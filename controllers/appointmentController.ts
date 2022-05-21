@@ -16,15 +16,23 @@ export const getAvailableTimesToSchedule = ({
 }): string[] => {
   const times = []
   for (
-    let currentTime = startTime;
-    currentTime < endTime;
-    currentTime += singleAppointmentDuration / 60
+    let currentTimeInHours = startTime;
+    currentTimeInHours < endTime;
+    currentTimeInHours += singleAppointmentDuration / 60
   ) {
-    const fractionOfHour = currentTime % 1
-    const minutes = Math.trunc(fractionOfHour * 60) + ''
-    const formattedMinutes = minutes.length === 1 ? `0${minutes}` : minutes
+    const formattedMinutes =
+      getFormattedMinutesFromTimeInHours(currentTimeInHours)
 
-    times.push(`${Math.trunc(currentTime)}:${formattedMinutes}`)
+    times.push(`${Math.trunc(currentTimeInHours)}:${formattedMinutes}`)
   }
   return times
+}
+
+export const getFormattedMinutesFromTimeInHours = (
+  timeInHours: number
+): string => {
+  const fractionOfHour = timeInHours % 1
+  const minutes = Math.trunc(fractionOfHour * 60) + ''
+  const formattedMinutes = minutes.length === 1 ? `0${minutes}` : minutes
+  return formattedMinutes
 }
