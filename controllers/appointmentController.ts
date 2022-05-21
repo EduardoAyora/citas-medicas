@@ -13,14 +13,11 @@ export const getAvailableTimesToSchedule = ({
     currentTime < endTime;
     currentTime += singleAppointmentDuration / 60
   ) {
-    const fractionOfHour = (currentTime % 1).toFixed(1)
-    if (fractionOfHour == '0.0') {
-      times.push(`${currentTime}:00`)
-    } else {
-      times.push(
-        `${Math.trunc(currentTime)}:${parseFloat(fractionOfHour) * 60}`
-      )
-    }
+    const fractionOfHour = currentTime % 1
+    const minutes = Math.trunc(fractionOfHour * 60) + ''
+    const formattedMinutes = minutes.length === 1 ? `0${minutes}` : minutes
+
+    times.push(`${Math.trunc(currentTime)}:${formattedMinutes}`)
   }
   return times
 }
