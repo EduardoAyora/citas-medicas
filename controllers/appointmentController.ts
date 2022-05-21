@@ -32,7 +32,7 @@ export const getFormattedMinutesFromTimeInHours = (
   timeInHours: number
 ): string => {
   const fractionOfHour = timeInHours % 1
-  const minutes = Math.trunc(fractionOfHour * 60) + ''
+  const minutes = Math.round(fractionOfHour * 60) + ''
   const formattedMinutes = minutes.length === 1 ? `0${minutes}` : minutes
   return formattedMinutes
 }

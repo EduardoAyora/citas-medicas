@@ -69,9 +69,7 @@ describe('getFormattedMinutesFromTimeInHours', () => {
     expect(getFormattedMinutesFromTimeInHours(10)).toBe('00')
     expect(getFormattedMinutesFromTimeInHours(10.5)).toBe('30')
     expect(getFormattedMinutesFromTimeInHours(1 / 3)).toBe('20')
-    expect(getFormattedMinutesFromTimeInHours(11 + 20 / 60 + 20 / 60)).toBe(
-      '40'
-    )
+    expect(getFormattedMinutesFromTimeInHours(11 + 40 / 60)).toBe('40')
     expect(getFormattedMinutesFromTimeInHours(11 + 10 / 60)).toBe('10')
     expect(getFormattedMinutesFromTimeInHours(12.75)).toBe('45')
     expect(getFormattedMinutesFromTimeInHours(23.25)).toBe('15')
