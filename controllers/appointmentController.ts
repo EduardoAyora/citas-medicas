@@ -1,11 +1,18 @@
+type appointment = {
+  time: string
+  durationInMinutes: number
+}
+
 export const getAvailableTimesToSchedule = ({
   startTime,
   endTime,
   singleAppointmentDuration,
+  appointmentsAlreadyScheduled,
 }: {
   startTime: number
   endTime: number
   singleAppointmentDuration: number
+  appointmentsAlreadyScheduled: appointment[]
 }): string[] => {
   const times = []
   for (
