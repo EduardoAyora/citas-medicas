@@ -46,6 +46,7 @@ export const getFormattedMinutesFromTimeInHours = (
   return formattedMinutes
 }
 
-export const getMinutesFromFormattedHour = (formattedHour: string): string => {
-  return ''
+export const getMinutesFromFormattedHour = (formattedHour: string): number => {
+  const [hour, minute] = formattedHour.split(':')
+  return parseInt(hour) * 60 + parseInt(minute)
 }
