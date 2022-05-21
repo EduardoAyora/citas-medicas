@@ -1,6 +1,8 @@
 import {
   getAvailableTimesToSchedule,
+  getFormattedHourFromTimeInHours,
   getFormattedMinutesFromTimeInHours,
+  getMinutesFromFormattedHour,
 } from './appointmentController'
 
 describe('getAvailableTimesToSchedule', () => {
@@ -12,7 +14,7 @@ describe('getAvailableTimesToSchedule', () => {
         singleAppointmentDuration: 30,
         appointmentsAlreadyScheduled: [],
       })
-    ).toEqual(['8:00', '8:30', '9:00', '9:30', '10:00', '10:30'])
+    ).toEqual(['08:00', '08:30', '09:00', '09:30', '10:00', '10:30'])
   })
 
   test('Devuelve una lista de horarios entre las 11:00 y las 13:00 con duración de 20 minutos', () => {
@@ -64,6 +66,19 @@ describe('getAvailableTimesToSchedule', () => {
   })
 })
 
+describe('getFormattedHoursFromTimeInHours', () => {
+  test('Devuelve un string con las horas formateadas', () => {
+    expect(getFormattedHourFromTimeInHours(10)).toBe('10')
+    expect(getFormattedHourFromTimeInHours(10.5)).toBe('10')
+    expect(getFormattedHourFromTimeInHours(1 / 3)).toBe('00')
+    expect(getFormattedHourFromTimeInHours(9)).toBe('09')
+    expect(getFormattedHourFromTimeInHours(9.5)).toBe('09')
+    expect(getFormattedHourFromTimeInHours(11 + 40 / 60)).toBe('11')
+    expect(getFormattedHourFromTimeInHours(12.75)).toBe('12')
+    expect(getFormattedHourFromTimeInHours(23.25)).toBe('23')
+  })
+})
+
 describe('getFormattedMinutesFromTimeInHours', () => {
   test('Devuelve un string con los minutos formateados', () => {
     expect(getFormattedMinutesFromTimeInHours(10)).toBe('00')
@@ -73,5 +88,13 @@ describe('getFormattedMinutesFromTimeInHours', () => {
     expect(getFormattedMinutesFromTimeInHours(11 + 10 / 60)).toBe('10')
     expect(getFormattedMinutesFromTimeInHours(12.75)).toBe('45')
     expect(getFormattedMinutesFromTimeInHours(23.25)).toBe('15')
+  })
+})
+
+describe('getMinutesFromFormattedHour', () => {
+  test('Devuelve el equivalente en minutos de la hora dada', () => {
+    expect(getMinutesFromFormattedHour('09:00')).toBe(540)
+    expect(getMinutesFromFormattedHour('11:20')).toBe(680)
+    expect(getMinutesFromFormattedHour('21:45')).toBe(1305)
   })
 })

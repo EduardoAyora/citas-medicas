@@ -22,10 +22,19 @@ export const getAvailableTimesToSchedule = ({
   ) {
     const formattedMinutes =
       getFormattedMinutesFromTimeInHours(currentTimeInHours)
+    const formattedHour = getFormattedHourFromTimeInHours(currentTimeInHours)
 
-    times.push(`${Math.trunc(currentTimeInHours)}:${formattedMinutes}`)
+    times.push(`${formattedHour}:${formattedMinutes}`)
   }
   return times
+}
+
+export const getFormattedHourFromTimeInHours = (
+  timeInHours: number
+): string => {
+  const hour = Math.trunc(timeInHours) + ''
+  const formattedHour = hour.length === 1 ? `0${hour}` : hour
+  return formattedHour
 }
 
 export const getFormattedMinutesFromTimeInHours = (
@@ -35,4 +44,8 @@ export const getFormattedMinutesFromTimeInHours = (
   const minutes = Math.round(fractionOfHour * 60) + ''
   const formattedMinutes = minutes.length === 1 ? `0${minutes}` : minutes
   return formattedMinutes
+}
+
+export const getMinutesFromFormattedHour = (formattedHour: string): string => {
+  return ''
 }
