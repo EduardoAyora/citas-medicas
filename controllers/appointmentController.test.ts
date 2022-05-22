@@ -64,6 +64,20 @@ describe('getAvailableTimesToSchedule', () => {
       })
     ).toEqual(['11:00', '11:40', '12:20'])
   })
+
+  test('Devuelve una lista de horarios y excluye horarios en los que ya hay citas agendadas, la duración de las citas nuevas es de 20m y de las ya agendadas es de 45m', () => {
+    expect(
+      getAvailableTimesToSchedule({
+        startTime: 11,
+        endTime: 14,
+        singleAppointmentDuration: 20,
+        appointmentsAlreadyScheduled: [
+          { time: '11:30', durationInMinutes: 45 },
+          { time: '12:40', durationInMinutes: 45 },
+        ],
+      })
+    ).toEqual(['11:00', '12:20', '13:40'])
+  })
 })
 
 describe('getFormattedHoursFromTimeInHours', () => {
