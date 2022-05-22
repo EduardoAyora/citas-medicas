@@ -26,7 +26,28 @@ export const getAvailableTimesToSchedule = ({
 
     times.push(`${formattedHour}:${formattedMinutes}`)
   }
-  return times
+  const timesWithoutAppointmentsAlreadyScheduled = times.filter(
+    (timeInSchedule) => {
+      const timeInScheduleInMinutes =
+        getMinutesFromFormattedHour(timeInSchedule)
+      const isTimeAlreadyScheduled = appointmentsAlreadyScheduled.some(
+        (appointment) => {
+          const { time, durationInMinutes } = appointment
+          const appointmentTimeInMinutesStart =
+            getMinutesFromFormattedHour(time)
+          const appointmentTimeInMinutesEnd =
+            appointmentTimeInMinutesStart + durationInMinutes
+
+          const isTimeAlreadyScheduled =
+            timeInScheduleInMinutes >= appointmentTimeInMinutesStart &&
+            timeInScheduleInMinutes < appointmentTimeInMinutesEnd
+          return isTimeAlreadyScheduled
+        }
+      )
+      return !isTimeAlreadyScheduled
+    }
+  )
+  return timesWithoutAppointmentsAlreadyScheduled
 }
 
 export const getFormattedHourFromTimeInHours = (

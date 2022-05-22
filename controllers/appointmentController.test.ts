@@ -50,7 +50,7 @@ describe('getAvailableTimesToSchedule', () => {
     ).toEqual(['13:00', '14:30', '16:00'])
   })
 
-  test.skip('Devuelve una lista de horarios y excluye horarios en los que ya hay citas agendadas, la duración de las citas nuevas y las ya agendadas es la misma', () => {
+  test('Devuelve una lista de horarios y excluye horarios en los que ya hay citas agendadas, la duración de las citas nuevas y las ya agendadas es la misma', () => {
     expect(
       getAvailableTimesToSchedule({
         startTime: 11,
