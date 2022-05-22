@@ -38,9 +38,18 @@ export const getAvailableTimesToSchedule = ({
           const appointmentTimeInMinutesEnd =
             appointmentTimeInMinutesStart + durationInMinutes
 
-          const isTimeAlreadyScheduled =
-            timeInScheduleInMinutes >= appointmentTimeInMinutesStart &&
-            timeInScheduleInMinutes < appointmentTimeInMinutesEnd
+          const isTimeAlreadyScheduled = Array.from(
+            Array(singleAppointmentDuration).keys()
+          ).reduce((prev, addedMinute) => {
+            return (
+              prev ||
+              (timeInScheduleInMinutes + addedMinute >=
+                appointmentTimeInMinutesStart &&
+                timeInScheduleInMinutes + addedMinute <
+                  appointmentTimeInMinutesEnd)
+            )
+          }, false)
+
           return isTimeAlreadyScheduled
         }
       )
