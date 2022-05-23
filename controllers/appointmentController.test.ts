@@ -4,6 +4,7 @@ import {
   getFormattedMinutesFromTimeInHours,
   getMinutesFromFormattedHour,
   isRangeOfNumbersCollisioningWithAnother,
+  isTimeAvailable,
 } from './appointmentController'
 
 describe('getAvailableTimesToSchedule', () => {
@@ -12,8 +13,8 @@ describe('getAvailableTimesToSchedule', () => {
       getAvailableTimesToSchedule({
         startTime: 8,
         endTime: 11,
-        singleAppointmentDuration: 30,
-        appointmentsAlreadyScheduled: [],
+        newAppointmentDuration: 30,
+        appointments: [],
       })
     ).toEqual(['08:00', '08:30', '09:00', '09:30', '10:00', '10:30'])
   })
@@ -23,8 +24,8 @@ describe('getAvailableTimesToSchedule', () => {
       getAvailableTimesToSchedule({
         startTime: 11,
         endTime: 13,
-        singleAppointmentDuration: 20,
-        appointmentsAlreadyScheduled: [],
+        newAppointmentDuration: 20,
+        appointments: [],
       })
     ).toEqual(['11:00', '11:20', '11:40', '12:00', '12:20', '12:40'])
   })
@@ -34,8 +35,8 @@ describe('getAvailableTimesToSchedule', () => {
       getAvailableTimesToSchedule({
         startTime: 13,
         endTime: 15,
-        singleAppointmentDuration: 45,
-        appointmentsAlreadyScheduled: [],
+        newAppointmentDuration: 45,
+        appointments: [],
       })
     ).toEqual(['13:00', '13:45', '14:30'])
   })
@@ -45,8 +46,8 @@ describe('getAvailableTimesToSchedule', () => {
       getAvailableTimesToSchedule({
         startTime: 13,
         endTime: 17,
-        singleAppointmentDuration: 90,
-        appointmentsAlreadyScheduled: [],
+        newAppointmentDuration: 90,
+        appointments: [],
       })
     ).toEqual(['13:00', '14:30', '16:00'])
   })
@@ -56,8 +57,8 @@ describe('getAvailableTimesToSchedule', () => {
       getAvailableTimesToSchedule({
         startTime: 11,
         endTime: 13,
-        singleAppointmentDuration: 20,
-        appointmentsAlreadyScheduled: [
+        newAppointmentDuration: 20,
+        appointments: [
           { time: '11:20', durationInMinutes: 20 },
           { time: '12:00', durationInMinutes: 20 },
           { time: '12:40', durationInMinutes: 20 },
@@ -71,8 +72,8 @@ describe('getAvailableTimesToSchedule', () => {
       getAvailableTimesToSchedule({
         startTime: 11,
         endTime: 14,
-        singleAppointmentDuration: 20,
-        appointmentsAlreadyScheduled: [
+        newAppointmentDuration: 20,
+        appointments: [
           { time: '11:30', durationInMinutes: 45 },
           { time: '12:40', durationInMinutes: 45 },
         ],
@@ -111,6 +112,38 @@ describe('getMinutesFromFormattedHour', () => {
     expect(getMinutesFromFormattedHour('09:00')).toBe(540)
     expect(getMinutesFromFormattedHour('11:20')).toBe(680)
     expect(getMinutesFromFormattedHour('21:45')).toBe(1305)
+  })
+})
+
+describe('isTimeAvailable', () => {
+  test('Devuelve si una horario ya ha sido agendado', () => {
+    expect(
+      isTimeAvailable({
+        appointments: [{ durationInMinutes: 30, time: '10:20' }],
+        newAppointmentDuration: 30,
+        time: '10:00',
+      })
+    ).toBe(false)
+    expect(
+      isTimeAvailable({
+        appointments: [
+          { durationInMinutes: 90, time: '00:20' },
+          { durationInMinutes: 60, time: '10:20' },
+        ],
+        newAppointmentDuration: 40,
+        time: '13:00',
+      })
+    ).toBe(true)
+    expect(
+      isTimeAvailable({
+        appointments: [
+          { durationInMinutes: 90, time: '00:20' },
+          { durationInMinutes: 10, time: '13:10' },
+        ],
+        newAppointmentDuration: 50,
+        time: '13:00',
+      })
+    ).toBe(false)
   })
 })
 

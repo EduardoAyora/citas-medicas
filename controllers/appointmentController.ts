@@ -6,19 +6,19 @@ type appointment = {
 export const getAvailableTimesToSchedule = ({
   startTime,
   endTime,
-  singleAppointmentDuration,
-  appointmentsAlreadyScheduled,
+  newAppointmentDuration,
+  appointments,
 }: {
   startTime: number
   endTime: number
-  singleAppointmentDuration: number
-  appointmentsAlreadyScheduled: appointment[]
+  newAppointmentDuration: number
+  appointments: appointment[]
 }): string[] => {
   const times = []
   for (
     let currentTimeInHours = startTime;
     currentTimeInHours < endTime;
-    currentTimeInHours += singleAppointmentDuration / 60
+    currentTimeInHours += newAppointmentDuration / 60
   ) {
     const formattedMinutes =
       getFormattedMinutesFromTimeInHours(currentTimeInHours)
@@ -26,34 +26,15 @@ export const getAvailableTimesToSchedule = ({
 
     times.push(`${formattedHour}:${formattedMinutes}`)
   }
-  const timesWithoutAppointmentsAlreadyScheduled = times.filter(
-    (timeInSchedule) => {
-      const timeInScheduleInMinutes =
-        getMinutesFromFormattedHour(timeInSchedule)
-      const isTimeAlreadyScheduled = appointmentsAlreadyScheduled.some(
-        (appointment) => {
-          const { time, durationInMinutes } = appointment
-          const appointmentTimeInMinutesStart =
-            getMinutesFromFormattedHour(time)
-          const appointmentTimeInMinutesEnd =
-            appointmentTimeInMinutesStart + durationInMinutes
 
-          const isTimeAlreadyScheduled =
-            isRangeOfNumbersCollisioningWithAnother({
-              smallestValueInFirstRange: timeInScheduleInMinutes,
-              highestValueInFirstRange:
-                timeInScheduleInMinutes + singleAppointmentDuration,
-              smallestValueInSecondRange: appointmentTimeInMinutesStart,
-              highestValueInSecondRange: appointmentTimeInMinutesEnd,
-            })
-
-          return isTimeAlreadyScheduled
-        }
-      )
-      return !isTimeAlreadyScheduled
-    }
+  const timesNotCollisioningWithAppointments = times.filter((time) =>
+    isTimeAvailable({
+      appointments,
+      newAppointmentDuration,
+      time,
+    })
   )
-  return timesWithoutAppointmentsAlreadyScheduled
+  return timesNotCollisioningWithAppointments
 }
 
 export const getFormattedHourFromTimeInHours = (
@@ -76,6 +57,36 @@ export const getFormattedMinutesFromTimeInHours = (
 export const getMinutesFromFormattedHour = (formattedHour: string): number => {
   const [hour, minute] = formattedHour.split(':')
   return parseInt(hour) * 60 + parseInt(minute)
+}
+
+export const isTimeAvailable = ({
+  appointments,
+  time,
+  newAppointmentDuration,
+}: {
+  appointments: appointment[]
+  time: string
+  newAppointmentDuration: number
+}): boolean => {
+  const timeInScheduleInMinutes = getMinutesFromFormattedHour(time)
+  return !appointments.some((appointment) => {
+    const timeOfAppointment = appointment.time
+    const durationInMinutesOfAppointment = appointment.durationInMinutes
+    const appointmentTimeInMinutesStart =
+      getMinutesFromFormattedHour(timeOfAppointment)
+    const appointmentTimeInMinutesEnd =
+      appointmentTimeInMinutesStart + durationInMinutesOfAppointment
+
+    const isTimeAlreadyScheduled = isRangeOfNumbersCollisioningWithAnother({
+      smallestValueInFirstRange: timeInScheduleInMinutes,
+      highestValueInFirstRange:
+        timeInScheduleInMinutes + newAppointmentDuration,
+      smallestValueInSecondRange: appointmentTimeInMinutesStart,
+      highestValueInSecondRange: appointmentTimeInMinutesEnd,
+    })
+
+    return isTimeAlreadyScheduled
+  })
 }
 
 export const isRangeOfNumbersCollisioningWithAnother = ({
