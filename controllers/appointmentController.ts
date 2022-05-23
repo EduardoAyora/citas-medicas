@@ -86,7 +86,7 @@ export const isTimeAvailable = ({
   newAppointmentDuration: number
 }): boolean => {
   const timeInScheduleInMinutes = getMinutesFromFormattedHour(time)
-  return !appointments.some((appointment) => {
+  const isTimeAlreadyScheduled = appointments.some((appointment) => {
     const timeOfAppointment = appointment.time
     const durationInMinutesOfAppointment = appointment.durationInMinutes
     const appointmentTimeInMinutesStart =
@@ -104,6 +104,7 @@ export const isTimeAvailable = ({
 
     return isTimeAlreadyScheduled
   })
+  return !isTimeAlreadyScheduled
 }
 
 export const isRangeOfNumbersCollisioningWithAnother = ({
