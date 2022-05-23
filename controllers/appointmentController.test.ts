@@ -3,6 +3,7 @@ import {
   getFormattedHourFromTimeInHours,
   getFormattedMinutesFromTimeInHours,
   getMinutesFromFormattedHour,
+  isRangeOfNumbersCollisioningWithAnother,
 } from './appointmentController'
 
 describe('getAvailableTimesToSchedule', () => {
@@ -110,5 +111,42 @@ describe('getMinutesFromFormattedHour', () => {
     expect(getMinutesFromFormattedHour('09:00')).toBe(540)
     expect(getMinutesFromFormattedHour('11:20')).toBe(680)
     expect(getMinutesFromFormattedHour('21:45')).toBe(1305)
+  })
+})
+
+describe('isRangeOfNumbersCollisioningWithAnother', () => {
+  test('Devuelve si un rango de números choca con otro rango', () => {
+    expect(
+      isRangeOfNumbersCollisioningWithAnother({
+        smallestValueInFirstRange: 3,
+        highestValueInFirstRange: 8,
+        smallestValueInSecondRange: 6,
+        highestValueInSecondRange: 10,
+      })
+    ).toBe(true)
+    expect(
+      isRangeOfNumbersCollisioningWithAnother({
+        smallestValueInFirstRange: 5,
+        highestValueInFirstRange: 9,
+        smallestValueInSecondRange: 8,
+        highestValueInSecondRange: 9,
+      })
+    ).toBe(true)
+    expect(
+      isRangeOfNumbersCollisioningWithAnother({
+        smallestValueInFirstRange: 5,
+        highestValueInFirstRange: 9,
+        smallestValueInSecondRange: 11,
+        highestValueInSecondRange: 12,
+      })
+    ).toBe(false)
+    expect(
+      isRangeOfNumbersCollisioningWithAnother({
+        smallestValueInFirstRange: 5,
+        highestValueInFirstRange: 9,
+        smallestValueInSecondRange: 9,
+        highestValueInSecondRange: 10,
+      })
+    ).toBe(false)
   })
 })

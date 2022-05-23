@@ -38,17 +38,14 @@ export const getAvailableTimesToSchedule = ({
           const appointmentTimeInMinutesEnd =
             appointmentTimeInMinutesStart + durationInMinutes
 
-          const isTimeAlreadyScheduled = Array.from(
-            Array(singleAppointmentDuration).keys()
-          ).reduce((prev, addedMinute) => {
-            return (
-              prev ||
-              (timeInScheduleInMinutes + addedMinute >=
-                appointmentTimeInMinutesStart &&
-                timeInScheduleInMinutes + addedMinute <
-                  appointmentTimeInMinutesEnd)
-            )
-          }, false)
+          const isTimeAlreadyScheduled =
+            isRangeOfNumbersCollisioningWithAnother({
+              smallestValueInFirstRange: timeInScheduleInMinutes,
+              highestValueInFirstRange:
+                timeInScheduleInMinutes + singleAppointmentDuration,
+              smallestValueInSecondRange: appointmentTimeInMinutesStart,
+              highestValueInSecondRange: appointmentTimeInMinutesEnd,
+            })
 
           return isTimeAlreadyScheduled
         }
@@ -79,4 +76,29 @@ export const getFormattedMinutesFromTimeInHours = (
 export const getMinutesFromFormattedHour = (formattedHour: string): number => {
   const [hour, minute] = formattedHour.split(':')
   return parseInt(hour) * 60 + parseInt(minute)
+}
+
+export const isRangeOfNumbersCollisioningWithAnother = ({
+  smallestValueInFirstRange,
+  highestValueInFirstRange,
+  smallestValueInSecondRange,
+  highestValueInSecondRange,
+}: {
+  smallestValueInFirstRange: number
+  highestValueInFirstRange: number
+  smallestValueInSecondRange: number
+  highestValueInSecondRange: number
+}): boolean => {
+  const lastValueToAddToSmallestValueInFirstRange =
+    highestValueInFirstRange - smallestValueInFirstRange
+  const isFirstRangeOfNumbersWithinSecondRange = Array.from(
+    Array(lastValueToAddToSmallestValueInFirstRange).keys()
+  ).reduce((prev, addedMinute) => {
+    return (
+      prev ||
+      (smallestValueInFirstRange + addedMinute >= smallestValueInSecondRange &&
+        smallestValueInFirstRange + addedMinute < highestValueInSecondRange)
+    )
+  }, false)
+  return isFirstRangeOfNumbersWithinSecondRange
 }
