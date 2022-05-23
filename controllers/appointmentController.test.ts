@@ -3,6 +3,7 @@ import {
   getFormattedHourFromTimeInHours,
   getFormattedMinutesFromTimeInHours,
   getMinutesFromFormattedHour,
+  getTimesToSchedule,
   isRangeOfNumbersCollisioningWithAnother,
   isTimeAvailable,
 } from './appointmentController'
@@ -17,39 +18,6 @@ describe('getAvailableTimesToSchedule', () => {
         appointments: [],
       })
     ).toEqual(['08:00', '08:30', '09:00', '09:30', '10:00', '10:30'])
-  })
-
-  test('Devuelve una lista de horarios entre las 11:00 y las 13:00 con duración de 20 minutos', () => {
-    expect(
-      getAvailableTimesToSchedule({
-        startTime: 11,
-        endTime: 13,
-        newAppointmentDuration: 20,
-        appointments: [],
-      })
-    ).toEqual(['11:00', '11:20', '11:40', '12:00', '12:20', '12:40'])
-  })
-
-  test('Devuelve una lista de horarios entre las 13:00 y las 15:00 con duración de 45 minutos', () => {
-    expect(
-      getAvailableTimesToSchedule({
-        startTime: 13,
-        endTime: 15,
-        newAppointmentDuration: 45,
-        appointments: [],
-      })
-    ).toEqual(['13:00', '13:45', '14:30'])
-  })
-
-  test('Devuelve una lista de horarios entre las 13:00 y las 17:00 con duración de 1 hora y media', () => {
-    expect(
-      getAvailableTimesToSchedule({
-        startTime: 13,
-        endTime: 17,
-        newAppointmentDuration: 90,
-        appointments: [],
-      })
-    ).toEqual(['13:00', '14:30', '16:00'])
   })
 
   test('Devuelve una lista de horarios y excluye horarios en los que ya hay citas agendadas, la duración de las citas nuevas y las ya agendadas es la misma', () => {
@@ -79,6 +47,38 @@ describe('getAvailableTimesToSchedule', () => {
         ],
       })
     ).toEqual(['11:00', '12:20', '13:40'])
+  })
+})
+
+describe('getTimesToSchedule', () => {
+  test('Devuelve una lista de horarios entre las 11:00 y las 13:00 con duración de 20 minutos', () => {
+    expect(
+      getTimesToSchedule({
+        startTime: 11,
+        endTime: 13,
+        newAppointmentDuration: 20,
+      })
+    ).toEqual(['11:00', '11:20', '11:40', '12:00', '12:20', '12:40'])
+  })
+
+  test('Devuelve una lista de horarios entre las 13:00 y las 15:00 con duración de 45 minutos', () => {
+    expect(
+      getTimesToSchedule({
+        startTime: 13,
+        endTime: 15,
+        newAppointmentDuration: 45,
+      })
+    ).toEqual(['13:00', '13:45', '14:30'])
+  })
+
+  test('Devuelve una lista de horarios entre las 13:00 y las 17:00 con duración de 1 hora y media', () => {
+    expect(
+      getTimesToSchedule({
+        startTime: 13,
+        endTime: 17,
+        newAppointmentDuration: 90,
+      })
+    ).toEqual(['13:00', '14:30', '16:00'])
   })
 })
 

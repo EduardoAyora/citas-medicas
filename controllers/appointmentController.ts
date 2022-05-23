@@ -14,6 +14,31 @@ export const getAvailableTimesToSchedule = ({
   newAppointmentDuration: number
   appointments: appointment[]
 }): string[] => {
+  const times = getTimesToSchedule({
+    startTime,
+    endTime,
+    newAppointmentDuration,
+  })
+
+  const timesNotCollisioningWithAppointments = times.filter((time) =>
+    isTimeAvailable({
+      appointments,
+      newAppointmentDuration,
+      time,
+    })
+  )
+  return timesNotCollisioningWithAppointments
+}
+
+export const getTimesToSchedule = ({
+  startTime,
+  endTime,
+  newAppointmentDuration,
+}: {
+  startTime: number
+  endTime: number
+  newAppointmentDuration: number
+}): string[] => {
   const times = []
   for (
     let currentTimeInHours = startTime;
@@ -26,15 +51,7 @@ export const getAvailableTimesToSchedule = ({
 
     times.push(`${formattedHour}:${formattedMinutes}`)
   }
-
-  const timesNotCollisioningWithAppointments = times.filter((time) =>
-    isTimeAvailable({
-      appointments,
-      newAppointmentDuration,
-      time,
-    })
-  )
-  return timesNotCollisioningWithAppointments
+  return times
 }
 
 export const getFormattedHourFromTimeInHours = (
