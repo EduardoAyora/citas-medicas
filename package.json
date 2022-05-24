@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --watch"
+    "test": "jest --watch",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "test:docker": "dotenv -e .env.test yarn docker:up && yarn prisma migrate deploy && jest -i"
   },
   "dependencies": {
     "@prisma/client": "^3.14.0",
