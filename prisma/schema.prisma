@@ -10,14 +10,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id      Int      @id @default(autoincrement())
-  username   String   @unique
-  name    String
-  role    Role     @default(DOCTOR)
+model Usuario {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  name     String
+  role     Rol    @default(DOCTOR)
 }
 
-enum Role {
+model Cita {
+  id                Int    @id @default(autoincrement())
+  time              String
+  durationInMinutes Int
+}
+
+enum Rol {
   DOCTOR
   SECRETARY
   ADMIN

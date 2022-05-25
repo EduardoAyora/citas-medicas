@@ -1,7 +1,4 @@
-type appointment = {
-  time: string
-  durationInMinutes: number
-}
+import { Cita } from '@prisma/client'
 
 export const getAvailableTimesToSchedule = ({
   startTime,
@@ -12,7 +9,7 @@ export const getAvailableTimesToSchedule = ({
   startTime: number
   endTime: number
   newAppointmentDuration: number
-  appointments: appointment[]
+  appointments: Cita[]
 }): string[] => {
   const times = getTimesToSchedule({
     startTime,
@@ -81,7 +78,7 @@ export const isTimeAvailable = ({
   time,
   newAppointmentDuration,
 }: {
-  appointments: appointment[]
+  appointments: Cita[]
   time: string
   newAppointmentDuration: number
 }): boolean => {
