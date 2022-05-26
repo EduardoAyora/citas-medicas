@@ -7,8 +7,8 @@ describe('handler /horario/[fecha]', () => {
   beforeAll(async () => {
     await prisma.cita.createMany({
       data: [
-        { id: 1, time: '11:30', durationInMinutes: 45 },
-        { id: 2, time: '12:40', durationInMinutes: 45 },
+        { id: 1, time: '11:30', durationInMinutes: 45, day: '2022-05-26' },
+        { id: 2, time: '12:40', durationInMinutes: 45, day: '2022-05-26' },
       ],
     })
   })
@@ -17,9 +17,23 @@ describe('handler /horario/[fecha]', () => {
     await prisma.cita.deleteMany()
   })
 
-  test('Devuelve un estado de error al no dar una fecha válida', async () => {
+  test('Devuelve un estado de error al no recibir una fecha', async () => {
     const { req, res } = createMocks({
       method: 'GET',
+    })
+    await handler(req, res)
+    expect(res._getStatusCode()).toBe(400)
+    expect(res._getJSONData()).toEqual({
+      message: expect.any(String),
+    })
+  })
+
+  test('Devuelve un estado de error al no recibir una fecha válida', async () => {
+    const { req, res } = createMocks({
+      method: 'GET',
+      query: {
+        fecha: 21,
+      },
     })
     await handler(req, res)
     expect(res._getStatusCode()).toBe(400)

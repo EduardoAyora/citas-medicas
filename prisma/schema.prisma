@@ -21,6 +21,7 @@ model Cita {
   id                Int    @id @default(autoincrement())
   time              String
   durationInMinutes Int
+  day               String
 }
 
 enum Rol {
