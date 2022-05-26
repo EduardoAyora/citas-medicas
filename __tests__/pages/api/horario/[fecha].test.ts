@@ -1,13 +1,38 @@
 import { createMocks } from 'node-mocks-http'
 
 import handler from '../../../../pages/api/horario/[fecha]'
+import { prisma } from '../../../../lib/db'
 
-describe('handler', () => {
-  test('Devuelve una lista de horarios entre las 8:00 y las 11:00 con duración de 30 minutos', async () => {
+describe('handler /horario/[fecha]', () => {
+  beforeAll(async () => {
+    await prisma.cita.createMany({
+      data: [
+        { id: 1, time: '11:30', durationInMinutes: 45 },
+        { id: 2, time: '12:40', durationInMinutes: 45 },
+      ],
+    })
+  })
+
+  afterAll(async () => {
+    await prisma.cita.deleteMany()
+  })
+
+  test('Devuelve un estado de error al no dar una fecha válida', async () => {
+    const { req, res } = createMocks({
+      method: 'GET',
+    })
+    await handler(req, res)
+    expect(res._getStatusCode()).toBe(400)
+    expect(res._getJSONData()).toEqual({
+      message: expect.any(String),
+    })
+  })
+
+  test('Devuelve una lista de horarios disponibles en una fecha determinada', async () => {
     const { req, res } = createMocks({
       method: 'GET',
       query: {
-        id: 'dog',
+        fecha: '2022-05-26',
       },
     })
 
@@ -15,7 +40,7 @@ describe('handler', () => {
 
     expect(res._getStatusCode()).toBe(200)
     expect(res._getJSONData()).toEqual({
-      horarioDia: [],
+      horarioDia: ['11:00', '12:20', '13:40'],
     })
   })
 })
