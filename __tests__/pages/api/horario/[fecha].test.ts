@@ -1,6 +1,6 @@
 import { createMocks } from 'node-mocks-http'
 
-import handler from '../../../../pages/api/horario/[fecha]'
+import handler from '../../../../pages/api/servicio/[servicio]/horario/[fecha]'
 import { prisma } from '../../../../lib/db'
 
 describe('handler /horario/[fecha]', () => {
@@ -32,7 +32,7 @@ describe('handler /horario/[fecha]', () => {
     const { req, res } = createMocks({
       method: 'GET',
       query: {
-        fecha: 21,
+        fecha: 'a',
       },
     })
     await handler(req, res)

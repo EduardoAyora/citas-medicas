@@ -24,6 +24,35 @@ model Cita {
   day               String
 }
 
+model Servicio {
+  id                Int          @id @default(autoincrement())
+  costo             Decimal
+  descripcion       String
+  duracionEnMinutos Int
+  dias              HorarioDia[]
+}
+
+model HorarioDia {
+  id         Int      @id @default(autoincrement())
+  horaInicio Int
+  horaFin    Int
+  dia        Dia
+  servicioId Int
+  servicio   Servicio @relation(fields: [servicioId], references: [id])
+
+  @@unique([servicioId, dia])
+}
+
+enum Dia {
+  LUNES
+  MARTES
+  MIERCOLES
+  JUEVES
+  VIERNES
+  SABADO
+  DOMINGO
+}
+
 enum Rol {
   DOCTOR
   SECRETARY

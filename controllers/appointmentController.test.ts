@@ -6,7 +6,10 @@ import {
   getTimesToSchedule,
   isRangeOfNumbersCollisioningWithAnother,
   isTimeAvailable,
+  getDayOfWeekFromDate,
 } from './appointmentController'
+
+import { Dia } from '@prisma/client'
 
 describe('getAvailableTimesToSchedule', () => {
   test('Devuelve una lista de horarios entre las 8:00 y las 11:00 con duración de 30 minutos', () => {
@@ -183,5 +186,16 @@ describe('isRangeOfNumbersCollisioningWithAnother', () => {
         highestValueInSecondRange: 10,
       })
     ).toBe(false)
+  })
+})
+
+describe('getDayOfWeekFromDate', () => {
+  test('Devuelve el día de la semana dada una fecha', () => {
+    expect(getDayOfWeekFromDate('2022-05-29')).toBe(Dia.DOMINGO)
+    expect(getDayOfWeekFromDate('2022-05-26')).toBe(Dia.JUEVES)
+    expect(getDayOfWeekFromDate('2022-05-02')).toBe(Dia.LUNES)
+    expect(getDayOfWeekFromDate('2022-04-20')).toBe(Dia.MIERCOLES)
+    expect(getDayOfWeekFromDate('')).toBe(undefined)
+    expect(getDayOfWeekFromDate('a')).toBe(undefined)
   })
 })

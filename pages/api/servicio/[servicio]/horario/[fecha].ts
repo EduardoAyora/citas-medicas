@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getAvailableTimesToSchedule } from '../../../controllers/appointmentController'
-import { prisma } from '../../../lib/db'
+import {
+  getAvailableTimesToSchedule,
+  getDayOfWeekFromDate,
+} from '../../../../../controllers/appointmentController'
+import { prisma } from '../../../../../lib/db'
 
 type Data = {
   horarioDia?: string[]
@@ -11,10 +14,14 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  try {
-    const { fecha } = req.query
-    if (!fecha) throw new Error()
+  const { fecha, servicio } = req.query
+  if (!fecha) return res.status(400).json({ message: 'La fecha es requerida' })
 
+  const diaDeLaSemana = getDayOfWeekFromDate(fecha as string)
+  if (!diaDeLaSemana)
+    return res.status(400).json({ message: 'La fecha no es válida' })
+
+  try {
     const citasDia = await prisma.cita.findMany({
       where: {
         day: {
@@ -34,6 +41,6 @@ export default async function handler(
       horarioDia,
     })
   } catch (error) {
-    res.status(400).json({ message: 'La fecha no es válida' })
+    res.status(500).json({ message: 'Ha ocurrido un error' })
   }
 }
