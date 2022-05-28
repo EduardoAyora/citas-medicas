@@ -1,7 +1,7 @@
 import { createMocks } from 'node-mocks-http'
 
-import handler from '../../../../pages/api/servicio/[servicio]/horario/[fecha]'
-import { prisma } from '../../../../lib/db'
+import handler from '../../../../../../pages/api/servicio/[servicio]/agendar/[fecha]'
+import { prisma } from '../../../../../../lib/db'
 
 describe('handler /horario/[fecha]', () => {
   beforeAll(async () => {
