@@ -5,8 +5,8 @@ import {
 } from '../../../../../controllers/appointmentController'
 import { prisma } from '../../../../../lib/db'
 
-type Data = {
-  horarioDia?: string[]
+export type Data = {
+  horarioDisponible?: string[]
   message?: string
 }
 
@@ -30,15 +30,39 @@ export default async function handler(
       },
     })
 
-    const horarioDia = getAvailableTimesToSchedule({
-      startTime: 11,
-      endTime: 14,
-      newAppointmentDuration: 20,
+    const servicioId = parseInt(servicio as string)
+
+    const informacionHorarioDia = await prisma.horarioDia.findUnique({
+      where: {
+        servicioId_dia: {
+          dia: diaDeLaSemana,
+          servicioId,
+        },
+      },
+    })
+    const informacionServicio = await prisma.servicio.findUnique({
+      where: {
+        id: servicioId,
+      },
+    })
+
+    if (!informacionServicio || !informacionHorarioDia)
+      return res
+        .status(404)
+        .json({ message: 'El servicio solicitado no se ha encontrado' })
+
+    const { horaInicio, horaFin } = informacionHorarioDia
+    const { duracionEnMinutos } = informacionServicio
+
+    const horarioDisponible = getAvailableTimesToSchedule({
+      startTime: horaInicio,
+      endTime: horaFin,
+      newAppointmentDuration: duracionEnMinutos,
       appointments: citasDia,
     })
 
     return res.status(200).json({
-      horarioDia,
+      horarioDisponible,
     })
   } catch (error) {
     res.status(500).json({ message: 'Ha ocurrido un error' })

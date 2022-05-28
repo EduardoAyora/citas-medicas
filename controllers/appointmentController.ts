@@ -129,9 +129,7 @@ export const isRangeOfNumbersCollisioningWithAnother = ({
   return isFirstRangeOfNumbersWithinSecondRange
 }
 
-export const getDayOfWeekFromDate = (
-  dateString: string
-): String | undefined => {
+export const getDayOfWeekFromDate = (dateString: string): Dia | undefined => {
   const date = new Date(dateString)
   switch (date.getDay()) {
     case 0:
