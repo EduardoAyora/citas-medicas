@@ -17,19 +17,23 @@ model Usuario {
   role     Rol    @default(DOCTOR)
 }
 
-model Cita {
-  id                Int    @id @default(autoincrement())
-  time              String
-  durationInMinutes Int
-  day               String
-}
-
 model Servicio {
   id                Int          @id @default(autoincrement())
   costo             Decimal
   descripcion       String
   duracionEnMinutos Int
   dias              HorarioDia[]
+  citas             Cita[]
+}
+
+model Cita {
+  id                Int    @id @default(autoincrement())
+  time              String
+  durationInMinutes Int
+  day               String
+  servicioId        Int
+
+  servicio Servicio @relation(fields: [servicioId], references: [id])
 }
 
 model HorarioDia {

@@ -22,21 +22,15 @@ export default async function handler(
     return res.status(400).json({ message: 'La fecha no es válida' })
 
   try {
+    const servicioId = parseInt(servicio as string)
+
     const citasDia = await prisma.cita.findMany({
       where: {
         day: {
           equals: fecha as string,
         },
-      },
-    })
-
-    const servicioId = parseInt(servicio as string)
-
-    const informacionHorarioDia = await prisma.horarioDia.findUnique({
-      where: {
-        servicioId_dia: {
-          dia: diaDeLaSemana,
-          servicioId,
+        servicioId: {
+          equals: servicioId,
         },
       },
     })
@@ -46,10 +40,24 @@ export default async function handler(
       },
     })
 
-    if (!informacionServicio || !informacionHorarioDia)
+    if (!informacionServicio)
       return res
         .status(404)
         .json({ message: 'El servicio solicitado no se ha encontrado' })
+
+    const informacionHorarioDia = await prisma.horarioDia.findUnique({
+      where: {
+        servicioId_dia: {
+          dia: diaDeLaSemana,
+          servicioId,
+        },
+      },
+    })
+
+    if (!informacionHorarioDia)
+      return res.status(200).json({
+        horarioDisponible: [],
+      })
 
     const { horaInicio, horaFin } = informacionHorarioDia
     const { duracionEnMinutos } = informacionServicio

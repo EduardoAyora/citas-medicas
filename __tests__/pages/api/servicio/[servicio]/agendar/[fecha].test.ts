@@ -6,16 +6,6 @@ import { prisma } from '../../../../../../lib/db'
 
 describe('handler /servicio/[servicio]/agendar/[fecha]', () => {
   beforeAll(async () => {
-    await prisma.cita.createMany({
-      data: [
-        { time: '11:30', durationInMinutes: 45, day: '2022-05-26' },
-        { time: '12:40', durationInMinutes: 45, day: '2022-05-26' },
-        { time: '11:20', durationInMinutes: 20, day: '2022-05-27' },
-        { time: '12:00', durationInMinutes: 20, day: '2022-05-27' },
-        { time: '12:40', durationInMinutes: 20, day: '2022-05-27' },
-      ],
-    })
-
     await prisma.servicio.createMany({
       data: [
         {
@@ -37,7 +27,48 @@ describe('handler /servicio/[servicio]/agendar/[fecha]', () => {
       data: [
         { dia: Dia.JUEVES, horaInicio: 11, horaFin: 14, servicioId: 1 },
         { dia: Dia.VIERNES, horaInicio: 11, horaFin: 13, servicioId: 1 },
-        { dia: Dia.VIERNES, horaInicio: 11, horaFin: 13, servicioId: 2 },
+        { dia: Dia.VIERNES, horaInicio: 11, horaFin: 15, servicioId: 2 },
+      ],
+    })
+
+    await prisma.cita.createMany({
+      data: [
+        {
+          time: '11:30',
+          durationInMinutes: 45,
+          day: '2022-05-26',
+          servicioId: 1,
+        },
+        {
+          time: '12:40',
+          durationInMinutes: 45,
+          day: '2022-05-26',
+          servicioId: 1,
+        },
+        {
+          time: '11:20',
+          durationInMinutes: 20,
+          day: '2022-05-27',
+          servicioId: 1,
+        },
+        {
+          time: '12:00',
+          durationInMinutes: 20,
+          day: '2022-05-27',
+          servicioId: 1,
+        },
+        {
+          time: '12:40',
+          durationInMinutes: 20,
+          day: '2022-05-27',
+          servicioId: 1,
+        },
+        {
+          time: '12:30',
+          durationInMinutes: 20,
+          day: '2022-05-27',
+          servicioId: 2,
+        },
       ],
     })
   })
@@ -135,7 +166,24 @@ describe('handler /servicio/[servicio]/agendar/[fecha]', () => {
 
     expect(res._getStatusCode()).toBe(200)
     expect(res._getJSONData()).toEqual({
-      horarioDisponible: ['11:00', '12:00'],
+      horarioDisponible: ['11:00', '13:00', '14:00'],
+    })
+  })
+
+  test('Devuelve una lista de horarios vacía cuando se pasa un día en el que un servicio no está disponible', async () => {
+    const { req, res } = createMocks({
+      method: 'GET',
+      query: {
+        fecha: '2022-05-30',
+        servicio: 2,
+      },
+    })
+
+    await handler(req, res)
+
+    expect(res._getStatusCode()).toBe(200)
+    expect(res._getJSONData()).toEqual({
+      horarioDisponible: [],
     })
   })
 })

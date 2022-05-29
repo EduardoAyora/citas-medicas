@@ -30,9 +30,27 @@ describe('getAvailableTimesToSchedule', () => {
         endTime: 13,
         newAppointmentDuration: 20,
         appointments: [
-          { id: 1, time: '11:20', durationInMinutes: 20, day: '2022-05-26' },
-          { id: 2, time: '12:00', durationInMinutes: 20, day: '2022-05-26' },
-          { id: 3, time: '12:40', durationInMinutes: 20, day: '2022-05-26' },
+          {
+            id: 1,
+            time: '11:20',
+            durationInMinutes: 20,
+            day: '2022-05-26',
+            servicioId: 1,
+          },
+          {
+            id: 2,
+            time: '12:00',
+            durationInMinutes: 20,
+            day: '2022-05-26',
+            servicioId: 1,
+          },
+          {
+            id: 3,
+            time: '12:40',
+            durationInMinutes: 20,
+            day: '2022-05-26',
+            servicioId: 1,
+          },
         ],
       })
     ).toEqual(['11:00', '11:40', '12:20'])
@@ -45,8 +63,20 @@ describe('getAvailableTimesToSchedule', () => {
         endTime: 14,
         newAppointmentDuration: 20,
         appointments: [
-          { id: 1, time: '11:30', durationInMinutes: 45, day: '2022-05-26' },
-          { id: 2, time: '12:40', durationInMinutes: 45, day: '2022-05-26' },
+          {
+            id: 1,
+            time: '11:30',
+            durationInMinutes: 45,
+            day: '2022-05-26',
+            servicioId: 1,
+          },
+          {
+            id: 2,
+            time: '12:40',
+            durationInMinutes: 45,
+            day: '2022-05-26',
+            servicioId: 1,
+          },
         ],
       })
     ).toEqual(['11:00', '12:20', '13:40'])
@@ -59,8 +89,20 @@ describe('getAvailableTimesToSchedule', () => {
         endTime: 14,
         newAppointmentDuration: 20,
         appointments: [
-          { id: 1, time: '11:30', durationInMinutes: 45, day: '2022-05-26' },
-          { id: 2, time: '12:40', durationInMinutes: 30, day: '2022-05-26' },
+          {
+            id: 1,
+            time: '11:30',
+            durationInMinutes: 45,
+            day: '2022-05-26',
+            servicioId: 1,
+          },
+          {
+            id: 2,
+            time: '12:40',
+            durationInMinutes: 30,
+            day: '2022-05-26',
+            servicioId: 1,
+          },
         ],
       })
     ).toEqual(['11:00', '12:20', '13:20', '13:40'])
@@ -137,7 +179,13 @@ describe('isTimeAvailable', () => {
     expect(
       isTimeAvailable({
         appointments: [
-          { id: 1, durationInMinutes: 30, time: '10:20', day: '2022-05-26' },
+          {
+            id: 1,
+            durationInMinutes: 30,
+            time: '10:20',
+            day: '2022-05-26',
+            servicioId: 1,
+          },
         ],
         newAppointmentDuration: 30,
         time: '10:00',
@@ -146,8 +194,20 @@ describe('isTimeAvailable', () => {
     expect(
       isTimeAvailable({
         appointments: [
-          { id: 1, durationInMinutes: 90, time: '00:20', day: '2022-05-26' },
-          { id: 2, durationInMinutes: 60, time: '10:20', day: '2022-05-26' },
+          {
+            id: 1,
+            durationInMinutes: 90,
+            time: '00:20',
+            day: '2022-05-26',
+            servicioId: 1,
+          },
+          {
+            id: 2,
+            durationInMinutes: 60,
+            time: '10:20',
+            day: '2022-05-26',
+            servicioId: 1,
+          },
         ],
         newAppointmentDuration: 40,
         time: '13:00',
@@ -156,8 +216,20 @@ describe('isTimeAvailable', () => {
     expect(
       isTimeAvailable({
         appointments: [
-          { id: 1, durationInMinutes: 90, time: '00:20', day: '2022-05-26' },
-          { id: 2, durationInMinutes: 10, time: '13:10', day: '2022-05-26' },
+          {
+            id: 1,
+            durationInMinutes: 90,
+            time: '00:20',
+            day: '2022-05-26',
+            servicioId: 1,
+          },
+          {
+            id: 2,
+            durationInMinutes: 10,
+            time: '13:10',
+            day: '2022-05-26',
+            servicioId: 1,
+          },
         ],
         newAppointmentDuration: 50,
         time: '13:00',
