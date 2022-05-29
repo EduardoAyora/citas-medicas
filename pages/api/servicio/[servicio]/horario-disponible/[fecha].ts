@@ -73,6 +73,6 @@ export default async function handler(
       horarioDisponible,
     })
   } catch (error) {
-    res.status(500).json({ message: 'Ha ocurrido un error' })
+    return res.status(500).json({ message: 'Ha ocurrido un error' })
   }
 }

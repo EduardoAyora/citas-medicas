@@ -1,0 +1,48 @@
+import { Cita } from '@prisma/client'
+import { NextApiResponse, NextApiRequest } from 'next'
+import { prisma } from '../../../../lib/db'
+
+export type Data = {
+  cita?: Cita
+  message?: string
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) {
+  const { servicio } = req.query
+  const { day, time } = req.body
+
+  if (!servicio || !day || !time)
+    return res
+      .status(400)
+      .json({ message: 'El servicio el día y la hora son requeridos' })
+
+  try {
+    const servicioId = parseInt(servicio as string)
+    const informacionServicio = await prisma.servicio.findUnique({
+      where: {
+        id: servicioId,
+      },
+    })
+
+    if (!informacionServicio)
+      return res
+        .status(404)
+        .json({ message: 'El servicio solicitado no se ha encontrado' })
+
+    const citaCreada = await prisma.cita.create({
+      data: {
+        day,
+        time,
+        durationInMinutes: informacionServicio.duracionEnMinutos,
+        servicioId,
+      },
+    })
+
+    return res.status(200).json({ cita: citaCreada })
+  } catch (error) {
+    return res.status(500).json({ message: 'Ha ocurrido un error' })
+  }
+}
