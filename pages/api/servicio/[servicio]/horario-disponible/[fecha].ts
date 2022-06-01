@@ -2,8 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import {
   getAvailableTimesToSchedule,
   getDayOfWeekFromDate,
-} from '../../../../../controllers/appointmentController'
-import { prisma } from '../../../../../lib/db'
+} from '../../../../../src/controllers/appointmentController'
+import { prisma } from '../../../../../src/lib/db'
 
 export type Data = {
   horarioDisponible?: string[]

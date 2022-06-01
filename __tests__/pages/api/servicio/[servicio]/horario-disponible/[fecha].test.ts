@@ -2,7 +2,7 @@ import { createMocks } from 'node-mocks-http'
 import { Dia } from '@prisma/client'
 
 import handler from '../../../../../../pages/api/servicio/[servicio]/horario-disponible/[fecha]'
-import { prisma } from '../../../../../../lib/db'
+import { prisma } from '../../../../../../src/lib/db'
 
 describe('handler /servicio/[servicio]/horario-disponible/[fecha]', () => {
   beforeAll(async () => {

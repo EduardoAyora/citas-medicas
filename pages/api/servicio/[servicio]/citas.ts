@@ -1,6 +1,6 @@
 import { Cita } from '@prisma/client'
 import { NextApiResponse, NextApiRequest } from 'next'
-import { prisma } from '../../../../lib/db'
+import { prisma } from '../../../../src/lib/db'
 
 export type Data = {
   cita?: Cita

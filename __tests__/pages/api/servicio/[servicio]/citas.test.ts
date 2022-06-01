@@ -1,7 +1,7 @@
 import { Dia } from '@prisma/client'
 
 import handler from '../../../../../pages/api/servicio/[servicio]/citas'
-import { prisma } from '../../../../../lib/db'
+import { prisma } from '../../../../../src/lib/db'
 import { createMocks } from 'node-mocks-http'
 
 describe('handler /servicio/[servicio]/citas', () => {
