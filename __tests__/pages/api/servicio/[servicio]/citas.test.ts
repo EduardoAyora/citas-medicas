@@ -1,11 +1,34 @@
-import { Dia } from '@prisma/client'
+import { Dia, Rol } from '@prisma/client'
 
 import handler from '../../../../../pages/api/servicio/[servicio]/citas'
 import { prisma } from '../../../../../src/lib/db'
 import { createMocks } from 'node-mocks-http'
 
+jest.mock('next-auth/react', () => ({
+  __esModule: true,
+  getSession: async () => ({
+    session: 'session',
+  }),
+}))
+
 describe('handler /servicio/[servicio]/citas', () => {
   beforeAll(async () => {
+    await prisma.usuario.createMany({
+      data: [
+        {
+          name: 'Karen',
+          password: '123',
+          username: 'karen',
+          role: Rol.SECRETARY,
+        },
+        {
+          name: 'Eduardo',
+          password: '123',
+          username: 'eduardo',
+        },
+      ],
+    })
+
     await prisma.servicio.createMany({
       data: [
         {
@@ -37,6 +60,7 @@ describe('handler /servicio/[servicio]/citas', () => {
   afterAll(async () => {
     await prisma.horarioDia.deleteMany()
     await prisma.servicio.deleteMany()
+    await prisma.usuario.deleteMany()
   })
 
   test('Devuelve la cita guardada con éxito', async () => {

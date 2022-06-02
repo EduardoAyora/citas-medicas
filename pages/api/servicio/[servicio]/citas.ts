@@ -1,16 +1,15 @@
 import { Cita } from '@prisma/client'
 import { NextApiResponse, NextApiRequest } from 'next'
 import { prisma } from '../../../../src/lib/db'
+import { withMiddleware } from '../../../../src/lib/withMiddleware'
+import authMiddleware from '../../../../src/middlewares/authMiddleware'
 
 export type Data = {
   cita?: Cita
   message?: string
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   const {
     query: { servicio },
     body: { day, time },
@@ -54,3 +53,5 @@ export default async function handler(
       return res.status(405).end(`Method ${method} Not Allowed`)
   }
 }
+
+export default withMiddleware(authMiddleware, handler)
