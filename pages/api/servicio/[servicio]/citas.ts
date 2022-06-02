@@ -3,6 +3,7 @@ import { NextApiResponse, NextApiRequest } from 'next'
 import { prisma } from '../../../../src/lib/db'
 import { withMiddleware } from '../../../../src/lib/withMiddleware'
 import authMiddleware from '../../../../src/middlewares/authMiddleware'
+import roleMiddleware from '../../../../src/middlewares/roleMiddleware'
 
 export type Data = {
   cita?: Cita
@@ -54,4 +55,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   }
 }
 
-export default withMiddleware(authMiddleware, handler)
+export default withMiddleware(authMiddleware, roleMiddleware, handler)
