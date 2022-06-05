@@ -3,15 +3,22 @@ import { getSession } from 'next-auth/react'
 import { Rol } from '@prisma/client'
 import 'isomorphic-fetch'
 
-export default async function roleMiddleware(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const session = await getSession({ req })
+export default function roleMiddleware(allowedRoles: Rol[]) {
+  return async (req: NextApiRequest, res: NextApiResponse) => {
+    const session = await getSession({ req })
+    const message =
+      'No tiene los permisos necesarios para acceder a este recurso.'
+    if (!session)
+      return res.status(403).json({
+        message,
+      })
 
-  if (!session || session.user.role !== Rol.SECRETARY) {
-    return res.status(403).json({
-      message: 'No tiene los permisos necesarios para acceder a este recurso.',
-    })
+    const userRoleIsAllowed = allowedRoles.some(
+      (allowedRole) => allowedRole === session.user.role
+    )
+    if (!userRoleIsAllowed)
+      return res.status(403).json({
+        message,
+      })
   }
 }

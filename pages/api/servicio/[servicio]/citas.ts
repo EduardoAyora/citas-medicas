@@ -1,4 +1,4 @@
-import { Cita } from '@prisma/client'
+import { Cita, Rol } from '@prisma/client'
 import { NextApiResponse, NextApiRequest } from 'next'
 import { prisma } from '../../../../src/lib/db'
 import { withMiddleware } from '../../../../src/lib/withMiddleware'
@@ -55,4 +55,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   }
 }
 
-export default withMiddleware(authMiddleware, roleMiddleware, handler)
+export default withMiddleware(
+  authMiddleware,
+  roleMiddleware([Rol.SECRETARY, Rol.ADMIN]),
+  handler
+)

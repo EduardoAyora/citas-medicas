@@ -4,7 +4,7 @@ import handler from '../../../../../pages/api/servicio/[servicio]/citas'
 import { prisma } from '../../../../../src/lib/db'
 import { createMocks } from 'node-mocks-http'
 
-let mockedRole: Rol = Rol.SECRETARY
+let mockedRole: Rol
 jest.mock('next-auth/react', () => ({
   __esModule: true,
   getSession: async () => ({
