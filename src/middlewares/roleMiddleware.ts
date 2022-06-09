@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import { Rol } from '@prisma/client'
-import 'isomorphic-fetch'
 
 export default function roleMiddleware(allowedRoles: Rol[]) {
   return async (req: NextApiRequest, res: NextApiResponse) => {

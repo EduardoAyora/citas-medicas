@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
-import 'isomorphic-fetch'
 
 export default async function authMiddleware(
   req: NextApiRequest,

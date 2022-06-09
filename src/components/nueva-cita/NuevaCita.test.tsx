@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import NuevaCita from './NuevaCita'
 
 describe('NuevaCita', () => {
-  test('Selecciona el horario y agenda cita para el paciente', () => {
+  test('Seleccionar el horario y agendar cita para el paciente', () => {
     render(<NuevaCita />)
 
     const hourButton = screen.getByRole('button', { name: '11:00' })

@@ -1,24 +1,33 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import nock from 'nock'
 
-import Paciente from './Paciente'
+import Paciente, { Patient } from './Paciente'
+
+const patientId = '0104236571'
+const patient: Patient = {
+  name: 'Eduardo',
+}
+
+const host = process.env.HOST || ''
+nock(host).get(`/api/paciente/${patientId}`).reply(200, JSON.stringify(patient))
 
 describe('Paciente', () => {
   beforeEach(() => {
     render(<Paciente />)
   })
 
-  test('Buscar un paciente', () => {
+  test('Buscar un paciente', async () => {
     const scheduleButton = screen.getByRole('button', { name: 'Agendar' })
     const searchBox = screen.getByLabelText('Busque un paciente')
     const searchButton = screen.getByRole('button', { name: 'Buscar' })
 
     expect(scheduleButton).toBeDisabled()
 
-    userEvent.type(searchBox, '0104236571')
+    await userEvent.type(searchBox, patientId)
     userEvent.click(searchButton)
 
-    screen.getByText('Eduardo')
+    await screen.findByText(patient.name)
     expect(scheduleButton).toBeEnabled()
   })
 
