@@ -11,4 +11,5 @@ export default async function authMiddleware(
       error: 'Primero debe autenticarse.',
     })
   }
+  req.body.session = session
 }

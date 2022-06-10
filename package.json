@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest --watch",
+    "test:coverage": "dotenv -e .env.test yarn docker:up && yarn prisma migrate deploy && jest -i --coverage",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "test:docker": "dotenv -e .env.test yarn docker:up && yarn prisma migrate deploy && jest -i --watch",
