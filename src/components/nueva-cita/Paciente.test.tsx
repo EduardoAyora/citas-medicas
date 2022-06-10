@@ -25,13 +25,13 @@ describe('Paciente', () => {
     expect(scheduleButton).toBeDisabled()
 
     await userEvent.type(searchBox, patientId)
-    userEvent.click(searchButton)
+    await userEvent.click(searchButton)
 
     await screen.findByText(patient.name)
     expect(scheduleButton).toBeEnabled()
   })
 
-  test('Crear un paciente', () => {
+  test.skip('Crear un paciente', () => {
     const scheduleButton = screen.getByRole('button', { name: 'Agendar' })
     const createButton = screen.getByRole('button', { name: 'Crear Paciente' })
 

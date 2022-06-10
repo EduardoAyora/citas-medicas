@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 export type Patient = {
   name: string
@@ -14,7 +14,7 @@ const Paciente: React.FC = () => {
   const searchPatient = async () => {
     const id = searchInputRef.current?.value
     const patientData = await fetch(`/api/paciente/${id}`)
-    if (!patientData.ok) return
+    if (!patientData.ok) return setIsScheduleButtonEnabled(false)
     const patient = await patientData.json()
     setPatient(patient)
     setIsScheduleButtonEnabled(true)
