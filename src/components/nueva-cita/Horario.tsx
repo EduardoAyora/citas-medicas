@@ -1,14 +1,17 @@
+import React, { SetStateAction } from 'react'
+
 interface Props {
   availableHours: string[]
+  setHour: React.Dispatch<SetStateAction<string | undefined>>
 }
 
-const HorarioDia: React.FC<Props> = ({ availableHours }) => {
+const HorarioDia: React.FC<Props> = ({ availableHours, setHour }) => {
   return (
     <div>
       <ul>
         {availableHours.map((availableHour, indice) => (
           <li key={indice}>
-            <button onClick={() => console.log('accc   ', availableHour)}>
+            <button onClick={() => setHour(availableHour)}>
               {availableHour}
             </button>
           </li>

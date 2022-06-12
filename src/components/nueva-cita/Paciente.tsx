@@ -5,7 +5,11 @@ export type Patient = {
   id: string
 }
 
-const Paciente: React.FC = () => {
+interface Props {
+  onScheduleClick: () => void
+}
+
+const Paciente: React.FC<Props> = ({ onScheduleClick }) => {
   const [isScheduleButtonEnabled, setIsScheduleButtonEnabled] =
     useState<boolean>(false)
   const [isCreatePatientEnabled, setIsCreatePatientEnabled] =
@@ -73,7 +77,13 @@ const Paciente: React.FC = () => {
           )}
         </div>
         {patient && <p>{patient.name}</p>}
-        <button disabled={!isScheduleButtonEnabled}>Agendar</button>
+        <button
+          type='button'
+          onClick={onScheduleClick}
+          disabled={!isScheduleButtonEnabled}
+        >
+          Agendar
+        </button>
       </form>
     </div>
   )

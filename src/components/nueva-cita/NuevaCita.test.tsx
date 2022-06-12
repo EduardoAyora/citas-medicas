@@ -1,23 +1,38 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import nock from 'nock'
 import NuevaCita from './NuevaCita'
+import { Patient } from './Paciente'
+
+const patient: Patient = {
+  name: 'Eduardo',
+  id: '0104236571',
+}
+
+const host = process.env.HOST || ''
+nock(host)
+  .get(`/api/servicio/1/horario-disponible/2022-01-01`)
+  .reply(200, JSON.stringify(['10:40', '11:00', '11:40', '12:20']))
+nock(host)
+  .get(`/api/paciente/${patient.id}`)
+  .reply(200, JSON.stringify(patient))
 
 describe('NuevaCita', () => {
-  test.skip('Seleccionar el horario y agendar cita para el paciente', () => {
+  test('Seleccionar el horario y agendar cita para el paciente', async () => {
     render(<NuevaCita />)
 
-    const hourButton = screen.getByRole('button', { name: '11:00' })
+    const hourButton = await screen.findByRole('button', { name: '11:00' })
 
-    userEvent.click(hourButton)
+    await userEvent.click(hourButton)
 
     const searchBox = screen.getByLabelText('Busque un paciente')
     const searchButton = screen.getByRole('button', { name: 'Buscar' })
 
-    userEvent.type(searchBox, '0104236571')
-    userEvent.click(searchButton)
+    await userEvent.type(searchBox, patient.id)
+    await userEvent.click(searchButton)
 
-    screen.getByText('Eduardo')
-    userEvent.click(screen.getByRole('button', { name: 'Agendar' }))
+    await screen.findByText(patient.name)
+    await userEvent.click(screen.getByRole('button', { name: 'Agendar' }))
     screen.getByText('Se ha agendado la cita')
   })
 })

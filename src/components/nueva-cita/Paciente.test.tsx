@@ -22,8 +22,13 @@ nock(host)
   .reply(200, JSON.stringify(patient))
 
 describe('Paciente', () => {
+  const onScheduleClick = jest.fn()
   beforeEach(() => {
-    render(<Paciente />)
+    render(<Paciente onScheduleClick={onScheduleClick} />)
+  })
+
+  afterEach(() => {
+    onScheduleClick.mockClear()
   })
 
   test('Buscar un paciente', async () => {
@@ -38,6 +43,9 @@ describe('Paciente', () => {
 
     await screen.findByText(patient.name)
     expect(scheduleButton).toBeEnabled()
+    await userEvent.click(scheduleButton)
+
+    expect(onScheduleClick).toHaveBeenCalledTimes(1)
   })
 
   test('Crear un paciente', async () => {
@@ -53,5 +61,8 @@ describe('Paciente', () => {
 
     await screen.findByText(patient.name)
     expect(scheduleButton).toBeEnabled()
+    await userEvent.click(scheduleButton)
+
+    expect(onScheduleClick).toHaveBeenCalledTimes(1)
   })
 })
