@@ -2,6 +2,8 @@ import type { NextPage } from 'next'
 import { useEffect, useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/router'
+import { getSession } from 'next-auth/react'
+import { Rol } from '@prisma/client'
 
 const Login: NextPage = () => {
   const [username, setUsername] = useState<string>('')
@@ -21,9 +23,13 @@ const Login: NextPage = () => {
       username,
       password,
     })
-    if (result && !result.error) {
-      router.replace('/')
-    }
+    if (!result || result.error) return
+    const session = await getSession()
+    if (!session) return
+    const { user } = session
+    if (user.role === Rol.SECRETARY) return router.replace('/app/secretario')
+    if (user.role === Rol.DOCTOR) return router.replace('/app/doctor')
+    if (user.role === Rol.ADMIN) return router.replace('/app/admin')
   }
 
   return (
