@@ -2,14 +2,35 @@ import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+import Layout from '../src/components/layout/Layout'
+
+function MyApp({
+  Component,
+  pageProps: { session, ...pageProps },
+  ...appProps
+}: AppProps) {
+  const currentPath = appProps.router.pathname
+
   return (
     <SessionProvider session={session}>
-      <div className='min-h-screen bg-gray-50'>
+      {isUserInDashboard(currentPath) ? (
+        <Layout
+          links={[
+            { name: 'uno', href: '#' },
+            { name: 'dos', href: '#' },
+          ]}
+        >
+          <Component {...pageProps} />
+        </Layout>
+      ) : (
         <Component {...pageProps} />
-      </div>
+      )}
     </SessionProvider>
   )
 }
 
 export default MyApp
+
+const isUserInDashboard = (currentPath: string): boolean => {
+  return /^\/app/.test(currentPath)
+}
