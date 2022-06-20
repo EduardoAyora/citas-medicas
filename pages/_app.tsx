@@ -5,8 +5,8 @@ import { SessionProvider } from 'next-auth/react'
 import Layout from '../src/components/layout/Layout'
 
 const adminLinks: Link[] = []
-const secretarioLinks: Link[] = [{ name: 'Ver citas', href: '/citas' }]
-const doctorLinks: Link[] = [
+const doctorLinks: Link[] = [{ name: 'Ver citas', href: '/citas' }]
+const secretarioLinks: Link[] = [
   { name: 'Ver citas', href: '/citas' },
   { name: 'Agendar cita', href: '/agendar-cita' },
 ]
