@@ -1,4 +1,4 @@
-import React from 'react'
+import Link from 'next/link'
 
 interface Props {
   links: Link[]
@@ -11,7 +11,7 @@ const Layout: React.FC<Props> = ({ links, children }) => {
       <ul>
         {links.map((link, index) => (
           <li key={index}>
-            <a href={link.href}>{link.name}</a>
+            <Link href={link.href}>{link.name}</Link>
           </li>
         ))}
       </ul>
