@@ -38,6 +38,6 @@ npm run dev
 
 En el navegador ingresar a `http://localhost:3000/login` y se puede ingresar los siguientes usuarios:
 
-Secretario: En el usuario poner `karen` y la contraseña `123`
-Doctor: En el usuario poner `edu` y la contraseña `123`
-Admin: En el usuario poner `admin` y la contraseña `123`
+* Secretario: En el usuario poner `karen` y la contraseña `123`
+* Doctor: En el usuario poner `edu` y la contraseña `123`
+* Admin: En el usuario poner `admin` y la contraseña `123`
