@@ -11,12 +11,12 @@ const patient: Patient = {
 
 const host = process.env.HOST || ''
 nock(host)
-  .get(`/api/paciente/${patient.id}`)
+  .get(`/api/persona/${patient.id}`)
   .reply(200, JSON.stringify(patient))
 
 nock(host)
   .post(
-    `/api/paciente`,
+    `/api/persona`,
     (body) => body.id === patient.id && body.name === patient.name
   )
   .reply(200, JSON.stringify(patient))

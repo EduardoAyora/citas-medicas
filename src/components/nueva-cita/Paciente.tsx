@@ -22,7 +22,7 @@ const Paciente: React.FC<Props> = ({ onScheduleClick }) => {
 
   const searchPatient = async () => {
     const id = searchInputRef.current?.value
-    const patientData = await fetch(`/api/paciente/${id}`)
+    const patientData = await fetch(`/api/persona/${id}`)
     if (!patientData.ok) return setIsScheduleButtonEnabled(false)
     const patient = await patientData.json()
     setPatient(patient)
@@ -32,7 +32,7 @@ const Paciente: React.FC<Props> = ({ onScheduleClick }) => {
   const createPatient = async () => {
     const id = createPatientIdInputRef.current?.value
     const name = createPatientNameInputRef.current?.value
-    const patientData = await fetch(`/api/paciente`, {
+    const patientData = await fetch(`/api/persona`, {
       method: 'POST',
       body: JSON.stringify({ id, name }),
     })

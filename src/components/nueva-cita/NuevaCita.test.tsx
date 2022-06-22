@@ -11,10 +11,13 @@ const patient: Patient = {
 
 const host = process.env.HOST || ''
 nock(host)
-  .get(`/api/servicio/1/horario-disponible/2022-01-01`)
-  .reply(200, JSON.stringify(['10:40', '11:00', '11:40', '12:20']))
+  .get(`/api/servicio/1/horario-disponible/2022-05-26`)
+  .reply(
+    200,
+    JSON.stringify({ horarioDisponible: ['10:40', '11:00', '11:40', '12:20'] })
+  )
 nock(host)
-  .get(`/api/paciente/${patient.id}`)
+  .get(`/api/persona/${patient.id}`)
   .reply(200, JSON.stringify(patient))
 
 describe('NuevaCita', () => {

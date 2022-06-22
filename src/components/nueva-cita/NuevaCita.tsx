@@ -11,11 +11,12 @@ const NuevaCita: React.FC = () => {
   useEffect(() => {
     const fetchInitialData = async () => {
       const availableHoursData = await fetch(
-        '/api/servicio/1/horario-disponible/2022-01-01'
+        '/api/servicio/1/horario-disponible/2022-05-26'
       )
       if (!availableHoursData.ok) return
       const availableHours = await availableHoursData.json()
-      setAvailableHours(availableHours)
+      const { horarioDisponible } = availableHours
+      setAvailableHours(horarioDisponible)
     }
     fetchInitialData()
   }, [])
