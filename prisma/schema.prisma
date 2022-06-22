@@ -38,8 +38,6 @@ model Servicio {
   duracionEnMinutos Int
   dias              HorarioDia[]
   citas             Cita[]
-  factura           Factura      @relation(fields: [facturaId], references: [id])
-  facturaId         Int          @unique
 }
 
 model Cita {
@@ -64,11 +62,13 @@ model HorarioDia {
 }
 
 model Factura {
-  id        Int       @id @default(autoincrement())
-  fecha     DateTime
-  cliente   Persona   @relation(fields: [clienteId], references: [id])
-  clienteId Int
-  servicio  Servicio?
+  id                  Int      @id @default(autoincrement())
+  fecha               DateTime
+  descripcionServicio String
+  precioServicio      Decimal
+  total               Decimal
+  cliente             Persona  @relation(fields: [clienteId], references: [id])
+  clienteId           Int
 }
 
 enum Dia {
