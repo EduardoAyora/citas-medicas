@@ -58,5 +58,11 @@ describe('getPageLinks', () => {
         {name: 'Ver citas', href: '/app/doctor/citas'}, 
         {name: 'Agendar cita', href: '/app/doctor/agendar-cita'}
       ])
+    expect(getPageLinks('/app/doctor/seccion-de-path-no-considerada', {doctorLinks, adminLinks, secretarioLinks}))
+      .toEqual([
+        {name: 'Inicio', href: '/app/doctor'},
+        {name: 'Ver citas', href: '/app/doctor/citas'}, 
+        {name: 'Agendar cita', href: '/app/doctor/agendar-cita'}
+      ])
   })
 })

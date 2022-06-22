@@ -58,6 +58,13 @@ export const getPageLinks = (
   if (isSecretarioAppPage(currentPath)) links = secretarioLinks
 
   const linksWithCompletePath: Link[] = links.map((link) => {
+    const indexOfThirdSlash = currentPath.indexOf(
+      '/',
+      currentPath.indexOf('/', currentPath.indexOf('/') + 1) + 1
+    )
+    if (indexOfThirdSlash !== -1)
+      currentPath = currentPath.substring(0, indexOfThirdSlash)
+
     let href = `${currentPath}${link.href}`
     if (link.href === '/') href = currentPath
     return {
