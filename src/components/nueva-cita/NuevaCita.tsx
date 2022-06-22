@@ -3,7 +3,7 @@ import Horario from './Horario'
 import { useEffect, useState } from 'react'
 
 const NuevaCita: React.FC = () => {
-  const [availableHours, setAvailableHours] = useState<string[]>()
+  const [availableHours, setAvailableHours] = useState<string[]>([])
   const [selectedHour, setSelectedHour] = useState<string>()
   const [isNewAppointmentCreated, setIsNewAppointmentCreated] =
     useState<boolean>(false)
@@ -13,6 +13,7 @@ const NuevaCita: React.FC = () => {
       const availableHoursData = await fetch(
         '/api/servicio/1/horario-disponible/2022-01-01'
       )
+      if (!availableHoursData.ok) return
       const availableHours = await availableHoursData.json()
       setAvailableHours(availableHours)
     }
