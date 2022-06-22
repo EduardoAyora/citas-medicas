@@ -4,9 +4,13 @@ import { SessionProvider } from 'next-auth/react'
 
 import Layout from '../src/components/layout/Layout'
 
-const adminLinks: Link[] = []
-const doctorLinks: Link[] = [{ name: 'Ver citas', href: '/citas' }]
+const adminLinks: Link[] = [{ name: 'Inicio', href: '/' }]
+const doctorLinks: Link[] = [
+  { name: 'Inicio', href: '/' },
+  { name: 'Ver citas', href: '/citas' },
+]
 const secretarioLinks: Link[] = [
+  { name: 'Inicio', href: '/' },
   { name: 'Ver citas', href: '/citas' },
   { name: 'Agendar cita', href: '/agendar-cita' },
 ]
@@ -27,7 +31,7 @@ function MyApp({
   return (
     <SessionProvider session={session}>
       {isAppPage(currentPath) ? (
-        <Layout links={links}>
+        <Layout currentPath={currentPath} links={links}>
           <Component {...pageProps} />
         </Layout>
       ) : (
@@ -53,10 +57,14 @@ export const getPageLinks = (
   if (isDoctorAppPage(currentPath)) links = doctorLinks
   if (isSecretarioAppPage(currentPath)) links = secretarioLinks
 
-  const linksWithCompletePath: Link[] = links.map((link) => ({
-    ...link,
-    href: `${currentPath}${link.href}`,
-  }))
+  const linksWithCompletePath: Link[] = links.map((link) => {
+    let href = `${currentPath}${link.href}`
+    if (link.href === '/') href = currentPath
+    return {
+      ...link,
+      href,
+    }
+  })
   return linksWithCompletePath
 }
 

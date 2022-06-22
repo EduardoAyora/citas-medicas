@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .sidebar {
+    transition: all 0.4s ease-in-out;
+  }
+}

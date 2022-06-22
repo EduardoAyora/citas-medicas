@@ -7,7 +7,11 @@ describe('Layout', () => {
       { name: 'Inicio', href: '/' },
       { name: 'Horario', href: '/horario' },
     ]
-    render(<Layout links={links} />)
+    render(
+      <Layout currentPath='/' links={links}>
+        <div>children</div>
+      </Layout>
+    )
     screen.getByRole('link', { name: 'Inicio' })
     screen.getByRole('link', { name: 'Horario' })
   })
