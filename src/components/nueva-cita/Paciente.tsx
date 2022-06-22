@@ -1,9 +1,5 @@
 import { useState, useRef } from 'react'
-
-export type Patient = {
-  name: string
-  id: string
-}
+import { Persona } from 'prisma/prisma-client'
 
 interface Props {
   onScheduleClick: () => void
@@ -14,7 +10,7 @@ const Paciente: React.FC<Props> = ({ onScheduleClick }) => {
     useState<boolean>(false)
   const [isCreatePatientEnabled, setIsCreatePatientEnabled] =
     useState<boolean>(false)
-  const [patient, setPatient] = useState<Patient>()
+  const [patient, setPatient] = useState<Persona>()
 
   const searchInputRef = useRef<HTMLInputElement>(null)
   const createPatientNameInputRef = useRef<HTMLInputElement>(null)
@@ -22,7 +18,7 @@ const Paciente: React.FC<Props> = ({ onScheduleClick }) => {
 
   const searchPatient = async () => {
     const id = searchInputRef.current?.value
-    const patientData = await fetch(`/api/persona/${id}`)
+    const patientData = await fetch(`/api/personas/${id}`)
     if (!patientData.ok) return setIsScheduleButtonEnabled(false)
     const patient = await patientData.json()
     setPatient(patient)
@@ -32,7 +28,7 @@ const Paciente: React.FC<Props> = ({ onScheduleClick }) => {
   const createPatient = async () => {
     const id = createPatientIdInputRef.current?.value
     const name = createPatientNameInputRef.current?.value
-    const patientData = await fetch(`/api/persona`, {
+    const patientData = await fetch(`/api/personas`, {
       method: 'POST',
       body: JSON.stringify({ id, name }),
     })
@@ -76,7 +72,7 @@ const Paciente: React.FC<Props> = ({ onScheduleClick }) => {
             </div>
           )}
         </div>
-        {patient && <p>{patient.name}</p>}
+        {patient && <p>{patient.nombre}</p>}
         <button
           type='button'
           onClick={onScheduleClick}

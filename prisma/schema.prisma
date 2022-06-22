@@ -14,7 +14,7 @@ model Persona {
   id        Int       @id @default(autoincrement())
   nombre    String
   apellido  String
-  cedula    String
+  cedula    String    @unique
   direccion String
   celular   String
   // usuario   Usuario   @relation(fields: [usuarioId], references: [id])

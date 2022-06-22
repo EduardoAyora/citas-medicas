@@ -2,22 +2,22 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import nock from 'nock'
 
-import Paciente, { Patient } from './Paciente'
+import Paciente from './Paciente'
 
-const patient: Patient = {
-  name: 'Eduardo',
-  id: '0104236571',
+const patient = {
+  nombre: 'Eduardo',
+  cedula: '0104236571',
 }
 
 const host = process.env.HOST || ''
 nock(host)
-  .get(`/api/persona/${patient.id}`)
+  .get(`/api/personas/${patient.cedula}`)
   .reply(200, JSON.stringify(patient))
 
 nock(host)
   .post(
-    `/api/persona`,
-    (body) => body.id === patient.id && body.name === patient.name
+    `/api/personas`,
+    (body) => body.id === patient.cedula && body.name === patient.nombre
   )
   .reply(200, JSON.stringify(patient))
 
@@ -38,10 +38,10 @@ describe('Paciente', () => {
 
     expect(scheduleButton).toBeDisabled()
 
-    await userEvent.type(searchBox, patient.id)
+    await userEvent.type(searchBox, patient.cedula)
     await userEvent.click(searchButton)
 
-    await screen.findByText(patient.name)
+    await screen.findByText(patient.nombre)
     expect(scheduleButton).toBeEnabled()
     await userEvent.click(scheduleButton)
 
@@ -55,11 +55,11 @@ describe('Paciente', () => {
     expect(scheduleButton).toBeDisabled()
 
     await userEvent.click(createButton)
-    await userEvent.type(screen.getByLabelText('Nombre'), patient.name)
-    await userEvent.type(screen.getByLabelText('Cédula'), patient.id)
+    await userEvent.type(screen.getByLabelText('Nombre'), patient.nombre)
+    await userEvent.type(screen.getByLabelText('Cédula'), patient.cedula)
     await userEvent.click(screen.getByRole('button', { name: 'Crear' }))
 
-    await screen.findByText(patient.name)
+    await screen.findByText(patient.nombre)
     expect(scheduleButton).toBeEnabled()
     await userEvent.click(scheduleButton)
 

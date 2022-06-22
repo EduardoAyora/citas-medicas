@@ -2,11 +2,10 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import nock from 'nock'
 import NuevaCita from './NuevaCita'
-import { Patient } from './Paciente'
 
-const patient: Patient = {
-  name: 'Eduardo',
-  id: '0104236571',
+const patient = {
+  nombre: 'Eduardo',
+  cedula: '0104236571',
 }
 
 const host = process.env.HOST || ''
@@ -17,7 +16,7 @@ nock(host)
     JSON.stringify({ horarioDisponible: ['10:40', '11:00', '11:40', '12:20'] })
   )
 nock(host)
-  .get(`/api/persona/${patient.id}`)
+  .get(`/api/personas/${patient.cedula}`)
   .reply(200, JSON.stringify(patient))
 
 describe('NuevaCita', () => {
@@ -31,10 +30,10 @@ describe('NuevaCita', () => {
     const searchBox = screen.getByLabelText('Busque un paciente')
     const searchButton = screen.getByRole('button', { name: 'Buscar' })
 
-    await userEvent.type(searchBox, patient.id)
+    await userEvent.type(searchBox, patient.cedula)
     await userEvent.click(searchButton)
 
-    await screen.findByText(patient.name)
+    await screen.findByText(patient.nombre)
     await userEvent.click(screen.getByRole('button', { name: 'Agendar' }))
     screen.getByText('Se ha agendado la cita')
   })
