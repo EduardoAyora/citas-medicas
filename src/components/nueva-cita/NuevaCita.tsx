@@ -13,15 +13,24 @@ const NuevaCita: React.FC = () => {
       const availableHoursData = await fetch(
         '/api/servicio/1/horario-disponible/2022-05-26'
       )
-      if (!availableHoursData.ok) return
       const availableHours = await availableHoursData.json()
+      if (!availableHoursData.ok) return alert(availableHours.message)
       const { horarioDisponible } = availableHours
       setAvailableHours(horarioDisponible)
     }
     fetchInitialData()
   }, [])
 
-  const onScheduleClick = () => {
+  const onScheduleClick = async () => {
+    const citaData = await fetch(`/api/servicio/1/citas`, {
+      method: 'POST',
+      body: JSON.stringify({
+        day: '2022-05-26',
+        time: selectedHour,
+      }),
+    })
+    const cita = await citaData.json()
+    if (!citaData.ok) return alert(cita.message)
     setIsNewAppointmentCreated(true)
   }
 

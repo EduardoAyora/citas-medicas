@@ -18,6 +18,7 @@ nock(host)
 nock(host)
   .get(`/api/personas/${patient.cedula}`)
   .reply(200, JSON.stringify(patient))
+nock(host).post(`/api/servicio/1/citas`).reply(200, JSON.stringify({}))
 
 describe('NuevaCita', () => {
   test('Seleccionar el horario y agendar cita para el paciente', async () => {
@@ -35,6 +36,6 @@ describe('NuevaCita', () => {
 
     await screen.findByText(patient.nombre)
     await userEvent.click(screen.getByRole('button', { name: 'Agendar' }))
-    screen.getByText('Se ha agendado la cita')
+    await screen.findByText('Se ha agendado la cita')
   })
 })
