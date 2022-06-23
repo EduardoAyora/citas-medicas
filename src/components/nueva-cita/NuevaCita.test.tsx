@@ -5,6 +5,7 @@ import NuevaCita from './NuevaCita'
 
 const patient = {
   nombre: 'Eduardo',
+  apellido: 'Ayora',
   cedula: '0104236571',
 }
 
@@ -34,7 +35,7 @@ describe('NuevaCita', () => {
     await userEvent.type(searchBox, patient.cedula)
     await userEvent.click(searchButton)
 
-    await screen.findByText(patient.nombre)
+    await screen.findByText(`${patient.nombre} ${patient.apellido}`)
     await userEvent.click(screen.getByRole('button', { name: 'Agendar' }))
     await screen.findByText('Se ha agendado la cita')
   })

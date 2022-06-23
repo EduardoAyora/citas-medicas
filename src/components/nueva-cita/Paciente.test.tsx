@@ -6,6 +6,7 @@ import Paciente from './Paciente'
 
 const patient = {
   nombre: 'Eduardo',
+  apellido: 'Ayora',
   cedula: '0104236571',
 }
 
@@ -41,7 +42,7 @@ describe('Paciente', () => {
     await userEvent.type(searchBox, patient.cedula)
     await userEvent.click(searchButton)
 
-    await screen.findByText(patient.nombre)
+    await screen.findByText(`${patient.nombre} ${patient.apellido}`)
     expect(scheduleButton).toBeEnabled()
     await userEvent.click(scheduleButton)
 
@@ -50,16 +51,20 @@ describe('Paciente', () => {
 
   test('Crear un paciente', async () => {
     const scheduleButton = screen.getByRole('button', { name: 'Agendar' })
-    const createButton = screen.getByRole('button', { name: 'Crear Paciente' })
+    const createButton = screen.getByRole('button', {
+      name: '+ Crear Paciente',
+    })
 
     expect(scheduleButton).toBeDisabled()
 
     await userEvent.click(createButton)
     await userEvent.type(screen.getByLabelText('Nombre'), patient.nombre)
     await userEvent.type(screen.getByLabelText('Cédula'), patient.cedula)
-    await userEvent.click(screen.getByRole('button', { name: 'Crear' }))
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Crear Paciente' })
+    )
 
-    await screen.findByText(patient.nombre)
+    await screen.findByText(`${patient.nombre} ${patient.apellido}`)
     expect(scheduleButton).toBeEnabled()
     await userEvent.click(scheduleButton)
 

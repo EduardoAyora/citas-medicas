@@ -91,7 +91,13 @@ const Paciente: React.FC<Props> = ({ onScheduleClick }) => {
               </div>
               <div>
                 <p className='font-cal text-bookinglight font-medium dark:text-gray-300'>
-                  Nombre Paciente
+                  {patient ? (
+                    `${patient.nombre} ${patient.apellido}`
+                  ) : (
+                    <span className='text-red-400'>
+                      Debe asignar un paciente
+                    </span>
+                  )}
                 </p>
               </div>
             </div>
@@ -123,24 +129,77 @@ const Paciente: React.FC<Props> = ({ onScheduleClick }) => {
                   </div>
                 </div>
                 <div className='mb-4'>
-                  <label
-                    htmlFor='guests'
+                  <button
+                    type='button'
+                    onClick={() => setIsCreatePatientEnabled(true)}
                     className='mb-1 block text-sm font-medium hover:cursor-pointer dark:text-white'
                   >
                     + Crear Paciente
-                  </label>
+                  </button>
                 </div>
+
+                {isCreatePatientEnabled && (
+                  <>
+                    <div className='mb-4'>
+                      <label
+                        htmlFor='nombre_en_crear'
+                        className='block text-sm font-medium text-gray-700 dark:text-white'
+                      >
+                        Nombre
+                      </label>
+                      <div className='mt-1'>
+                        <input
+                          ref={createPatientNameInputRef}
+                          type='text'
+                          id='nombre_en_crear'
+                          className='focus:border-brand block w-full rounded-sm border-gray-300 shadow-sm focus:ring-black disabled:bg-gray-200 disabled:hover:cursor-not-allowed dark:border-gray-900 dark:bg-gray-700 dark:text-white dark:selection:bg-green-500 disabled:dark:text-gray-500 sm:text-sm'
+                          placeholder='Nombre'
+                        />
+                      </div>
+                    </div>
+                    <div className='mb-4'>
+                      <label
+                        htmlFor='cedula_en_crear'
+                        className='block text-sm font-medium text-gray-700 dark:text-white'
+                      >
+                        Cédula
+                      </label>
+                      <div className='mt-1'>
+                        <input
+                          ref={createPatientIdInputRef}
+                          type='text'
+                          id='cedula_en_crear'
+                          className='focus:border-brand block w-full rounded-sm border-gray-300 shadow-sm focus:ring-black disabled:bg-gray-200 disabled:hover:cursor-not-allowed dark:border-gray-900 dark:bg-gray-700 dark:text-white dark:selection:bg-green-500 disabled:dark:text-gray-500 sm:text-sm'
+                          placeholder='Cédula'
+                        />
+                      </div>
+                    </div>
+                    <div className='flex items-start justify-end space-x-2 rtl:space-x-reverse mb-4'>
+                      <button
+                        type='button'
+                        onClick={createPatient}
+                        className='btn-confirm'
+                      >
+                        Crear Paciente
+                      </button>
+                    </div>
+                  </>
+                )}
+
                 <div className='flex items-start space-x-2 rtl:space-x-reverse'>
                   <button
-                    type='submit'
-                    data-testid='confirm-book-button'
-                    className='btn-confirm'
+                    disabled={!isScheduleButtonEnabled}
+                    onClick={onScheduleClick}
+                    type='button'
+                    className={`btn-confirm ${
+                      !isScheduleButtonEnabled && 'bg-gray-400'
+                    }`}
                   >
-                    Confirm
+                    Agendar
                   </button>
                   <button
                     type='button'
-                    className='inline-flex items-center px-3 py-2 text-sm font-medium rounded-sm relative border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:text-gray-900 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-neutral-900 dark:bg-transparent dark:text-white dark:border-gray-800 dark:hover:bg-gray-800'
+                    className='inline-flex items-center px-3 py-2 text-sm font-medium rounded-sm relative border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-neutral-900 dark:bg-transparent dark:text-white dark:border-gray-800 dark:hover:bg-gray-800'
                   >
                     Cancel
                   </button>
@@ -150,47 +209,6 @@ const Paciente: React.FC<Props> = ({ onScheduleClick }) => {
           </div>
         </div>
       </main>
-
-      <div>
-        <form>
-          <div></div>
-          <div>
-            <button
-              type='button'
-              onClick={() => setIsCreatePatientEnabled(true)}
-            >
-              Crear Paciente
-            </button>
-            {isCreatePatientEnabled && (
-              <div>
-                <label htmlFor='nombre_en_crear'>Nombre</label>
-                <input
-                  ref={createPatientNameInputRef}
-                  id='nombre_en_crear'
-                  type='text'
-                />
-                <label htmlFor='cedula_en_crear'>Cédula</label>
-                <input
-                  ref={createPatientIdInputRef}
-                  id='cedula_en_crear'
-                  type='text'
-                />
-                <button type='button' onClick={createPatient}>
-                  Crear
-                </button>
-              </div>
-            )}
-          </div>
-          {patient && <p>{patient.nombre}</p>}
-          <button
-            type='button'
-            onClick={onScheduleClick}
-            disabled={!isScheduleButtonEnabled}
-          >
-            Agendar
-          </button>
-        </form>
-      </div>
     </>
   )
 }
