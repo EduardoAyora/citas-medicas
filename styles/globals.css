@@ -6,4 +6,8 @@
   .sidebar {
     transition: all 0.4s ease-in-out;
   }
+
+  .btn-confirm {
+    @apply inline-flex items-center px-3 py-2 text-sm font-medium rounded-sm relative border border-transparent dark:bg-white hover:bg-opacity-90 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-neutral-900;
+  }
 }
