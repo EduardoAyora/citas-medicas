@@ -2,6 +2,8 @@ import Paciente from './Paciente'
 import Horario from './Horario'
 import { useEffect, useState } from 'react'
 
+import Exito from './Exito'
+
 const NuevaCita: React.FC = () => {
   const [availableHours, setAvailableHours] = useState<string[]>([])
   const [selectedHour, setSelectedHour] = useState<string>()
@@ -36,7 +38,7 @@ const NuevaCita: React.FC = () => {
 
   if (!availableHours) return <>Cargando...</>
 
-  if (isNewAppointmentCreated) return <>Se ha agendado la cita</>
+  if (isNewAppointmentCreated) return <Exito />
 
   return (
     <div>
