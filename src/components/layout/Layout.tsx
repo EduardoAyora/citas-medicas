@@ -79,7 +79,7 @@ const Layout: React.FC<Props> = ({ links, currentPath, children }) => {
           </div>
         </div>
       </div>
-      <div className='pl-14'>
+      <div className='pl-14 bg-primary min-h-screen'>
         <div className='mx-auto px-4 sm:px-6 lg:px-20 xl:px-32'>
           <div className='py-10'>{children}</div>
         </div>
