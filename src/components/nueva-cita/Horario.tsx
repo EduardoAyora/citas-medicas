@@ -9,19 +9,14 @@ interface Props {
 const HorarioDia: React.FC<Props> = ({ availableHours, setHour }) => {
   const [selectedDate, setSelectedDate] = useState(new Date())
 
+  const currentDate = new Date()
+
   const firstDayOfWeekOfMonth = getFirstDayOfWeekOfMonth(selectedDate)
   const lastDayOfMonth = getLastDayOfMonth(selectedDate)
-  let dayNodesContentOfCurrentMonth = []
-  const indexOfFinalNodeOfDay = firstDayOfWeekOfMonth + lastDayOfMonth - 1
-  let currentDayOfMonth = 1
-  for (let i = 0; i <= indexOfFinalNodeOfDay; i++) {
-    if (i < firstDayOfWeekOfMonth) {
-      dayNodesContentOfCurrentMonth.push(null)
-      continue
-    }
-    dayNodesContentOfCurrentMonth.push(currentDayOfMonth)
-    currentDayOfMonth++
-  }
+  const dayNodesContentOfCurrentMonth = getDayNodesContentOfCurrentMonth(
+    firstDayOfWeekOfMonth,
+    lastDayOfMonth
+  )
 
   return (
     <MainCard>
@@ -109,8 +104,22 @@ const HorarioDia: React.FC<Props> = ({ availableHours, setHour }) => {
                 return (
                   <div key={index} className='relative w-full pt-[100%]'>
                     <button
-                      className='hover:border-brand disabled:text-bookinglighter absolute top-0 left-0 right-0 bottom-0 mx-auto w-full rounded-sm border border-transparent text-center font-medium disabled:cursor-default disabled:border-transparent disabled:font-light dark:hover:border-white disabled:dark:border-transparent'
+                      className={`hover:border-brand disabled:text-bookinglighter absolute top-0 left-0 right-0 bottom-0 mx-auto w-full rounded-sm border border-transparent text-center font-medium disabled:cursor-default disabled:border-transparent disabled:font-light dark:hover:border-white disabled:dark:border-transparent ${
+                        day === selectedDate.getDate()
+                          ? 'bg-white text-primary'
+                          : day >= currentDate.getDate() && 'bg-primary-ligth'
+                      }`}
                       data-disabled='true'
+                      disabled={day < currentDate.getDate()}
+                      onClick={() =>
+                        setSelectedDate(
+                          new Date(
+                            selectedDate.getFullYear(),
+                            selectedDate.getMonth(),
+                            day
+                          )
+                        )
+                      }
                     >
                       {day}
                     </button>
@@ -196,6 +205,24 @@ const HorarioDia: React.FC<Props> = ({ availableHours, setHour }) => {
 }
 
 export default HorarioDia
+
+const getDayNodesContentOfCurrentMonth = (
+  firstDayOfWeekOfMonth: number,
+  lastDayOfMonth: number
+): (number | null)[] => {
+  let dayNodesContentOfCurrentMonth = []
+  const indexOfFinalNodeOfDay = firstDayOfWeekOfMonth + lastDayOfMonth - 1
+  let currentDayOfMonth = 1
+  for (let i = 0; i <= indexOfFinalNodeOfDay; i++) {
+    if (i < firstDayOfWeekOfMonth) {
+      dayNodesContentOfCurrentMonth.push(null)
+      continue
+    }
+    dayNodesContentOfCurrentMonth.push(currentDayOfMonth)
+    currentDayOfMonth++
+  }
+  return dayNodesContentOfCurrentMonth
+}
 
 const getFirstDayOfWeekOfMonth = (date: Date) => {
   const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
