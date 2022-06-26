@@ -1,4 +1,4 @@
-import React, { Fragment, SetStateAction, useState } from 'react'
+import React, { Fragment, SetStateAction, useEffect, useState } from 'react'
 import MainCard from '../layout/MainCard'
 
 interface Props {
@@ -8,6 +8,11 @@ interface Props {
 
 const HorarioDia: React.FC<Props> = ({ availableHours, setHour }) => {
   const [selectedDate, setSelectedDate] = useState(new Date())
+  const [formattedDateString, setFormattedDateString] = useState('')
+
+  useEffect(() => {
+    setFormattedDateString(getFormattedDateString(selectedDate))
+  }, [selectedDate])
 
   const currentDate = new Date()
 
@@ -171,8 +176,7 @@ const HorarioDia: React.FC<Props> = ({ availableHours, setHour }) => {
           <div className='mt-8 flex flex-col text-center sm:mt-0 sm:w-full sm:pl-4 md:-mb-5'>
             <div className='mb-4 text-left text-lg font-light text-gray-600'>
               <span className='text-bookingdarker w-1/2 dark:text-white'>
-                <strong>Viernes</strong>
-                <span className='text-bookinglight'>, 24 Junio</span>
+                <span className='text-bookinglight'>{formattedDateString}</span>
               </span>
             </div>
             <div className='flex-grow overflow-y-auto md:h-[364px] w-full'>
@@ -232,4 +236,12 @@ const getFirstDayOfWeekOfMonth = (date: Date) => {
 const getLastDayOfMonth = (date: Date) => {
   const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
   return lastDay.getDate()
+}
+
+const getFormattedDateString = (date: Date) => {
+  const options = { weekday: 'long', month: 'long', day: 'numeric' } as const
+  const dateString = date.toLocaleDateString('es-ES', options)
+  const dateStringCapilized =
+    dateString.charAt(0).toUpperCase() + dateString.slice(1)
+  return dateStringCapilized
 }
