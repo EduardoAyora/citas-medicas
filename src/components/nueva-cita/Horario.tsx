@@ -9,9 +9,11 @@ interface Props {
 const HorarioDia: React.FC<Props> = ({ availableHours, setHour }) => {
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [formattedDateString, setFormattedDateString] = useState('')
+  const [formattedMonthString, setFormattedMonthString] = useState('')
 
   useEffect(() => {
     setFormattedDateString(getFormattedDateString(selectedDate))
+    setFormattedMonthString(getFormattedMonthString(selectedDate))
   }, [selectedDate])
 
   const currentDate = new Date()
@@ -30,10 +32,9 @@ const HorarioDia: React.FC<Props> = ({ availableHours, setHour }) => {
           <div className='text-gray-200 mt-8 w-full sm:mt-0 sm:min-w-[455px] sm:w-1/2 sm:border-r sm:pl-4 sm:pr-6 sm:dark:border-gray-700 md:w-1/3 '>
             <div className='mb-4 flex justify-between text-xl font-light'>
               <span className='w-1/2 dark:text-white'>
-                <strong className='text-bookingdarker dark:text-white'>
-                  Junio
-                </strong>{' '}
-                <span className='text-bookinglight'>2022</span>
+                <span className='text-bookinglight'>
+                  {formattedMonthString}
+                </span>
               </span>
               <div className='text-black dark:text-white'>
                 <button
@@ -240,6 +241,14 @@ const getLastDayOfMonth = (date: Date) => {
 
 const getFormattedDateString = (date: Date) => {
   const options = { weekday: 'long', month: 'long', day: 'numeric' } as const
+  const dateString = date.toLocaleDateString('es-ES', options)
+  const dateStringCapilized =
+    dateString.charAt(0).toUpperCase() + dateString.slice(1)
+  return dateStringCapilized
+}
+
+const getFormattedMonthString = (date: Date) => {
+  const options = { year: 'numeric', month: 'long' } as const
   const dateString = date.toLocaleDateString('es-ES', options)
   const dateStringCapilized =
     dateString.charAt(0).toUpperCase() + dateString.slice(1)
