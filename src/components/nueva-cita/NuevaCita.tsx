@@ -6,16 +6,19 @@ import Exito from './Exito'
 
 const NuevaCita: React.FC = () => {
   const [availableHours, setAvailableHours] = useState<string[]>([])
+  const [isAvailableHoursLoading, setIsAvailableHoursLoading] = useState(true)
   const [selectedHour, setSelectedHour] = useState<string>()
   const [isNewAppointmentCreated, setIsNewAppointmentCreated] =
     useState<boolean>(false)
 
   useEffect(() => {
     const fetchInitialData = async () => {
+      setIsAvailableHoursLoading(true)
       const availableHoursData = await fetch(
         '/api/servicio/1/horario-disponible/2022-05-26'
       )
       const availableHours = await availableHoursData.json()
+      setIsAvailableHoursLoading(false)
       if (!availableHoursData.ok) return alert(availableHours.message)
       const { horarioDisponible } = availableHours
       setAvailableHours(horarioDisponible)
@@ -43,7 +46,12 @@ const NuevaCita: React.FC = () => {
   return (
     <div>
       {!selectedHour && (
-        <Horario availableHours={availableHours} setHour={setSelectedHour} />
+        <Horario
+          isAvailableHoursLoading={isAvailableHoursLoading}
+          setIsAvailableHoursLoading={setIsAvailableHoursLoading}
+          availableHours={availableHours}
+          setHour={setSelectedHour}
+        />
       )}
       {selectedHour && <Paciente onScheduleClick={onScheduleClick} />}
     </div>

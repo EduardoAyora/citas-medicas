@@ -7,7 +7,14 @@ describe('HorarioDia', () => {
   test('Muestra un listado con la disponibilidad de horario', async () => {
     const availableHours: string[] = ['10:40', '11:00', '11:40', '12:20']
     const setHour = jest.fn()
-    render(<HorarioDia availableHours={availableHours} setHour={setHour} />)
+    render(
+      <HorarioDia
+        isAvailableHoursLoading={false}
+        setIsAvailableHoursLoading={() => {}}
+        availableHours={availableHours}
+        setHour={setHour}
+      />
+    )
 
     const hourButton = screen.getByRole('button', { name: '10:40' })
     screen.getByRole('button', { name: '11:00' })

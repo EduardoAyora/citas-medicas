@@ -1,12 +1,20 @@
 import React, { Fragment, SetStateAction, useEffect, useState } from 'react'
+import Loading from '../common/Loading'
 import MainCard from '../layout/MainCard'
 
 interface Props {
   availableHours: string[]
+  isAvailableHoursLoading: boolean
+  setIsAvailableHoursLoading: React.Dispatch<SetStateAction<boolean>>
   setHour: React.Dispatch<SetStateAction<string | undefined>>
 }
 
-const HorarioDia: React.FC<Props> = ({ availableHours, setHour }) => {
+const HorarioDia: React.FC<Props> = ({
+  availableHours,
+  isAvailableHoursLoading,
+  setIsAvailableHoursLoading,
+  setHour,
+}) => {
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [formattedDateString, setFormattedDateString] = useState('')
   const [formattedMonthString, setFormattedMonthString] = useState('')
@@ -181,24 +189,30 @@ const HorarioDia: React.FC<Props> = ({ availableHours, setHour }) => {
               </span>
             </div>
             <div className='flex-grow overflow-y-auto md:h-[364px] w-full'>
-              {true ? (
-                <Fragment>
-                  {availableHours.map((availableHour, indice) => (
-                    <div key={indice}>
-                      <button
-                        onClick={() => setHour(availableHour)}
-                        className='text-white bg-primary-ligth w-full hover:bg-brand hover:text-brandcontrast mb-2 block rounded-sm py-4 font-medium hover:bg-white hover:text-gray-900'
-                      >
-                        {availableHour}
-                      </button>
-                    </div>
-                  ))}
-                </Fragment>
+              {!isAvailableHoursLoading ? (
+                availableHours.length > 0 ? (
+                  <Fragment>
+                    {availableHours.map((availableHour, indice) => (
+                      <div key={indice}>
+                        <button
+                          onClick={() => setHour(availableHour)}
+                          className='text-white bg-primary-ligth w-full hover:bg-brand hover:text-brandcontrast mb-2 block rounded-sm py-4 font-medium hover:bg-white hover:text-gray-900'
+                        >
+                          {availableHour}
+                        </button>
+                      </div>
+                    ))}
+                  </Fragment>
+                ) : (
+                  <div className='-mt-4 flex h-full w-full flex-col content-center items-center justify-center'>
+                    <h1 className='my-6 text-xl text-black dark:text-white'>
+                      No hay horarios disponibles para este día
+                    </h1>
+                  </div>
+                )
               ) : (
-                <div className='-mt-4 flex h-full w-full flex-col content-center items-center justify-center'>
-                  <h1 className='my-6 text-xl text-black dark:text-white'>
-                    No hay horarios disponibles para este día
-                  </h1>
+                <div className='h-full w-full flex justify-center items-center'>
+                  <Loading />
                 </div>
               )}
             </div>
