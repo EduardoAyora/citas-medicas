@@ -1,10 +1,10 @@
 import { createMocks } from 'node-mocks-http'
 import { Dia } from '@prisma/client'
 
-import handler from '../../../../../../pages/api/servicio/[servicio]/horario-disponible/[fecha]'
+import handler from '../../../../../../pages/api/servicios/[servicio]/horario-disponible/[fecha]'
 import { prisma } from '../../../../../../src/lib/db'
 
-describe('handler /servicio/[servicio]/horario-disponible/[fecha]', () => {
+describe('handler /servicios/[servicio]/horario-disponible/[fecha]', () => {
   beforeAll(async () => {
     await prisma.servicio.createMany({
       data: [

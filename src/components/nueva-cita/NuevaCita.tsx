@@ -20,7 +20,7 @@ const NuevaCita: React.FC = () => {
     const formattedDate = date.toISOString().split('T')[0]
     setIsAvailableHoursLoading(true)
     const availableHoursData = await fetch(
-      `/api/servicio/1/horario-disponible/${formattedDate}`
+      `/api/servicios/1/horario-disponible/${formattedDate}`
     )
     const availableHours = await availableHoursData.json()
     setIsAvailableHoursLoading(false)
@@ -30,7 +30,7 @@ const NuevaCita: React.FC = () => {
   }
 
   const onScheduleClick = async () => {
-    const citaData = await fetch(`/api/servicio/1/citas`, {
+    const citaData = await fetch(`/api/servicios/1/citas`, {
       method: 'POST',
       body: JSON.stringify({
         day: '2022-05-26',

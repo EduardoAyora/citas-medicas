@@ -1,6 +1,6 @@
 import { Dia, Rol } from '@prisma/client'
 
-import handler from '../../../../../pages/api/servicio/[servicio]/citas'
+import handler from '../../../../../pages/api/servicios/[servicio]/citas'
 import { prisma } from '../../../../../src/lib/db'
 import { createMocks } from 'node-mocks-http'
 
@@ -12,7 +12,7 @@ jest.mock('next-auth/react', () => ({
   }),
 }))
 
-describe('handler /servicio/[servicio]/citas', () => {
+describe('handler /servicios/[servicio]/citas', () => {
   beforeAll(async () => {
     await prisma.usuario.createMany({
       data: [
