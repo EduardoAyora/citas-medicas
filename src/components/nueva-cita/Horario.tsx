@@ -50,7 +50,7 @@ const HorarioDia: React.FC<Props> = ({
               <div className='text-black dark:text-white'>
                 <button
                   className='group p-1 opacity-50 ltr:mr-2 rtl:ml-2 disabled:text-bookinglighter hover:opacity-50'
-                  data-testid='decrementMonth'
+                  onClick={() => setSelectedDate(currentDate)}
                 >
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -68,7 +68,9 @@ const HorarioDia: React.FC<Props> = ({
                 </button>
                 <button
                   className='group p-1 opacity-50 hover:opacity-100'
-                  data-testid='incrementMonth'
+                  onClick={() => {
+                    setSelectedDate(getDateOfFirstDatOfNextMonth(selectedDate))
+                  }}
                 >
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -124,10 +126,16 @@ const HorarioDia: React.FC<Props> = ({
                       className={`hover:border-brand disabled:text-bookinglighter absolute top-0 left-0 right-0 bottom-0 mx-auto w-full rounded-sm border border-transparent text-center font-medium disabled:cursor-default disabled:border-transparent disabled:font-light dark:hover:border-white disabled:dark:border-transparent ${
                         day === selectedDate.getDate()
                           ? 'bg-white text-primary'
-                          : day >= currentDate.getDate() && 'bg-primary-ligth'
+                          : (day >= currentDate.getDate() ||
+                              currentDate.getMonth() !==
+                                selectedDate.getMonth()) &&
+                            'bg-primary-ligth'
                       }`}
                       data-disabled='true'
-                      disabled={day < currentDate.getDate()}
+                      disabled={
+                        day < currentDate.getDate() &&
+                        currentDate.getMonth() === selectedDate.getMonth()
+                      }
                       onClick={() =>
                         setSelectedDate(
                           new Date(
@@ -270,4 +278,9 @@ const getFormattedMonthString = (date: Date) => {
   const dateStringCapilized =
     dateString.charAt(0).toUpperCase() + dateString.slice(1)
   return dateStringCapilized
+}
+
+const getDateOfFirstDatOfNextMonth = (date: Date) => {
+  const nextMonth = new Date(date.getFullYear(), date.getMonth() + 1, 1)
+  return nextMonth
 }
