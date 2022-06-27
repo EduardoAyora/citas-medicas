@@ -55,6 +55,10 @@ const HorarioDia: React.FC<Props> = ({
                       getDateOfFirstDatOfPreviousMonth(selectedDate)
                     )
                   }
+                  disabled={
+                    selectedDate.getMonth() === currentDate.getMonth() &&
+                    selectedDate.getFullYear() === currentDate.getFullYear()
+                  }
                 >
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
