@@ -128,13 +128,16 @@ const HorarioDia: React.FC<Props> = ({
                           ? 'bg-white text-primary'
                           : (day >= currentDate.getDate() ||
                               currentDate.getMonth() !==
-                                selectedDate.getMonth()) &&
+                                selectedDate.getMonth() ||
+                              currentDate.getFullYear() !==
+                                selectedDate.getFullYear()) &&
                             'bg-primary-ligth'
                       }`}
                       data-disabled='true'
                       disabled={
                         day < currentDate.getDate() &&
-                        currentDate.getMonth() === selectedDate.getMonth()
+                        currentDate.getMonth() === selectedDate.getMonth() &&
+                        currentDate.getFullYear() === selectedDate.getFullYear()
                       }
                       onClick={() =>
                         setSelectedDate(
