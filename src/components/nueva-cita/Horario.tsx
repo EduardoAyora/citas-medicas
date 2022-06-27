@@ -50,7 +50,11 @@ const HorarioDia: React.FC<Props> = ({
               <div className='text-black dark:text-white'>
                 <button
                   className='group p-1 opacity-50 ltr:mr-2 rtl:ml-2 disabled:text-bookinglighter hover:opacity-50'
-                  onClick={() => setSelectedDate(currentDate)}
+                  onClick={() =>
+                    setSelectedDate(
+                      getDateOfFirstDatOfPreviousMonth(selectedDate)
+                    )
+                  }
                 >
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -283,7 +287,27 @@ const getFormattedMonthString = (date: Date) => {
   return dateStringCapilized
 }
 
-const getDateOfFirstDatOfNextMonth = (date: Date) => {
-  const nextMonth = new Date(date.getFullYear(), date.getMonth() + 1, 1)
+const getDateOfFirstDatOfNextMonth = (selectedDate: Date) => {
+  const nextMonth = new Date(
+    selectedDate.getFullYear(),
+    selectedDate.getMonth() + 1,
+    1
+  )
   return nextMonth
+}
+
+const getDateOfFirstDatOfPreviousMonth = (selectedDate: Date) => {
+  const currentDate = new Date()
+  const previousMonth = new Date(
+    selectedDate.getFullYear(),
+    selectedDate.getMonth() - 1,
+    1
+  )
+  if (
+    previousMonth.getMonth() === currentDate.getMonth() &&
+    previousMonth.getFullYear() === currentDate.getFullYear()
+  )
+    return currentDate
+
+  return previousMonth
 }
