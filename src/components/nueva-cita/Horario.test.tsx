@@ -9,6 +9,8 @@ describe('HorarioDia', () => {
     const setHour = jest.fn()
     render(
       <HorarioDia
+        selectedDate={new Date()}
+        setSelectedDate={() => {}}
         isAvailableHoursLoading={false}
         setIsAvailableHoursLoading={() => {}}
         availableHours={availableHours}

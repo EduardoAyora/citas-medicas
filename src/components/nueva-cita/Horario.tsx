@@ -3,19 +3,22 @@ import Loading from '../common/Loading'
 import MainCard from '../layout/MainCard'
 
 interface Props {
+  selectedDate: Date
   availableHours: string[]
   isAvailableHoursLoading: boolean
+  setSelectedDate: React.Dispatch<SetStateAction<Date>>
   setIsAvailableHoursLoading: React.Dispatch<SetStateAction<boolean>>
   setHour: React.Dispatch<SetStateAction<string | undefined>>
 }
 
 const HorarioDia: React.FC<Props> = ({
+  selectedDate,
   availableHours,
   isAvailableHoursLoading,
+  setSelectedDate,
   setIsAvailableHoursLoading,
   setHour,
 }) => {
-  const [selectedDate, setSelectedDate] = useState(new Date())
   const [formattedDateString, setFormattedDateString] = useState('')
   const [formattedMonthString, setFormattedMonthString] = useState('')
 

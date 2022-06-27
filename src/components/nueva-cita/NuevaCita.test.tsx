@@ -11,7 +11,7 @@ const patient = {
 
 const host = process.env.HOST || ''
 nock(host)
-  .get(`/api/servicio/1/horario-disponible/2022-05-26`)
+  .get(/\/api\/servicio\/1\/horario-disponible\/.*/)
   .reply(
     200,
     JSON.stringify({ horarioDisponible: ['10:40', '11:00', '11:40', '12:20'] })

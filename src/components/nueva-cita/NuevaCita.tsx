@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import Exito from './Exito'
 
 const NuevaCita: React.FC = () => {
+  const [selectedDate, setSelectedDate] = useState(new Date())
   const [availableHours, setAvailableHours] = useState<string[]>([])
   const [isAvailableHoursLoading, setIsAvailableHoursLoading] = useState(true)
   const [selectedHour, setSelectedHour] = useState<string>()
@@ -12,19 +13,21 @@ const NuevaCita: React.FC = () => {
     useState<boolean>(false)
 
   useEffect(() => {
-    const fetchInitialData = async () => {
-      setIsAvailableHoursLoading(true)
-      const availableHoursData = await fetch(
-        '/api/servicio/1/horario-disponible/2022-05-26'
-      )
-      const availableHours = await availableHoursData.json()
-      setIsAvailableHoursLoading(false)
-      if (!availableHoursData.ok) return alert(availableHours.message)
-      const { horarioDisponible } = availableHours
-      setAvailableHours(horarioDisponible)
-    }
-    fetchInitialData()
-  }, [])
+    fetchDaySchedule(selectedDate)
+  }, [selectedDate])
+
+  const fetchDaySchedule = async (date: Date) => {
+    const formattedDate = date.toISOString().split('T')[0]
+    setIsAvailableHoursLoading(true)
+    const availableHoursData = await fetch(
+      `/api/servicio/1/horario-disponible/${formattedDate}`
+    )
+    const availableHours = await availableHoursData.json()
+    setIsAvailableHoursLoading(false)
+    if (!availableHoursData.ok) return alert(availableHours.message)
+    const { horarioDisponible } = availableHours
+    setAvailableHours(horarioDisponible)
+  }
 
   const onScheduleClick = async () => {
     const citaData = await fetch(`/api/servicio/1/citas`, {
@@ -47,6 +50,8 @@ const NuevaCita: React.FC = () => {
     <div>
       {!selectedHour && (
         <Horario
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
           isAvailableHoursLoading={isAvailableHoursLoading}
           setIsAvailableHoursLoading={setIsAvailableHoursLoading}
           availableHours={availableHours}
