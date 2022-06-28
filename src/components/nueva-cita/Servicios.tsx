@@ -1,19 +1,18 @@
-import { Servicio } from '@prisma/client'
-import { Decimal } from '@prisma/client/runtime';
+import { Decimal } from '@prisma/client/runtime'
 import { useEffect, useState } from 'react'
 import Loading from '../common/Loading'
 
 interface Props {
-  setService: (service: Servicio) => void
+  setService: (service: ServicioJSON) => void
 }
 
-interface ServicioJSON {
-  id: number;
-  descripcion: string; 
-  usuario: { name: string };
-  duracionEnMinutos: number;
-  costo: Decimal;
-  usuarioId: number;
+export interface ServicioJSON {
+  id: number
+  descripcion: string
+  usuario: { name: string }
+  duracionEnMinutos: number
+  costo: Decimal
+  usuarioId: number
 }
 
 const Servicios: React.FC<Props> = ({ setService }) => {

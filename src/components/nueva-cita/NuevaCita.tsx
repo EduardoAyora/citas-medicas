@@ -3,11 +3,11 @@ import Horario from './Horario'
 import { useEffect, useState } from 'react'
 
 import Exito from './Exito'
-import Servicios from './Servicios'
+import Servicios, { ServicioJSON } from './Servicios'
 import { Servicio } from '@prisma/client'
 
 const NuevaCita: React.FC = () => {
-  const [service, setService] = useState<Servicio>()
+  const [service, setService] = useState<ServicioJSON>()
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [availableHours, setAvailableHours] = useState<string[]>([])
   const [isAvailableHoursLoading, setIsAvailableHoursLoading] = useState(true)
@@ -65,7 +65,7 @@ const NuevaCita: React.FC = () => {
           setHour={setSelectedHour}
         />
       )}
-      {selectedHour && <Paciente onScheduleClick={onScheduleClick} />}
+      {selectedHour && <Paciente servicio={service} onScheduleClick={onScheduleClick} />}
     </div>
   )
 }

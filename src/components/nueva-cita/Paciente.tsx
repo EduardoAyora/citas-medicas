@@ -1,12 +1,14 @@
 import { useState, useRef } from 'react'
 import { Persona } from 'prisma/prisma-client'
 import MainCard from '../layout/MainCard'
+import { ServicioJSON } from './Servicios'
 
 interface Props {
   onScheduleClick: () => void
+  servicio: ServicioJSON
 }
 
-const Paciente: React.FC<Props> = ({ onScheduleClick }) => {
+const Paciente: React.FC<Props> = ({ onScheduleClick, servicio }) => {
   const [isScheduleButtonEnabled, setIsScheduleButtonEnabled] =
     useState<boolean>(false)
   const [isCreatePatientEnabled, setIsCreatePatientEnabled] =
@@ -51,10 +53,10 @@ const Paciente: React.FC<Props> = ({ onScheduleClick }) => {
             </li>
           </ul>
           <h2 className='font-cal text-bookinglight mt-2 font-medium dark:text-gray-300'>
-            Nombre Médico
+            {servicio.usuario.name}
           </h2>
           <h1 className='text-bookingdark mb-4 text-xl font-semibold dark:text-white'>
-            Descripción Servicio
+            {servicio.descripcion}
           </h1>
           <p className='text-bookinglight mb-2 dark:text-white'>
             <svg
@@ -70,7 +72,7 @@ const Paciente: React.FC<Props> = ({ onScheduleClick }) => {
                 clipRule='evenodd'
               ></path>
             </svg>
-            15 Minutes
+            {servicio.duracionEnMinutos} Minutos
           </p>
           <div className='text-green-500 mb-2 flex'>
             <svg

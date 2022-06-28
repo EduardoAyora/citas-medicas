@@ -1,3 +1,4 @@
+import { Decimal } from '@prisma/client/runtime'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import nock from 'nock'
@@ -25,7 +26,19 @@ nock(host)
 describe('Paciente', () => {
   const onScheduleClick = jest.fn()
   beforeEach(() => {
-    render(<Paciente onScheduleClick={onScheduleClick} />)
+    render(
+      <Paciente
+        servicio={{
+          id: 1,
+          costo: new Decimal(2),
+          descripcion: '',
+          duracionEnMinutos: 20,
+          usuario: { name: '' },
+          usuarioId: 1,
+        }}
+        onScheduleClick={onScheduleClick}
+      />
+    )
   })
 
   afterEach(() => {
