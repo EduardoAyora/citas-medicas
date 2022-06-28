@@ -10,7 +10,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
       const servicios = await prisma.servicio.findMany({
         select: {
-          id: true, costo: true, descripcion: true, duracionEnMinutos: true, usuario: {
+          id: true, costo: true, descripcion: true, duracionEnMinutos: true, 
+          usuario: {
             select: {
               name: true
             }
