@@ -1,25 +1,24 @@
-import { Servicio } from "@prisma/client"
 import { NextApiRequest, NextApiResponse } from "next"
 
-type Data = {
-  servicios?: Servicio[]
-  message?: string
-}
+import {prisma} from '../../../src/lib/db'
 
-async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req
 
   switch (method) {
   case 'GET':
     try {
-      const servicioId = parseInt(servicio as string)
-      const informacionServicio = await prisma.servicio.findUnique({
-        where: {
-          id: servicioId,
-        },
+      const servicios = await prisma.servicio.findMany({
+        select: {
+          id: true, costo: true, descripcion: true, duracionEnMinutos: true, usuario: {
+            select: {
+              name: true
+            }
+          }
+        }
       })
 
-      return res.status(200).json({ cita: citaCreada })
+      return res.status(200).json({ servicios })
     } catch (error) {
       return res.status(500).json({ message: 'Ha ocurrido un error' })
     }
@@ -27,3 +26,5 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
     return res.status(405).end(`Method ${method} Not Allowed`)
   }
 }
+
+export default handler
