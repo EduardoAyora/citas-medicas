@@ -1,11 +1,22 @@
+import { Servicio } from '@prisma/client'
+import { Decimal } from '@prisma/client/runtime';
 import { useEffect, useState } from 'react'
 import Loading from '../common/Loading'
 
 interface Props {
-  setServiceId: (serviceId: number) => void
+  setService: (service: Servicio) => void
 }
 
-const Servicios: React.FC<Props> = ({ setServiceId }) => {
+interface ServicioJSON {
+  id: number;
+  descripcion: string; 
+  usuario: { name: string };
+  duracionEnMinutos: number;
+  costo: Decimal;
+  usuarioId: number;
+}
+
+const Servicios: React.FC<Props> = ({ setService }) => {
   const [servicios, setServicios] = useState<ServicioJSON[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
@@ -41,7 +52,7 @@ const Servicios: React.FC<Props> = ({ setServiceId }) => {
         {servicios.map((service, index) => (
           <div
             key={index}
-            onClick={() => setServiceId(service.id)}
+            onClick={() => setService(service)}
             aria-label={`${service.descripcion}-${service.usuario.name}`}
             role='button'
             style={{ display: 'flex' }}

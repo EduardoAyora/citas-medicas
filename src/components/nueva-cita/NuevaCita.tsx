@@ -4,9 +4,10 @@ import { useEffect, useState } from 'react'
 
 import Exito from './Exito'
 import Servicios from './Servicios'
+import { Servicio } from '@prisma/client'
 
 const NuevaCita: React.FC = () => {
-  const [serviceId, setServiceId] = useState<number>()
+  const [service, setService] = useState<Servicio>()
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [availableHours, setAvailableHours] = useState<string[]>([])
   const [isAvailableHoursLoading, setIsAvailableHoursLoading] = useState(true)
@@ -16,10 +17,11 @@ const NuevaCita: React.FC = () => {
 
   useEffect(() => {
     const fetchDaySchedule = async (date: Date) => {
+      if (!service) return
       const formattedDate = date.toISOString().split('T')[0]
       setIsAvailableHoursLoading(true)
       const availableHoursData = await fetch(
-        `/api/servicios/${serviceId}/horario-disponible/${formattedDate}`
+        `/api/servicios/${service.id}/horario-disponible/${formattedDate}`
       )
       const availableHours = await availableHoursData.json()
       setIsAvailableHoursLoading(false)
@@ -27,12 +29,13 @@ const NuevaCita: React.FC = () => {
       const { horarioDisponible } = availableHours
       setAvailableHours(horarioDisponible)
     }
-    if (serviceId) fetchDaySchedule(selectedDate)
-  }, [selectedDate, serviceId])
+    fetchDaySchedule(selectedDate)
+  }, [selectedDate, service])
 
   const onScheduleClick = async () => {
+    if (!service) return
     const formattedDate = selectedDate.toISOString().split('T')[0]
-    const citaData = await fetch(`/api/servicios/${serviceId}/citas`, {
+    const citaData = await fetch(`/api/servicios/${service.id}/citas`, {
       method: 'POST',
       body: JSON.stringify({
         day: formattedDate,
@@ -44,7 +47,7 @@ const NuevaCita: React.FC = () => {
     setIsNewAppointmentCreated(true)
   }
 
-  if (!serviceId) return <Servicios setServiceId={setServiceId} />
+  if (!service) return <Servicios setService={setService} />
 
   if (!availableHours) return <>Cargando...</>
 
