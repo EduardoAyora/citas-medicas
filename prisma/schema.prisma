@@ -23,11 +23,12 @@ model Persona {
 }
 
 model Usuario {
-  id       Int    @id @default(autoincrement())
-  username String @unique
-  password String
-  name     String
-  role     Rol    @default(DOCTOR)
+  id        Int        @id @default(autoincrement())
+  username  String     @unique
+  password  String
+  name      String
+  role      Rol        @default(DOCTOR)
+  servicios Servicio[]
   // persona  Persona?
 }
 
@@ -38,6 +39,8 @@ model Servicio {
   duracionEnMinutos Int
   dias              HorarioDia[]
   citas             Cita[]
+  usuario           Usuario?     @relation(fields: [usuarioId], references: [id])
+  usuarioId         Int?
 }
 
 model Cita {

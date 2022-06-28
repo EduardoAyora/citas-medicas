@@ -8,8 +8,17 @@ const patient = {
   apellido: 'Ayora',
   cedula: '0104236571',
 }
+const servicio = {
+  id: 1,
+  descripcion: 'Consulta general',
+  usuario: { name: 'Eduardo' },
+}
 
 const host = process.env.HOST || ''
+
+nock(host)
+  .get('/api/servicios')
+  .reply(200, JSON.stringify({ servicios: [servicio] }))
 nock(host)
   .get(/\/api\/servicios\/1\/horario-disponible\/.*/)
   .reply(
@@ -25,6 +34,10 @@ describe('NuevaCita', () => {
   test('Seleccionar el horario y agendar cita para el paciente', async () => {
     render(<NuevaCita />)
 
+    const serviceButton = await screen.findByRole('button', {
+      name: `${servicio.descripcion}-${servicio.usuario.name}`,
+    })
+    await userEvent.click(serviceButton)
     const hourButton = await screen.findByRole('button', { name: '11:00' })
 
     await userEvent.click(hourButton)
