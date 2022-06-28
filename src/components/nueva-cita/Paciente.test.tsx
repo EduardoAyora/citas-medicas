@@ -28,6 +28,8 @@ describe('Paciente', () => {
   beforeEach(() => {
     render(
       <Paciente
+        selectedDate={new Date()}
+        selectedHour={'10:00'}
         servicio={{
           id: 1,
           costo: new Decimal(2),

@@ -2,13 +2,21 @@ import { useState, useRef } from 'react'
 import { Persona } from 'prisma/prisma-client'
 import MainCard from '../layout/MainCard'
 import { ServicioJSON } from './Servicios'
+import { getFormattedDateString } from './Horario'
 
 interface Props {
   onScheduleClick: () => void
   servicio: ServicioJSON
+  selectedDate: Date
+  selectedHour: string
 }
 
-const Paciente: React.FC<Props> = ({ onScheduleClick, servicio }) => {
+const Paciente: React.FC<Props> = ({
+  onScheduleClick,
+  servicio,
+  selectedDate,
+  selectedHour,
+}) => {
   const [isScheduleButtonEnabled, setIsScheduleButtonEnabled] =
     useState<boolean>(false)
   const [isCreatePatientEnabled, setIsCreatePatientEnabled] =
@@ -88,7 +96,10 @@ const Paciente: React.FC<Props> = ({ onScheduleClick, servicio }) => {
                 clipRule='evenodd'
               ></path>
             </svg>
-            <div className='-mt-1'>3:15, Friday, June 24, 2022</div>
+            <div className='-mt-1'>
+              {selectedHour}, {getFormattedDateString(selectedDate)},{' '}
+              {selectedDate.getFullYear()}
+            </div>
           </div>
           <div>
             <p className='font-cal text-bookinglight font-medium dark:text-gray-300'>

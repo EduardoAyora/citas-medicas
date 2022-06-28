@@ -65,7 +65,14 @@ const NuevaCita: React.FC = () => {
           setHour={setSelectedHour}
         />
       )}
-      {selectedHour && <Paciente servicio={service} onScheduleClick={onScheduleClick} />}
+      {selectedHour && (
+        <Paciente
+          selectedDate={selectedDate}
+          selectedHour={selectedHour}
+          servicio={service}
+          onScheduleClick={onScheduleClick}
+        />
+      )}
     </div>
   )
 }
