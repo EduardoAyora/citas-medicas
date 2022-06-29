@@ -18,9 +18,9 @@ const Exito: React.FC<Props> = ({ onGoBack }) => {
           <RefreshIcon className='w-5 h-5' />{' '}
           <span className='ml-2'>Agendar nueva cita</span>
         </button>
-        <div className='flex flex-col w-full justify-center items-center text-white py-20'>
+        <div className='flex flex-col w-full justify-center items-center dark:text-white py-20'>
           <CheckCircleIcon className='h-36 w-36 text-green-500' />
-          <p className='text-lg'>Se ha agendado la cita</p>
+          <p className='text-xl'>Se ha agendado la cita</p>
         </div>
       </>
     </MainCard>
