@@ -227,7 +227,7 @@ const HorarioDia: React.FC<Props> = ({
                       <div key={indice}>
                         <button
                           onClick={() => setHour(availableHour)}
-                          className='text-white bg-primary-ligth w-full hover:bg-brand hover:text-brandcontrast mb-2 block rounded-sm py-4 font-medium hover:bg-white hover:text-gray-900'
+                          className='dark:text-white dark:bg-primary-ligth dark:border-0 border border-black hover:bg-black hover:text-white w-full hover:bg-brand hover:text-brandcontrast mb-2 block rounded-sm py-4 font-medium dark:hover:bg-white dark:hover:text-gray-900'
                         >
                           {availableHour}
                         </button>
