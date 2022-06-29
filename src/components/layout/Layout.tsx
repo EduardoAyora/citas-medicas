@@ -9,7 +9,7 @@ interface Props {
 
 const Layout: React.FC<Props> = ({ links, currentPath, children }) => {
   return (
-    <div className='min-h-screen bg-gray-100'>
+    <div className='h-screen bg-gray-100'>
       <div className='sidebar absolute bg-gray-100 min-h-screen w-[3.25rem] overflow-hidden border-r hover:w-56 hover:bg-white hover:shadow-lg'>
         <div className='flex h-screen flex-col justify-between pt-2 pb-6'>
           <div>
@@ -79,7 +79,7 @@ const Layout: React.FC<Props> = ({ links, currentPath, children }) => {
           </div>
         </div>
       </div>
-      <div className='pl-14 dark:bg-primary-dark min-h-screen'>
+      <div className='pl-14 dark:bg-primary-dark h-screen overflow-y-auto'>
         <div className='mx-auto px-4 sm:px-6 lg:px-20 xl:px-32'>
           <div className='py-10'>{children}</div>
         </div>
