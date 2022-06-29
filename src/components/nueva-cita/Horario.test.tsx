@@ -9,6 +9,7 @@ describe('HorarioDia', () => {
     const setHour = jest.fn()
     render(
       <HorarioDia
+        onGoBack={jest.fn()}
         selectedDate={new Date()}
         setSelectedDate={() => {}}
         isAvailableHoursLoading={false}

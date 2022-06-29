@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 
 import Exito from './Exito'
 import Servicios, { ServicioJSON } from './Servicios'
-import { Servicio } from '@prisma/client'
 
 const NuevaCita: React.FC = () => {
   const [service, setService] = useState<ServicioJSON>()
@@ -57,6 +56,7 @@ const NuevaCita: React.FC = () => {
     <div>
       {!selectedHour && (
         <Horario
+          onGoBack={() => setService(undefined)}
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
           isAvailableHoursLoading={isAvailableHoursLoading}

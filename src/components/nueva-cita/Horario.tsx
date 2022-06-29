@@ -9,6 +9,7 @@ interface Props {
   setSelectedDate: React.Dispatch<SetStateAction<Date>>
   setIsAvailableHoursLoading: React.Dispatch<SetStateAction<boolean>>
   setHour: React.Dispatch<SetStateAction<string | undefined>>
+  onGoBack: () => void
 }
 
 const HorarioDia: React.FC<Props> = ({
@@ -18,6 +19,7 @@ const HorarioDia: React.FC<Props> = ({
   setSelectedDate,
   setIsAvailableHoursLoading,
   setHour,
+  onGoBack,
 }) => {
   const [formattedDateString, setFormattedDateString] = useState('')
   const [formattedMonthString, setFormattedMonthString] = useState('')
@@ -39,6 +41,13 @@ const HorarioDia: React.FC<Props> = ({
   return (
     <MainCard>
       <>
+        <button
+          onClick={onGoBack}
+          type='button'
+          className='absolute right-0 -top-12 inline-flex items-center px-3 py-2 text-sm font-medium rounded-sm border border-gray-300 text-gray-700 bg-white hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-neutral-900 dark:bg-primary dark:text-white dark:border-gray-600'
+        >
+          Cancelar
+        </button>
         <div className='sm:flex w-full'>
           <div className='text-gray-200 mt-8 w-full sm:mt-0 sm:min-w-[455px] sm:w-1/2 sm:border-r sm:pl-4 sm:pr-6 sm:dark:border-gray-700 md:w-1/3 '>
             <div className='mb-4 flex justify-between text-xl font-light'>
