@@ -143,10 +143,13 @@ const Paciente: React.FC<Props> = ({
             <div className='mb-4'>
               <button
                 type='button'
-                onClick={() => setIsCreatePatientEnabled(true)}
+                onClick={() => {
+                  if (!isCreatePatientEnabled) setIsCreatePatientEnabled(true)
+                  else setIsCreatePatientEnabled(false)
+                }}
                 className='mb-1 block text-sm font-medium hover:cursor-pointer dark:text-white'
               >
-                + Crear Paciente
+                {!isCreatePatientEnabled ? '+' : '-'} Crear Paciente
               </button>
             </div>
 
