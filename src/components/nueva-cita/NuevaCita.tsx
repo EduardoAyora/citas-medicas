@@ -50,7 +50,17 @@ const NuevaCita: React.FC = () => {
 
   if (!availableHours) return <>Cargando...</>
 
-  if (isNewAppointmentCreated) return <Exito />
+  if (isNewAppointmentCreated)
+    return (
+      <Exito
+        onGoBack={() => {
+          setIsNewAppointmentCreated(false)
+          setSelectedHour(undefined)
+          setSelectedDate(new Date())
+          setService(undefined)
+        }}
+      />
+    )
 
   return (
     <div>
