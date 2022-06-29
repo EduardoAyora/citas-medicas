@@ -9,10 +9,12 @@ interface Props {
   servicio: ServicioJSON
   selectedDate: Date
   selectedHour: string
+  onGoBack: () => void
 }
 
 const Paciente: React.FC<Props> = ({
   onScheduleClick,
+  onGoBack,
   servicio,
   selectedDate,
   selectedHour,
@@ -208,6 +210,7 @@ const Paciente: React.FC<Props> = ({
                 Agendar
               </button>
               <button
+                onClick={onGoBack}
                 type='button'
                 className='inline-flex items-center px-3 py-2 text-sm font-medium rounded-sm relative border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-neutral-900 dark:bg-transparent dark:text-white dark:border-gray-800 dark:hover:bg-gray-800'
               >

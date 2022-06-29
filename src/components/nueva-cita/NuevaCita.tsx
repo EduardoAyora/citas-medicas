@@ -67,6 +67,7 @@ const NuevaCita: React.FC = () => {
       )}
       {selectedHour && (
         <Paciente
+          onGoBack={() => setSelectedHour(undefined)}
           selectedDate={selectedDate}
           selectedHour={selectedHour}
           servicio={service}

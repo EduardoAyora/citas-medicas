@@ -28,6 +28,7 @@ describe('Paciente', () => {
   beforeEach(() => {
     render(
       <Paciente
+        onGoBack={jest.fn()}
         selectedDate={new Date()}
         selectedHour={'10:00'}
         servicio={{
