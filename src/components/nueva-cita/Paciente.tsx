@@ -26,8 +26,12 @@ const Paciente: React.FC<Props> = ({
   const [patient, setPatient] = useState<Persona>()
 
   const searchInputRef = useRef<HTMLInputElement>(null)
-  const createPatientNameInputRef = useRef<HTMLInputElement>(null)
   const createPatientIdInputRef = useRef<HTMLInputElement>(null)
+  const createPatientNameInputRef = useRef<HTMLInputElement>(null)
+  const createPatientSurnameInputRef = useRef<HTMLInputElement>(null)
+  const createPatientDirectionInputRef = useRef<HTMLInputElement>(null)
+  const createPatientPhoneInputRef = useRef<HTMLInputElement>(null)
+  const createPatientEmailInputRef = useRef<HTMLInputElement>(null)
 
   const searchPatient = async () => {
     const id = searchInputRef.current?.value
@@ -41,9 +45,20 @@ const Paciente: React.FC<Props> = ({
   const createPatient = async () => {
     const id = createPatientIdInputRef.current?.value
     const name = createPatientNameInputRef.current?.value
+    const surname = createPatientSurnameInputRef.current?.value
+    const direction = createPatientDirectionInputRef.current?.value
+    const phone = createPatientPhoneInputRef.current?.value
+    const email = createPatientEmailInputRef.current?.value
     const patientData = await fetch(`/api/personas`, {
       method: 'POST',
-      body: JSON.stringify({ id, name }),
+      body: JSON.stringify({
+        cedula: id,
+        nombre: name,
+        apellido: surname,
+        direccion: direction,
+        celular: phone,
+        email,
+      }),
     })
     if (!patientData.ok) return setIsScheduleButtonEnabled(false)
     const patient = await patientData.json()
@@ -157,6 +172,23 @@ const Paciente: React.FC<Props> = ({
               <>
                 <div className='mb-4'>
                   <label
+                    htmlFor='cedula_en_crear'
+                    className='block text-sm font-medium text-gray-700 dark:text-white'
+                  >
+                    Cédula
+                  </label>
+                  <div className='mt-1'>
+                    <input
+                      ref={createPatientIdInputRef}
+                      type='text'
+                      id='cedula_en_crear'
+                      className='focus:border-brand block w-full rounded-sm border-gray-300 shadow-sm focus:ring-black disabled:bg-gray-200 disabled:hover:cursor-not-allowed dark:border-gray-900 dark:bg-gray-700 dark:text-white dark:selection:bg-green-500 disabled:dark:text-gray-500 sm:text-sm'
+                      placeholder='Cédula'
+                    />
+                  </div>
+                </div>
+                <div className='mb-4'>
+                  <label
                     htmlFor='nombre_en_crear'
                     className='block text-sm font-medium text-gray-700 dark:text-white'
                   >
@@ -174,18 +206,69 @@ const Paciente: React.FC<Props> = ({
                 </div>
                 <div className='mb-4'>
                   <label
-                    htmlFor='cedula_en_crear'
+                    htmlFor='apellido_en_crear'
                     className='block text-sm font-medium text-gray-700 dark:text-white'
                   >
-                    Cédula
+                    Apellido
                   </label>
                   <div className='mt-1'>
                     <input
-                      ref={createPatientIdInputRef}
+                      ref={createPatientSurnameInputRef}
                       type='text'
-                      id='cedula_en_crear'
+                      id='apellido_en_crear'
                       className='focus:border-brand block w-full rounded-sm border-gray-300 shadow-sm focus:ring-black disabled:bg-gray-200 disabled:hover:cursor-not-allowed dark:border-gray-900 dark:bg-gray-700 dark:text-white dark:selection:bg-green-500 disabled:dark:text-gray-500 sm:text-sm'
-                      placeholder='Cédula'
+                      placeholder='Apellido'
+                    />
+                  </div>
+                </div>
+                <div className='mb-4'>
+                  <label
+                    htmlFor='direccion_en_crear'
+                    className='block text-sm font-medium text-gray-700 dark:text-white'
+                  >
+                    Dirección
+                  </label>
+                  <div className='mt-1'>
+                    <input
+                      ref={createPatientDirectionInputRef}
+                      type='text'
+                      id='direccion_en_crear'
+                      className='focus:border-brand block w-full rounded-sm border-gray-300 shadow-sm focus:ring-black disabled:bg-gray-200 disabled:hover:cursor-not-allowed dark:border-gray-900 dark:bg-gray-700 dark:text-white dark:selection:bg-green-500 disabled:dark:text-gray-500 sm:text-sm'
+                      placeholder='Dirección'
+                    />
+                  </div>
+                </div>
+                <div className='mb-4'>
+                  <label
+                    htmlFor='celular_en_crear'
+                    className='block text-sm font-medium text-gray-700 dark:text-white'
+                  >
+                    Celular
+                  </label>
+                  <div className='mt-1'>
+                    <input
+                      ref={createPatientPhoneInputRef}
+                      type='text'
+                      id='celular_en_crear'
+                      className='focus:border-brand block w-full rounded-sm border-gray-300 shadow-sm focus:ring-black disabled:bg-gray-200 disabled:hover:cursor-not-allowed dark:border-gray-900 dark:bg-gray-700 dark:text-white dark:selection:bg-green-500 disabled:dark:text-gray-500 sm:text-sm'
+                      placeholder='Celular'
+                    />
+                  </div>
+                </div>
+                <div className='mb-4'>
+                  <label
+                    htmlFor='email_en_crear'
+                    className='block text-sm font-medium text-gray-700 dark:text-white'
+                  >
+                    Email
+                  </label>
+                  <div className='mt-1'>
+                    <input
+                      ref={createPatientEmailInputRef}
+                      type='text'
+                      id='email_en_crear'
+                      className='focus:border-brand block w-full rounded-sm border-gray-300 shadow-sm focus:ring-black disabled:bg-gray-200 disabled:hover:cursor-not-allowed dark:border-gray-900 dark:bg-gray-700 dark:text-white dark:selection:bg-green-500 disabled:dark:text-gray-500 sm:text-sm'
+                      placeholder='Email'
                     />
                   </div>
                 </div>

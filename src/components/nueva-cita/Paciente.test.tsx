@@ -9,6 +9,9 @@ const patient = {
   nombre: 'Eduardo',
   apellido: 'Ayora',
   cedula: '0104236571',
+  direccion: 'Calle falsa 123',
+  celular: '0982634321',
+  email: 'eduardo@gmail.com',
 }
 
 const host = process.env.HOST || ''
@@ -19,7 +22,13 @@ nock(host)
 nock(host)
   .post(
     `/api/personas`,
-    (body) => body.id === patient.cedula && body.name === patient.nombre
+    (body) =>
+      body.cedula === patient.cedula &&
+      body.nombre === patient.nombre &&
+      body.apellido === patient.apellido &&
+      body.direccion === patient.direccion &&
+      body.celular === patient.celular &&
+      body.email === patient.email
   )
   .reply(200, JSON.stringify(patient))
 
@@ -75,7 +84,11 @@ describe('Paciente', () => {
 
     await userEvent.click(createButton)
     await userEvent.type(screen.getByLabelText('Nombre'), patient.nombre)
+    await userEvent.type(screen.getByLabelText('Apellido'), patient.apellido)
     await userEvent.type(screen.getByLabelText('Cédula'), patient.cedula)
+    await userEvent.type(screen.getByLabelText('Dirección'), patient.direccion)
+    await userEvent.type(screen.getByLabelText('Celular'), patient.celular)
+    await userEvent.type(screen.getByLabelText('Email'), patient.email)
     await userEvent.click(
       screen.getByRole('button', { name: 'Crear Paciente' })
     )

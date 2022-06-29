@@ -17,6 +17,7 @@ model Persona {
   cedula    String    @unique
   direccion String
   celular   String
+  email     String    @unique
   // usuario   Usuario   @relation(fields: [usuarioId], references: [id])
   // usuarioId Int       @unique
   facturas  Factura[]
