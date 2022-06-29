@@ -49,10 +49,10 @@ const HorarioDia: React.FC<Props> = ({
           Cancelar
         </button>
         <div className='sm:flex w-full'>
-          <div className='text-gray-200 mt-8 w-full sm:mt-0 sm:min-w-[455px] sm:w-1/2 sm:border-r sm:pl-4 sm:pr-6 sm:dark:border-gray-700 md:w-1/3 '>
+          <div className='text-gray-400 dark:text-gray-200 mt-8 w-full sm:mt-0 sm:min-w-[455px] sm:w-1/2 sm:border-r sm:pl-4 sm:pr-6 sm:dark:border-gray-700 md:w-1/3 '>
             <div className='mb-4 flex justify-between text-xl font-light'>
               <span className='w-1/2 dark:text-white'>
-                <span className='text-bookinglight'>
+                <span className='text-gray-500 dark:text-white'>
                   {formattedMonthString}
                 </span>
               </span>
@@ -142,13 +142,13 @@ const HorarioDia: React.FC<Props> = ({
                     <button
                       className={`hover:border-brand disabled:text-bookinglighter absolute top-0 left-0 right-0 bottom-0 mx-auto w-full rounded-sm border border-transparent text-center font-medium disabled:cursor-default disabled:border-transparent disabled:font-light dark:hover:border-white disabled:dark:border-transparent ${
                         day === selectedDate.getDate()
-                          ? 'bg-white text-primary'
+                          ? 'bg-black dark:bg-white text-white dark:text-primary'
                           : (day >= currentDate.getDate() ||
                               currentDate.getMonth() !==
                                 selectedDate.getMonth() ||
                               currentDate.getFullYear() !==
                                 selectedDate.getFullYear()) &&
-                            'bg-primary-ligth'
+                            'bg-gray-100 text-black dark:text-white dark:bg-primary-ligth'
                       }`}
                       data-disabled='true'
                       disabled={

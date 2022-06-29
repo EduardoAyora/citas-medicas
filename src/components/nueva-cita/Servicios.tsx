@@ -42,7 +42,7 @@ const Servicios: React.FC<Props> = ({ setService }) => {
   return (
     <main className='mx-auto max-w-3xl py-24 px-4'>
       <div className='mb-8 text-center'>
-        <h1 className='font-cal mb-1 text-3xl text-neutral-900 dark:text-white'>
+        <h1 className='font-cal font-bold mb-1 text-3xl text-neutral-900 dark:text-white'>
           Servicios disponibles
         </h1>
         <p className='text-neutral-500 dark:text-white'></p>
