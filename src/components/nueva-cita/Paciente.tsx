@@ -3,6 +3,7 @@ import { Persona } from 'prisma/prisma-client'
 import MainCard from '../layout/MainCard'
 import { ServicioJSON } from './Servicios'
 import { getFormattedDateString } from './Horario'
+import Loading from '../common/Loading'
 
 interface Props {
   onScheduleClick: () => void
@@ -24,6 +25,7 @@ const Paciente: React.FC<Props> = ({
   const [isCreatePatientEnabled, setIsCreatePatientEnabled] =
     useState<boolean>(false)
   const [patient, setPatient] = useState<Persona>()
+  const [isPatientLoading, setIsPatientLoading] = useState<boolean>(false)
 
   const searchInputRef = useRef<HTMLInputElement>(null)
   const createPatientIdInputRef = useRef<HTMLInputElement>(null)
@@ -35,8 +37,13 @@ const Paciente: React.FC<Props> = ({
 
   const searchPatient = async () => {
     const id = searchInputRef.current?.value
+    setIsPatientLoading(true)
     const patientData = await fetch(`/api/personas/${id}`)
-    if (!patientData.ok) return setIsScheduleButtonEnabled(false)
+    setIsPatientLoading(false)
+    if (!patientData.ok) {
+      setPatient(undefined)
+      return setIsScheduleButtonEnabled(false)
+    }
     const patient = await patientData.json()
     setPatient(patient)
     setIsScheduleButtonEnabled(true)
@@ -49,6 +56,7 @@ const Paciente: React.FC<Props> = ({
     const direction = createPatientDirectionInputRef.current?.value
     const phone = createPatientPhoneInputRef.current?.value
     const email = createPatientEmailInputRef.current?.value
+    setIsPatientLoading(true)
     const patientData = await fetch(`/api/personas`, {
       method: 'POST',
       body: JSON.stringify({
@@ -60,7 +68,11 @@ const Paciente: React.FC<Props> = ({
         email,
       }),
     })
-    if (!patientData.ok) return setIsScheduleButtonEnabled(false)
+    setIsPatientLoading(false)
+    if (!patientData.ok) {
+      setPatient(undefined)
+      return setIsScheduleButtonEnabled(false)
+    }
     const patient = await patientData.json()
     setPatient(patient)
     setIsScheduleButtonEnabled(true)
@@ -120,7 +132,9 @@ const Paciente: React.FC<Props> = ({
           </div>
           <div>
             <p className='font-cal text-bookinglight font-medium dark:text-gray-300'>
-              {patient ? (
+              {isPatientLoading ? (
+                <Loading />
+              ) : patient ? (
                 `${patient.nombre} ${patient.apellido}`
               ) : (
                 <span className='text-red-400'>Debe asignar un paciente</span>
