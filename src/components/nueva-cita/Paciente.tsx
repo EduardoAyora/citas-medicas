@@ -30,7 +30,6 @@ const Paciente: React.FC<Props> = ({
   const [isPatientLoading, setIsPatientLoading] = useState<boolean>(false)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [modalMessage, setModalMessage] = useState<string>('')
-  const [modalTitle, setModalTitle] = useState<string>('')
   const [isSuccessModal, setIsSuccessModal] = useState<boolean>(false)
 
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -41,16 +40,30 @@ const Paciente: React.FC<Props> = ({
   const createPatientPhoneInputRef = useRef<HTMLInputElement>(null)
   const createPatientEmailInputRef = useRef<HTMLInputElement>(null)
 
+  const showModal = ({
+    message,
+    isSuccess,
+  }: {
+    message: string
+    isSuccess: boolean
+  }) => {
+    setModalMessage(message)
+    setIsSuccessModal(isSuccess)
+    setIsModalOpen(true)
+  }
+
   const searchPatient = async () => {
     const id = searchInputRef.current?.value
     setIsPatientLoading(true)
     const patientData = await fetch(`/api/personas/${id}`)
+    const patient = await patientData.json()
     setIsPatientLoading(false)
     if (!patientData.ok) {
       setPatient(undefined)
-      return setIsScheduleButtonEnabled(false)
+      setIsScheduleButtonEnabled(false)
+      showModal({ isSuccess: false, message: patient.message })
+      return
     }
-    const patient = await patientData.json()
     setPatient(patient)
     setIsScheduleButtonEnabled(true)
   }
@@ -74,14 +87,20 @@ const Paciente: React.FC<Props> = ({
         email,
       }),
     })
+    const patient = await patientData.json()
     setIsPatientLoading(false)
     if (!patientData.ok) {
       setPatient(undefined)
-      return setIsScheduleButtonEnabled(false)
+      setIsScheduleButtonEnabled(false)
+      showModal({ isSuccess: false, message: patient.message })
+      return
     }
-    const patient = await patientData.json()
     setPatient(patient)
     setIsScheduleButtonEnabled(true)
+    showModal({
+      isSuccess: true,
+      message: 'El paciente se ha creado con éxito',
+    })
   }
 
   return (
@@ -91,7 +110,6 @@ const Paciente: React.FC<Props> = ({
           isOpen={isModalOpen}
           setIsOpen={setIsModalOpen}
           message={modalMessage}
-          title={modalTitle}
           isSuccess={isSuccessModal}
         />
         <div className='sm:w-1/2 sm:border-r sm:dark:border-gray-700'>

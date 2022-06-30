@@ -26,7 +26,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       }
     })
 
-    if (persona) return res.status(400).json({message: 'Ya existe una persona con esa cedula'})
+    if (persona) return res.status(400).json({message: 'Ya existe una persona con esa cédula'})
 
     const personaConCedula = await prisma.persona.findUnique({
       where:{

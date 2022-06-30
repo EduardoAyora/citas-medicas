@@ -6,17 +6,10 @@ interface Props {
   isOpen: boolean
   setIsOpen: (isOpen: boolean) => void
   message: string
-  title: string
   isSuccess: boolean
 }
 
-const Modal: React.FC<Props> = ({
-  isOpen,
-  setIsOpen,
-  message,
-  title,
-  isSuccess,
-}) => {
+const Modal: React.FC<Props> = ({ isOpen, setIsOpen, message, isSuccess }) => {
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog as='div' className='relative z-10' onClose={setIsOpen}>
@@ -64,7 +57,7 @@ const Modal: React.FC<Props> = ({
                         as='h3'
                         className='text-lg leading-6 font-medium text-gray-900'
                       >
-                        {title}
+                        {isSuccess ? 'Éxito' : 'Error'}
                       </Dialog.Title>
                       <div className='mt-2'>
                         <p className='text-sm text-gray-500'>{message}</p>
@@ -75,10 +68,10 @@ const Modal: React.FC<Props> = ({
                 <div className='bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse'>
                   <button
                     type='button'
-                    className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm ${
+                    className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm ${
                       isSuccess
-                        ? 'bg-green-600 focus:ring-green-500'
-                        : 'bg-red-600 focus:ring-red-500'
+                        ? 'bg-green-600 focus:ring-green-500 hover:bg-green-700'
+                        : 'bg-red-600 focus:ring-red-500 hover:bg-red-700'
                     }`}
                     onClick={() => setIsOpen(false)}
                   >
