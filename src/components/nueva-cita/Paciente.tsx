@@ -6,6 +6,7 @@ import MainCard from '../layout/MainCard'
 import { ServicioJSON } from './Servicios'
 import { getFormattedDateString } from './Horario'
 import Loading from '../common/Loading'
+import useSuccessErrorModal from '../../hooks/modals/useSuccessError'
 
 interface Props {
   onScheduleClick: () => void
@@ -28,9 +29,13 @@ const Paciente: React.FC<Props> = ({
     useState<boolean>(false)
   const [patient, setPatient] = useState<Persona>()
   const [isPatientLoading, setIsPatientLoading] = useState<boolean>(false)
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
-  const [modalMessage, setModalMessage] = useState<string>('')
-  const [isSuccessModal, setIsSuccessModal] = useState<boolean>(false)
+  const {
+    isModalOpen,
+    isSuccessModal,
+    modalMessage,
+    setIsModalOpen,
+    showModal,
+  } = useSuccessErrorModal()
 
   const searchInputRef = useRef<HTMLInputElement>(null)
   const createPatientIdInputRef = useRef<HTMLInputElement>(null)
@@ -39,18 +44,6 @@ const Paciente: React.FC<Props> = ({
   const createPatientDirectionInputRef = useRef<HTMLInputElement>(null)
   const createPatientPhoneInputRef = useRef<HTMLInputElement>(null)
   const createPatientEmailInputRef = useRef<HTMLInputElement>(null)
-
-  const showModal = ({
-    message,
-    isSuccess,
-  }: {
-    message: string
-    isSuccess: boolean
-  }) => {
-    setModalMessage(message)
-    setIsSuccessModal(isSuccess)
-    setIsModalOpen(true)
-  }
 
   const searchPatient = async () => {
     const id = searchInputRef.current?.value
@@ -66,6 +59,7 @@ const Paciente: React.FC<Props> = ({
     }
     setPatient(patient)
     setIsScheduleButtonEnabled(true)
+    if (searchInputRef.current) searchInputRef.current.value = ''
   }
 
   const createPatient = async () => {
