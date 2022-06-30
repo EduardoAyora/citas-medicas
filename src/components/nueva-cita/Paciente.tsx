@@ -1,5 +1,7 @@
 import { useState, useRef } from 'react'
 import { Persona } from 'prisma/prisma-client'
+
+import Modal from '../common/SuccessErrorModal'
 import MainCard from '../layout/MainCard'
 import { ServicioJSON } from './Servicios'
 import { getFormattedDateString } from './Horario'
@@ -26,6 +28,10 @@ const Paciente: React.FC<Props> = ({
     useState<boolean>(false)
   const [patient, setPatient] = useState<Persona>()
   const [isPatientLoading, setIsPatientLoading] = useState<boolean>(false)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [modalMessage, setModalMessage] = useState<string>('')
+  const [modalTitle, setModalTitle] = useState<string>('')
+  const [isSuccessModal, setIsSuccessModal] = useState<boolean>(false)
 
   const searchInputRef = useRef<HTMLInputElement>(null)
   const createPatientIdInputRef = useRef<HTMLInputElement>(null)
@@ -81,6 +87,13 @@ const Paciente: React.FC<Props> = ({
   return (
     <MainCard>
       <>
+        <Modal
+          isOpen={isModalOpen}
+          setIsOpen={setIsModalOpen}
+          message={modalMessage}
+          title={modalTitle}
+          isSuccess={isSuccessModal}
+        />
         <div className='sm:w-1/2 sm:border-r sm:dark:border-gray-700'>
           <ul className=''>
             <li className='-mr-2 inline-block'>
