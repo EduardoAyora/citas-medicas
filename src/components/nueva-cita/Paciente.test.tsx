@@ -93,6 +93,9 @@ describe('Paciente', () => {
       screen.getByRole('button', { name: 'Crear Paciente' })
     )
 
+    const btnCloseModal = await screen.findByRole('button', { name: 'Cerrar' })
+    await userEvent.click(btnCloseModal)
+
     await screen.findByText(`${patient.nombre} ${patient.apellido}`)
     expect(scheduleButton).toBeEnabled()
     await userEvent.click(scheduleButton)

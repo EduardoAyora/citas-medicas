@@ -166,7 +166,10 @@ const Paciente: React.FC<Props> = ({
               {isPatientLoading ? (
                 <Loading />
               ) : patient ? (
-                `${patient.nombre} ${patient.apellido}`
+                <span>
+                  <span className='font-bold'>Paciente: </span>
+                  <span>{`${patient.nombre} ${patient.apellido}`}</span>
+                </span>
               ) : (
                 <span className='text-red-400'>Debe asignar un paciente</span>
               )}
