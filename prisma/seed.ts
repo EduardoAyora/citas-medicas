@@ -1,56 +1,78 @@
-import { PrismaClient } from '@prisma/client'
+import { Dia, PrismaClient, Rol } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-  await prisma.persona.create({
-    data: {
-      nombre: 'Juan',
-      apellido: 'Perez',
-      cedula: '1234567890',
-      celular: '1234567890',
-      direccion: 'calle falsa 123',
-    }})
-    
-  // await prisma.cita.createMany({
+  // await prisma.usuario.createMany({
   //   data: [
   //     {
-  //       time: '11:30',
-  //       durationInMinutes: 45,
-  //       day: '2022-05-26',
-  //       servicioId: 1,
+  //       id: 1,
+  //       name: 'Eduardo Ayora',
+  //       password: '123',
+  //       username: 'edu',
+  //       role: Rol.DOCTOR,
   //     },
   //     {
-  //       time: '12:40',
-  //       durationInMinutes: 45,
-  //       day: '2022-05-26',
-  //       servicioId: 1,
+  //       name: 'Karen Ayora',
+  //       password: '123',
+  //       username: 'karen',
+  //       role: Rol.SECRETARY,
   //     },
   //     {
-  //       time: '11:20',
-  //       durationInMinutes: 20,
-  //       day: '2022-05-27',
-  //       servicioId: 1,
+  //       name: 'Admin',
+  //       password: '123',
+  //       username: 'admin',
+  //       role: Rol.ADMIN,
   //     },
-  //     {
-  //       time: '12:00',
-  //       durationInMinutes: 20,
-  //       day: '2022-05-27',
-  //       servicioId: 1,
-  //     },
-  //     {
-  //       time: '12:40',
-  //       durationInMinutes: 20,
-  //       day: '2022-05-27',
-  //       servicioId: 1,
-  //     },
-  //     {
-  //       time: '12:30',
-  //       durationInMinutes: 20,
-  //       day: '2022-05-27',
-  //       servicioId: 2,
-  //     },
-  //   ],
+  //   ]
   // })
+    
+  // await prisma.servicio.createMany({
+  //   data: [
+  //     {
+  //       id: 1,
+  //       costo: 20,
+  //       descripcion: 'Consulta general',
+  //       duracionEnMinutos: 20,
+  //       usuarioId: 1
+  //     },
+  //     {
+  //       id: 2,
+  //       costo: 35,
+  //       descripcion: 'Consulta con especialista - Dermatología',
+  //       duracionEnMinutos: 30,
+  //       usuarioId: 1
+  //     }
+  //   ]
+  // })
+
+  await prisma.horarioDia.createMany({
+    data: [
+      {
+        horaInicio: 10,
+        horaFin: 14,
+        dia: Dia.LUNES,
+        servicioId: 1
+      },
+      {
+        horaInicio: 9,
+        horaFin: 14,
+        dia: Dia.JUEVES,
+        servicioId: 1
+      },
+      {
+        horaInicio: 11,
+        horaFin: 14,
+        dia: Dia.VIERNES,
+        servicioId: 1
+      },
+      {
+        horaInicio: 11,
+        horaFin: 15,
+        dia: Dia.VIERNES,
+        servicioId: 2
+      },
+    ]
+  })
 }
 
 main()
