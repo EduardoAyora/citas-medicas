@@ -1,5 +1,4 @@
 import { useState, useRef } from 'react'
-import { Persona } from 'prisma/prisma-client'
 
 import Modal from '../common/SuccessErrorModal'
 import MainCard from '../layout/MainCard'
@@ -7,27 +6,32 @@ import { ServicioJSON } from './Servicios'
 import { getFormattedDateString } from '../../lib/dateFormatters'
 import Loading from '../common/Loading'
 import useSuccessErrorModal from '../../hooks/modals/useSuccessError'
+import { Persona } from '@prisma/client'
 
 interface Props {
   onScheduleClick: () => void
   servicio: ServicioJSON
   selectedDate: Date
   selectedHour: string
+  patient: Persona | undefined
+  setPatient: (patient: Persona | undefined) => void
   onGoBack: () => void
 }
 
 const Paciente: React.FC<Props> = ({
   onScheduleClick,
   onGoBack,
+  setPatient,
   servicio,
   selectedDate,
   selectedHour,
+  patient,
 }) => {
   const [isScheduleButtonEnabled, setIsScheduleButtonEnabled] =
     useState<boolean>(false)
   const [isCreatePatientEnabled, setIsCreatePatientEnabled] =
     useState<boolean>(false)
-  const [patient, setPatient] = useState<Persona>()
+
   const [isPatientLoading, setIsPatientLoading] = useState<boolean>(false)
   const {
     isModalOpen,

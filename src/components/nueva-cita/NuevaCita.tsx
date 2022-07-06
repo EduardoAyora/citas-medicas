@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 
 import Exito from './Exito'
 import Servicios, { ServicioJSON } from './Servicios'
+import { Persona } from '@prisma/client'
 
 const NuevaCita: React.FC = () => {
   const [service, setService] = useState<ServicioJSON>()
@@ -11,6 +12,7 @@ const NuevaCita: React.FC = () => {
   const [availableHours, setAvailableHours] = useState<string[]>([])
   const [isAvailableHoursLoading, setIsAvailableHoursLoading] = useState(true)
   const [selectedHour, setSelectedHour] = useState<string>()
+  const [patient, setPatient] = useState<Persona>()
   const [isNewAppointmentCreated, setIsNewAppointmentCreated] =
     useState<boolean>(false)
 
@@ -33,12 +35,14 @@ const NuevaCita: React.FC = () => {
 
   const onScheduleClick = async () => {
     if (!service) return
+    if (!patient) return
     const formattedDate = selectedDate.toISOString().split('T')[0]
     const citaData = await fetch(`/api/servicios/${service.id}/citas`, {
       method: 'POST',
       body: JSON.stringify({
         day: formattedDate,
         time: selectedHour,
+        pacienteId: patient.cedula,
       }),
     })
     const cita = await citaData.json()
@@ -77,6 +81,8 @@ const NuevaCita: React.FC = () => {
       )}
       {selectedHour && (
         <Paciente
+          patient={patient}
+          setPatient={setPatient}
           onGoBack={() => setSelectedHour(undefined)}
           selectedDate={selectedDate}
           selectedHour={selectedHour}
