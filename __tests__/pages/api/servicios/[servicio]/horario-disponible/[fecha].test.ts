@@ -31,6 +31,16 @@ describe('handler /servicios/[servicio]/horario-disponible/[fecha]', () => {
       ],
     })
 
+    await prisma.persona.create({
+      data: {
+        cedula: '1234567890',
+        nombre: 'eduardo',
+        apellido: 'sanchez',
+        email: 'kar@gmail.com',
+        celular: '1234567890',
+        direccion: 'calle falsa 123',
+      }})
+
     await prisma.cita.createMany({
       data: [
         {
@@ -38,36 +48,42 @@ describe('handler /servicios/[servicio]/horario-disponible/[fecha]', () => {
           durationInMinutes: 45,
           day: '2022-05-26',
           servicioId: 1,
+          pacienteId:'1234567890',
         },
         {
           time: '12:40',
           durationInMinutes: 45,
           day: '2022-05-26',
           servicioId: 1,
+          pacienteId:'1234567890',
         },
         {
           time: '11:20',
           durationInMinutes: 20,
           day: '2022-05-27',
           servicioId: 1,
+          pacienteId:'1234567890',
         },
         {
           time: '12:00',
           durationInMinutes: 20,
           day: '2022-05-27',
           servicioId: 1,
+          pacienteId:'1234567890',
         },
         {
           time: '12:40',
           durationInMinutes: 20,
           day: '2022-05-27',
           servicioId: 1,
+          pacienteId:'1234567890',
         },
         {
           time: '12:30',
           durationInMinutes: 20,
           day: '2022-05-27',
           servicioId: 2,
+          pacienteId:'1234567890',
         },
       ],
     })
@@ -77,6 +93,7 @@ describe('handler /servicios/[servicio]/horario-disponible/[fecha]', () => {
     await prisma.cita.deleteMany()
     await prisma.horarioDia.deleteMany()
     await prisma.servicio.deleteMany()
+    await prisma.persona.deleteMany()
   })
 
   test('Devuelve un estado de error al no recibir una fecha', async () => {

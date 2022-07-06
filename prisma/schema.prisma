@@ -20,6 +20,7 @@ model Persona {
   email     String    @unique
   // usuario   Usuario   @relation(fields: [usuarioId], references: [id])
   // usuarioId Int       @unique
+  citas     Cita[]
   facturas  Factura[]
 }
 
@@ -45,13 +46,15 @@ model Servicio {
 }
 
 model Cita {
-  id                Int    @id @default(autoincrement())
+  id                Int     @id @default(autoincrement())
   time              String
   durationInMinutes Int
   day               String
-  servicioId        Int
   esCancelada       Boolean @default(false)
+  servicioId        Int
+  pacienteId        String
 
+  paciente Persona  @relation(fields: [pacienteId], references: [cedula])
   servicio Servicio @relation(fields: [servicioId], references: [id])
 }
 

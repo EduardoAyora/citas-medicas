@@ -14,6 +14,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse<{citas: Cita[]}
         day: {
           gte: new Date().toISOString().split('T')[0]
         }
+      },
+      include: {
+        servicio: {
+          include: {
+            usuario: true
+          }
+        }
       }
     })
 

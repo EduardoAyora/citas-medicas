@@ -14,6 +14,17 @@ jest.mock('next-auth/react', () => ({
 
 describe('handler /servicios/[servicio]/citas', () => {
   beforeAll(async () => {
+    await prisma.persona.create({
+      data: {
+        cedula: '1234567890',
+        nombre: 'eduardo',
+        apellido: 'sanchez',
+        email: 'kar@gmail.com',
+        celular: '1234567890',
+        direccion: 'calle falsa 123',
+      }
+    })
+
     await prisma.usuario.createMany({
       data: [
         {
@@ -65,6 +76,7 @@ describe('handler /servicios/[servicio]/citas', () => {
     await prisma.horarioDia.deleteMany()
     await prisma.servicio.deleteMany()
     await prisma.usuario.deleteMany()
+    await prisma.persona.deleteMany()
   })
 
   test('Devuelve que no se tiene los permisos necesarios', async () => {
@@ -95,6 +107,7 @@ describe('handler /servicios/[servicio]/citas', () => {
       body: {
         day: '2022-05-26',
         time: '11:30',
+        pacienteId: '1234567890',
       },
     })
     await handler(req, res)
@@ -106,6 +119,8 @@ describe('handler /servicios/[servicio]/citas', () => {
         day: '2022-05-26',
         servicioId: 1,
         id: expect.any(Number),
+        esCancelada: false,
+        pacienteId: '1234567890',
       },
     })
   })

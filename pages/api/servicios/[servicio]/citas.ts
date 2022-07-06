@@ -13,7 +13,7 @@ export type Data = {
 async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   const {
     query: { servicio },
-    body: { day, time },
+    body: { day, time, pacienteId },
     method,
   } = req
 
@@ -26,21 +26,32 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
 
     try {
       const servicioId = parseInt(servicio as string)
+
       const informacionServicio = await prisma.servicio.findUnique({
         where: {
           id: servicioId,
         },
       })
-
       if (!informacionServicio)
         return res
           .status(404)
           .json({ message: 'El servicio solicitado no se ha encontrado' })
+      
+      const paciente = await prisma.persona.findUnique({
+        where: {
+          cedula: pacienteId,
+        }
+      })
+      if (!paciente)
+        return res
+          .status(404)
+          .json({ message: 'El paciente no se ha encontrado' })
 
       const citaCreada = await prisma.cita.create({
         data: {
           day,
           time,
+          pacienteId,
           durationInMinutes: informacionServicio.duracionEnMinutos,
           servicioId,
         },
