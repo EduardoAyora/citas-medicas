@@ -6,6 +6,14 @@ import { prisma } from '../../../../../../src/lib/db'
 
 describe('handler /servicios/[servicio]/horario-disponible/[fecha]', () => {
   beforeAll(async () => {
+    await prisma.usuario.create({
+      data: {
+        id: 1,
+        name: 'Doctor',
+        password: '123456',
+        username: 'doctor',
+      }
+    })
     await prisma.servicio.createMany({
       data: [
         {
@@ -13,12 +21,14 @@ describe('handler /servicios/[servicio]/horario-disponible/[fecha]', () => {
           costo: 15,
           descripcion: 'Medicina General',
           duracionEnMinutos: 20,
+          usuarioId: 1,
         },
         {
           id: 2,
           costo: 25,
           descripcion: 'Medicina General 2',
           duracionEnMinutos: 60,
+          usuarioId: 1,
         },
       ],
     })
@@ -94,6 +104,7 @@ describe('handler /servicios/[servicio]/horario-disponible/[fecha]', () => {
     await prisma.horarioDia.deleteMany()
     await prisma.servicio.deleteMany()
     await prisma.persona.deleteMany()
+    await prisma.usuario.deleteMany()
   })
 
   test('Devuelve un estado de error al no recibir una fecha', async () => {

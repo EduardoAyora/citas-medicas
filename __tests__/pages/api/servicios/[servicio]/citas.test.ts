@@ -41,6 +41,15 @@ describe('handler /servicios/[servicio]/citas', () => {
       ],
     })
 
+    await prisma.usuario.create({
+      data: {
+        id: 1,
+        name: 'Doctor',
+        password: '123456',
+        username: 'doctor',
+      }
+    })
+
     await prisma.servicio.createMany({
       data: [
         {
@@ -48,12 +57,14 @@ describe('handler /servicios/[servicio]/citas', () => {
           costo: 15,
           descripcion: 'Medicina General',
           duracionEnMinutos: 20,
+          usuarioId: 1,
         },
         {
           id: 2,
           costo: 25,
           descripcion: 'Medicina General 2',
           duracionEnMinutos: 60,
+          usuarioId: 1,
         },
       ],
     })
