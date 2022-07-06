@@ -50,6 +50,7 @@ model Cita {
   durationInMinutes Int
   day               String
   servicioId        Int
+  esCancelada       Boolean @default(false)
 
   servicio Servicio @relation(fields: [servicioId], references: [id])
 }

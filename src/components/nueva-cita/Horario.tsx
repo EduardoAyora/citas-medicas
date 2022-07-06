@@ -1,6 +1,8 @@
 import React, { Fragment, SetStateAction, useEffect, useState } from 'react'
+
 import Loading from '../common/Loading'
 import MainCard from '../layout/MainCard'
+import { getFormattedDateString } from '../../lib/dateFormatters'
 
 interface Props {
   selectedDate: Date
@@ -282,14 +284,6 @@ const getFirstDayOfWeekOfMonth = (date: Date) => {
 const getLastDayOfMonth = (date: Date) => {
   const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
   return lastDay.getDate()
-}
-
-export const getFormattedDateString = (date: Date) => {
-  const options = { weekday: 'long', month: 'long', day: 'numeric' } as const
-  const dateString = date.toLocaleDateString('es-ES', options)
-  const dateStringCapilized =
-    dateString.charAt(0).toUpperCase() + dateString.slice(1)
-  return dateStringCapilized
 }
 
 const getFormattedMonthString = (date: Date) => {

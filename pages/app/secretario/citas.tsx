@@ -1,9 +1,7 @@
-const Citas = () => {
-  return (
-    <div>
-      
-    </div>
-  );
-};
+import VerCitas from '../../../src/components/ver-citas/VerCitas'
 
-export default Citas;
+const Citas = () => {
+  return <VerCitas />
+}
+
+export default Citas

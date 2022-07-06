@@ -4,7 +4,7 @@ import { Persona } from 'prisma/prisma-client'
 import Modal from '../common/SuccessErrorModal'
 import MainCard from '../layout/MainCard'
 import { ServicioJSON } from './Servicios'
-import { getFormattedDateString } from './Horario'
+import { getFormattedDateString } from '../../lib/dateFormatters'
 import Loading from '../common/Loading'
 import useSuccessErrorModal from '../../hooks/modals/useSuccessError'
 

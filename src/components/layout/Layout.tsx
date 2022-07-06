@@ -5,12 +5,18 @@ interface Props {
   links: Link[]
   currentPath: string
   children: JSX.Element
+  isDarkModeEnabled: boolean
 }
 
-const Layout: React.FC<Props> = ({ links, currentPath, children }) => {
+const Layout: React.FC<Props> = ({
+  links,
+  currentPath,
+  children,
+  isDarkModeEnabled = false,
+}) => {
   return (
     <div className='h-screen bg-gray-100'>
-      <div className='sidebar absolute bg-gray-100 min-h-screen w-[3.25rem] overflow-hidden border-r hover:w-56 hover:bg-white hover:shadow-lg'>
+      <div className='sidebar z-10 absolute bg-white min-h-screen w-[3.25rem] overflow-hidden border-r hover:w-56 hover:bg-white hover:shadow-lg'>
         <div className='flex h-screen flex-col justify-between pt-2 pb-6'>
           <div>
             <div className='w-max p-2.5'>
@@ -79,7 +85,11 @@ const Layout: React.FC<Props> = ({ links, currentPath, children }) => {
           </div>
         </div>
       </div>
-      <div className='pl-14 dark:bg-primary-dark h-screen overflow-y-auto'>
+      <div
+        className={`pl-14 h-screen overflow-y-auto ${
+          isDarkModeEnabled && 'dark:bg-primary-dark'
+        }`}
+      >
         <div className='mx-auto px-4 sm:px-6 lg:px-20 xl:px-32'>
           <div className='py-10'>{children}</div>
         </div>

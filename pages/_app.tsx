@@ -31,7 +31,11 @@ function MyApp({
   return (
     <SessionProvider session={session}>
       {isAppPage(currentPath) ? (
-        <Layout currentPath={currentPath} links={links}>
+        <Layout
+          currentPath={currentPath}
+          links={links}
+          isDarkModeEnabled={isDarkModeEnabled(currentPath)}
+        >
           <Component {...pageProps} />
         </Layout>
       ) : (
@@ -90,3 +94,5 @@ export const isAdminAppPage = currentPathMatcher('/app/admin')
 export const isSecretarioAppPage = currentPathMatcher('/app/secretario')
 
 export const isDoctorAppPage = currentPathMatcher('/app/doctor')
+
+export const isDarkModeEnabled = currentPathMatcher('/agendar-cita')
