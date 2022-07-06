@@ -1,15 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from '../../../src/lib/db'
 
-interface Cita {
-  id: number
-  day: string
-  durationInMinutes: number
-  time: string
-  doctor: string
-  paciente: string
-}
-async function handler(req: NextApiRequest, res: NextApiResponse<{citas: Cita[]}>) {
+async function handler(req: NextApiRequest, res: NextApiResponse<{citas: CitaResponse[]}>) {
   const {
     method,
   } = req
@@ -20,8 +12,17 @@ async function handler(req: NextApiRequest, res: NextApiResponse<{citas: Cita[]}
       where: {
         day: {
           gte: new Date().toISOString().split('T')[0]
-        }
+        },
+        esCancelada: false
       },
+      orderBy: [
+        {
+          day: 'asc',
+        },
+        {
+          time: 'asc',
+        }
+      ],
       include: {
         servicio: {
           include: {

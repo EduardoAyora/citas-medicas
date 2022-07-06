@@ -1,8 +1,7 @@
-import { Cita } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from '../../../src/lib/db'
 
-async function handler(req: NextApiRequest, res: NextApiResponse<{citas: Cita[]}>) {
+async function handler(req: NextApiRequest, res: NextApiResponse<{citas: CitaResponse[]}>) {
   const {
     method,
   } = req
@@ -14,10 +13,34 @@ async function handler(req: NextApiRequest, res: NextApiResponse<{citas: Cita[]}
         day: {
           lt: new Date().toISOString().split('T')[0]
         }
+      },
+      orderBy: [
+        {
+          day: 'asc',
+        },
+        {
+          time: 'asc',
+        }
+      ],
+      include: {
+        servicio: {
+          include: {
+            usuario: true
+          }
+        },
+        paciente: true
       }
     })
+    const mappedCitas = citas.map(cita => ({
+      id: cita.id,
+      day: cita.day,
+      durationInMinutes: cita.durationInMinutes,
+      time: cita.time,
+      doctor: cita.servicio.usuario.name,
+      paciente: `${cita.paciente.nombre} ${cita.paciente.apellido}`
+    }))
 
-    return res.status(200).json({citas})
+    return res.status(200).json({citas: mappedCitas})
   default:
     return res.status(405).end(`Method ${method} Not Allowed`)
   }
