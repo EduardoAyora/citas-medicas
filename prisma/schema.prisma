@@ -14,20 +14,23 @@ model Persona {
   id        Int       @id @default(autoincrement())
   nombre    String
   apellido  String
-  cedula    String
+  cedula    String    @unique
   direccion String
   celular   String
+  email     String    @unique
   // usuario   Usuario   @relation(fields: [usuarioId], references: [id])
   // usuarioId Int       @unique
+  citas     Cita[]
   facturas  Factura[]
 }
 
 model Usuario {
-  id       Int    @id @default(autoincrement())
-  username String @unique
-  password String
-  name     String
-  role     Rol    @default(DOCTOR)
+  id        Int        @id @default(autoincrement())
+  username  String     @unique
+  password  String
+  name      String
+  role      Rol        @default(DOCTOR)
+  servicios Servicio[]
   // persona  Persona?
 }
 
@@ -38,17 +41,21 @@ model Servicio {
   duracionEnMinutos Int
   dias              HorarioDia[]
   citas             Cita[]
-  factura           Factura      @relation(fields: [facturaId], references: [id])
-  facturaId         Int          @unique
+  usuarioId         Int
+  
+  usuario           Usuario     @relation(fields: [usuarioId], references: [id])
 }
 
 model Cita {
-  id                Int    @id @default(autoincrement())
+  id                Int     @id @default(autoincrement())
   time              String
   durationInMinutes Int
   day               String
+  esCancelada       Boolean @default(false)
   servicioId        Int
+  pacienteId        String
 
+  paciente Persona  @relation(fields: [pacienteId], references: [cedula])
   servicio Servicio @relation(fields: [servicioId], references: [id])
 }
 
@@ -64,11 +71,13 @@ model HorarioDia {
 }
 
 model Factura {
-  id        Int       @id @default(autoincrement())
-  fecha     DateTime
-  cliente   Persona   @relation(fields: [clienteId], references: [id])
-  clienteId Int
-  servicio  Servicio?
+  id                  Int      @id @default(autoincrement())
+  fecha               DateTime
+  descripcionServicio String
+  precioServicio      Decimal
+  total               Decimal
+  cliente             Persona  @relation(fields: [clienteId], references: [id])
+  clienteId           Int
 }
 
 enum Dia {

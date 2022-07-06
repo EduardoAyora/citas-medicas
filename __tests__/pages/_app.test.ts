@@ -48,10 +48,21 @@ describe('getPageLinks', () => {
     const adminLinks: [] = []
     const secretarioLinks: Link[] = [{ name: 'Ver citas', href: '/citas' }]
     const doctorLinks: Link[] = [
+      { name: 'Inicio', href: '/' },
       { name: 'Ver citas', href: '/citas' },
       { name: 'Agendar cita', href: '/agendar-cita' },
     ]
     expect(getPageLinks('/app/doctor', {doctorLinks, adminLinks, secretarioLinks}))
-      .toEqual([{name: 'Ver citas', href: '/app/doctor/citas'}, {name: 'Agendar cita', href: '/app/doctor/agendar-cita'}])
+      .toEqual([
+        {name: 'Inicio', href: '/app/doctor'},
+        {name: 'Ver citas', href: '/app/doctor/citas'}, 
+        {name: 'Agendar cita', href: '/app/doctor/agendar-cita'}
+      ])
+    expect(getPageLinks('/app/doctor/seccion-de-path-no-considerada', {doctorLinks, adminLinks, secretarioLinks}))
+      .toEqual([
+        {name: 'Inicio', href: '/app/doctor'},
+        {name: 'Ver citas', href: '/app/doctor/citas'}, 
+        {name: 'Agendar cita', href: '/app/doctor/agendar-cita'}
+      ])
   })
 })

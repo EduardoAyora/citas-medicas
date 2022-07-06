@@ -8,14 +8,15 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest --watch",
-    "test:coverage": "dotenv -e .env.test yarn docker:up && yarn prisma migrate deploy && jest -i --coverage",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
-    "test:docker": "dotenv -e .env.test yarn docker:up && yarn prisma migrate deploy && jest -i --watch",
-    "migrate": "npx prisma migrate dev --name postgres-init",
-    "migrate:test": "dotenv -e .env.test -- npx prisma migrate dev --name postgres-init"
+    "test:coverage": "dotenv -e .env.test -- npx prisma migrate dev && yarn docker:up && jest -i --coverage",
+    "test:docker": "dotenv -e .env.test -- npx prisma migrate dev && yarn docker:up && jest -i --watch",
+    "migrate": "npx prisma migrate dev",
+    "migrate:test": "dotenv -e .env.test -- npx prisma migrate dev"
   },
   "dependencies": {
+    "@headlessui/react": "^1.6.5",
     "@heroicons/react": "^1.0.6",
     "@prisma/client": "^3.14.0",
     "@tailwindcss/forms": "^0.5.2",
@@ -43,6 +44,10 @@
     "postcss": "^8.4.14",
     "prisma": "^3.14.0",
     "tailwindcss": "^3.0.24",
+    "ts-node": "^10.8.1",
     "typescript": "4.6.4"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }

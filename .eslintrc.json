@@ -3,7 +3,7 @@
   "rules": {
     "complexity": ["warn", 8],
     "max-params": ["warn", 3],
-    "max-lines": ["warn", 300],
+    "max-lines": ["warn", 400],
     "indent": ["error", 2],
     "no-var": "error"
   }

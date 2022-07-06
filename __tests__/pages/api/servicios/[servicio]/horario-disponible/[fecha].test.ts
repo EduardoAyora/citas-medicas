@@ -1,11 +1,19 @@
 import { createMocks } from 'node-mocks-http'
 import { Dia } from '@prisma/client'
 
-import handler from '../../../../../../pages/api/servicio/[servicio]/horario-disponible/[fecha]'
+import handler from '../../../../../../pages/api/servicios/[servicio]/horario-disponible/[fecha]'
 import { prisma } from '../../../../../../src/lib/db'
 
-describe('handler /servicio/[servicio]/horario-disponible/[fecha]', () => {
+describe('handler /servicios/[servicio]/horario-disponible/[fecha]', () => {
   beforeAll(async () => {
+    await prisma.usuario.create({
+      data: {
+        id: 1,
+        name: 'Doctor',
+        password: '123456',
+        username: 'doctor',
+      }
+    })
     await prisma.servicio.createMany({
       data: [
         {
@@ -13,12 +21,14 @@ describe('handler /servicio/[servicio]/horario-disponible/[fecha]', () => {
           costo: 15,
           descripcion: 'Medicina General',
           duracionEnMinutos: 20,
+          usuarioId: 1,
         },
         {
           id: 2,
           costo: 25,
           descripcion: 'Medicina General 2',
           duracionEnMinutos: 60,
+          usuarioId: 1,
         },
       ],
     })
@@ -31,6 +41,16 @@ describe('handler /servicio/[servicio]/horario-disponible/[fecha]', () => {
       ],
     })
 
+    await prisma.persona.create({
+      data: {
+        cedula: '1234567890',
+        nombre: 'eduardo',
+        apellido: 'sanchez',
+        email: 'kar@gmail.com',
+        celular: '1234567890',
+        direccion: 'calle falsa 123',
+      }})
+
     await prisma.cita.createMany({
       data: [
         {
@@ -38,36 +58,42 @@ describe('handler /servicio/[servicio]/horario-disponible/[fecha]', () => {
           durationInMinutes: 45,
           day: '2022-05-26',
           servicioId: 1,
+          pacienteId:'1234567890',
         },
         {
           time: '12:40',
           durationInMinutes: 45,
           day: '2022-05-26',
           servicioId: 1,
+          pacienteId:'1234567890',
         },
         {
           time: '11:20',
           durationInMinutes: 20,
           day: '2022-05-27',
           servicioId: 1,
+          pacienteId:'1234567890',
         },
         {
           time: '12:00',
           durationInMinutes: 20,
           day: '2022-05-27',
           servicioId: 1,
+          pacienteId:'1234567890',
         },
         {
           time: '12:40',
           durationInMinutes: 20,
           day: '2022-05-27',
           servicioId: 1,
+          pacienteId:'1234567890',
         },
         {
           time: '12:30',
           durationInMinutes: 20,
           day: '2022-05-27',
           servicioId: 2,
+          pacienteId:'1234567890',
         },
       ],
     })
@@ -77,6 +103,8 @@ describe('handler /servicio/[servicio]/horario-disponible/[fecha]', () => {
     await prisma.cita.deleteMany()
     await prisma.horarioDia.deleteMany()
     await prisma.servicio.deleteMany()
+    await prisma.persona.deleteMany()
+    await prisma.usuario.deleteMany()
   })
 
   test('Devuelve un estado de error al no recibir una fecha', async () => {

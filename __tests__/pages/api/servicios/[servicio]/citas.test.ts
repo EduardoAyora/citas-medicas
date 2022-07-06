@@ -1,6 +1,6 @@
 import { Dia, Rol } from '@prisma/client'
 
-import handler from '../../../../../pages/api/servicio/[servicio]/citas'
+import handler from '../../../../../pages/api/servicios/[servicio]/citas'
 import { prisma } from '../../../../../src/lib/db'
 import { createMocks } from 'node-mocks-http'
 
@@ -12,8 +12,19 @@ jest.mock('next-auth/react', () => ({
   }),
 }))
 
-describe('handler /servicio/[servicio]/citas', () => {
+describe('handler /servicios/[servicio]/citas', () => {
   beforeAll(async () => {
+    await prisma.persona.create({
+      data: {
+        cedula: '1234567890',
+        nombre: 'eduardo',
+        apellido: 'sanchez',
+        email: 'kar@gmail.com',
+        celular: '1234567890',
+        direccion: 'calle falsa 123',
+      }
+    })
+
     await prisma.usuario.createMany({
       data: [
         {
@@ -30,6 +41,15 @@ describe('handler /servicio/[servicio]/citas', () => {
       ],
     })
 
+    await prisma.usuario.create({
+      data: {
+        id: 1,
+        name: 'Doctor',
+        password: '123456',
+        username: 'doctor',
+      }
+    })
+
     await prisma.servicio.createMany({
       data: [
         {
@@ -37,12 +57,14 @@ describe('handler /servicio/[servicio]/citas', () => {
           costo: 15,
           descripcion: 'Medicina General',
           duracionEnMinutos: 20,
+          usuarioId: 1,
         },
         {
           id: 2,
           costo: 25,
           descripcion: 'Medicina General 2',
           duracionEnMinutos: 60,
+          usuarioId: 1,
         },
       ],
     })
@@ -65,6 +87,7 @@ describe('handler /servicio/[servicio]/citas', () => {
     await prisma.horarioDia.deleteMany()
     await prisma.servicio.deleteMany()
     await prisma.usuario.deleteMany()
+    await prisma.persona.deleteMany()
   })
 
   test('Devuelve que no se tiene los permisos necesarios', async () => {
@@ -95,6 +118,7 @@ describe('handler /servicio/[servicio]/citas', () => {
       body: {
         day: '2022-05-26',
         time: '11:30',
+        pacienteId: '1234567890',
       },
     })
     await handler(req, res)
@@ -106,6 +130,8 @@ describe('handler /servicio/[servicio]/citas', () => {
         day: '2022-05-26',
         servicioId: 1,
         id: expect.any(Number),
+        esCancelada: false,
+        pacienteId: '1234567890',
       },
     })
   })
