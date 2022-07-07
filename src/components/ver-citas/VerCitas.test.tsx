@@ -79,6 +79,7 @@ describe('VerCitas', () => {
     await screen.findAllByText('Miércoles, 6 de julio')
     screen.getAllByText('12:00')
     await userEvent.click(screen.getByRole('button', { name: 'cancelar-0' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Confirmar' }))
 
     await waitFor(() => {
       expect(

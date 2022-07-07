@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from 'react'
+import { Fragment, useRef } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { ExclamationIcon } from '@heroicons/react/outline'
 
@@ -7,9 +7,16 @@ interface Props {
   setIsOpen: (isOpen: boolean) => void
   message: string
   title: string
+  onConfirm: Function
 }
 
-const Modal: React.FC<Props> = ({ isOpen, setIsOpen, message, title }) => {
+const Modal: React.FC<Props> = ({
+  isOpen,
+  setIsOpen,
+  message,
+  title,
+  onConfirm,
+}) => {
   const cancelButtonRef = useRef<HTMLButtonElement>(null)
 
   return (
@@ -60,9 +67,7 @@ const Modal: React.FC<Props> = ({ isOpen, setIsOpen, message, title }) => {
                         {title}
                       </Dialog.Title>
                       <div className='mt-2'>
-                        <p className='text-sm text-gray-500'>
-                          {message}
-                        </p>
+                        <p className='text-sm text-gray-500'>{message}</p>
                       </div>
                     </div>
                   </div>
@@ -70,10 +75,13 @@ const Modal: React.FC<Props> = ({ isOpen, setIsOpen, message, title }) => {
                 <div className='bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse'>
                   <button
                     type='button'
-                    className='w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm'
-                    onClick={() => setIsOpen(false)}
+                    className='w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-800 text-base font-medium text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black-500 sm:ml-3 sm:w-auto sm:text-sm'
+                    onClick={() => {
+                      onConfirm()
+                      setIsOpen(false)
+                    }}
                   >
-                    Deactivate
+                    Confirmar
                   </button>
                   <button
                     type='button'
@@ -81,7 +89,7 @@ const Modal: React.FC<Props> = ({ isOpen, setIsOpen, message, title }) => {
                     onClick={() => setIsOpen(false)}
                     ref={cancelButtonRef}
                   >
-                    Cancel
+                    Cancelar
                   </button>
                 </div>
               </Dialog.Panel>

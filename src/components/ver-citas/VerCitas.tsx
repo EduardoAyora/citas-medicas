@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 
 import { getFormattedDateString } from '../../lib/dateFormatters'
 import Loading from '../common/Loading'
+import ConfirmModal from '../common/ConfirmModal'
 
 const VerCitas = () => {
   const [appointmentsState, setAppointmentsState] = useState<
@@ -10,6 +11,8 @@ const VerCitas = () => {
   >('proximas')
   const [appointments, setAppointments] = useState<CitaResponse[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
+  const [idCitaToDelete, setIdCitaToDelete] = useState<number>()
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -22,17 +25,33 @@ const VerCitas = () => {
     fetchAppointments()
   }, [appointmentsState])
 
-  const cancelarCita = async (id: number) => {
-    const response = await fetch(`/api/citas/${id}/cancelar`, {
+  const cancelAppointment = async () => {
+    const response = await fetch(`/api/citas/${idCitaToDelete}/cancelar`, {
       method: 'PUT',
     })
     const { message } = await response.json()
     if (!response.ok) alert(message)
-    setAppointments(appointments.filter((appointment) => appointment.id !== id))
+    setAppointments(
+      appointments.filter((appointment) => appointment.id !== idCitaToDelete)
+    )
+    setIdCitaToDelete(undefined)
+    setIsConfirmModalOpen(false)
+  }
+
+  const onCancelAppointmentClick = (idCita: number) => {
+    setIdCitaToDelete(idCita)
+    setIsConfirmModalOpen(true)
   }
 
   return (
     <div className='flex flex-1 flex-col overflow-hidden'>
+      <ConfirmModal
+        isOpen={isConfirmModalOpen}
+        setIsOpen={setIsConfirmModalOpen}
+        title='¿Seguro que desea cancelar la cita?'
+        message='No podrá deshacer esta acción'
+        onConfirm={cancelAppointment}
+      />
       <main className='relative z-0 flex-1 overflow-y-auto focus:outline-none max-w-[1700px]'>
         <div className='py-8'>
           <div className='block min-h-[80px] justify-between px-4 sm:flex sm:px-6 md:px-8'>
@@ -152,7 +171,9 @@ const VerCitas = () => {
                                     <td className='whitespace-nowrap py-4 text-right text-sm font-medium ltr:pr-4 rtl:pl-4'>
                                       <div className='hidden space-x-2 rtl:space-x-reverse lg:block'>
                                         <button
-                                          onClick={() => cancelarCita(id)}
+                                          onClick={() =>
+                                            onCancelAppointmentClick(id)
+                                          }
                                           aria-label={`cancelar-${index}`}
                                           className='inline-flex items-center px-3 py-2 text-sm font-medium rounded-sm relative border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:text-gray-900 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-neutral-900 dark:bg-transparent'
                                         >
