@@ -186,18 +186,20 @@ const VerCitas = () => {
                                       </div>
                                     </td>
                                     <td className='whitespace-nowrap py-4 text-right text-sm font-medium ltr:pr-4 rtl:pl-4'>
-                                      <div className='hidden space-x-2 rtl:space-x-reverse lg:block'>
-                                        <button
-                                          onClick={() =>
-                                            onCancelAppointmentClick(id)
-                                          }
-                                          aria-label={`cancelar-${index}`}
-                                          className='inline-flex items-center px-3 py-2 text-sm font-medium rounded-sm relative border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:text-gray-900 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-neutral-900 dark:bg-transparent'
-                                        >
-                                          <XIcon className='inline -ml-1 h-5 w-5 ltr:mr-2 rtl:ml-2 rtl:-mr-1' />
-                                          Cancelar
-                                        </button>
-                                      </div>
+                                      {appointmentsState === 'proximas' && (
+                                        <div className='hidden space-x-2 rtl:space-x-reverse lg:block'>
+                                          <button
+                                            onClick={() =>
+                                              onCancelAppointmentClick(id)
+                                            }
+                                            aria-label={`cancelar-${index}`}
+                                            className='inline-flex items-center px-3 py-2 text-sm font-medium rounded-sm relative border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:text-gray-900 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-neutral-900 dark:bg-transparent'
+                                          >
+                                            <XIcon className='inline -ml-1 h-5 w-5 ltr:mr-2 rtl:ml-2 rtl:-mr-1' />
+                                            Cancelar
+                                          </button>
+                                        </div>
+                                      )}
                                       <div className='inline-block text-left lg:hidden'>
                                         <button
                                           type='button'
