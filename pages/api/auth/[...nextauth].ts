@@ -21,7 +21,7 @@ export default NextAuth({
         if (!user) throw new Error('No se encontró el usuario')
         if (user.password !== credentials.password)
           throw new Error('La contraseña no es correcta')
-        return { name: user.name, role: user.role, username: user.username }
+        return { name: user.name, role: user.role, username: user.username, id: user.id }
       },
     }),
   ],
