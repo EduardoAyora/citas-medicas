@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { getFormattedDateString } from '../../lib/dateFormatters'
 import Loading from '../common/Loading'
 import ConfirmModal from '../common/ConfirmModal'
+import useSuccessError from '../../hooks/modals/useSuccessError'
+import SuccessErrorModal from '../common/SuccessErrorModal'
 
 const VerCitas = () => {
   const [appointmentsState, setAppointmentsState] = useState<
@@ -13,6 +15,14 @@ const VerCitas = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
   const [idCitaToDelete, setIdCitaToDelete] = useState<number>()
+
+  const {
+    isModalOpen,
+    isSuccessModal,
+    modalMessage,
+    setIsModalOpen,
+    showModal,
+  } = useSuccessError()
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -30,12 +40,13 @@ const VerCitas = () => {
       method: 'PUT',
     })
     const { message } = await response.json()
-    if (!response.ok) alert(message)
+    if (!response.ok) return showModal({ message, isSuccess: false })
     setAppointments(
       appointments.filter((appointment) => appointment.id !== idCitaToDelete)
     )
     setIdCitaToDelete(undefined)
     setIsConfirmModalOpen(false)
+    showModal({ message, isSuccess: true })
   }
 
   const onCancelAppointmentClick = (idCita: number) => {
@@ -51,6 +62,12 @@ const VerCitas = () => {
         title='¿Seguro que desea cancelar la cita?'
         message='No podrá deshacer esta acción'
         onConfirm={cancelAppointment}
+      />
+      <SuccessErrorModal
+        isOpen={isModalOpen}
+        isSuccess={isSuccessModal}
+        message={modalMessage}
+        setIsOpen={setIsModalOpen}
       />
       <main className='relative z-0 flex-1 overflow-y-auto focus:outline-none max-w-[1700px]'>
         <div className='py-8'>
