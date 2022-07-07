@@ -36,6 +36,8 @@ describe('getAvailableTimesToSchedule', () => {
             durationInMinutes: 20,
             day: '2022-05-26',
             servicioId: 1,
+            esCancelada: false,
+            pacienteId: '1',
           },
           {
             id: 2,
@@ -43,6 +45,8 @@ describe('getAvailableTimesToSchedule', () => {
             durationInMinutes: 20,
             day: '2022-05-26',
             servicioId: 1,
+            esCancelada: false,
+            pacienteId: '1',
           },
           {
             id: 3,
@@ -50,6 +54,8 @@ describe('getAvailableTimesToSchedule', () => {
             durationInMinutes: 20,
             day: '2022-05-26',
             servicioId: 1,
+            esCancelada: false,
+            pacienteId: '1',
           },
         ],
       })
@@ -69,6 +75,8 @@ describe('getAvailableTimesToSchedule', () => {
             durationInMinutes: 45,
             day: '2022-05-26',
             servicioId: 1,
+            esCancelada: false,
+            pacienteId: '1',
           },
           {
             id: 2,
@@ -76,6 +84,8 @@ describe('getAvailableTimesToSchedule', () => {
             durationInMinutes: 45,
             day: '2022-05-26',
             servicioId: 1,
+            esCancelada: false,
+            pacienteId: '1',
           },
         ],
       })
@@ -95,6 +105,8 @@ describe('getAvailableTimesToSchedule', () => {
             durationInMinutes: 45,
             day: '2022-05-26',
             servicioId: 1,
+            esCancelada: false,
+            pacienteId: '1',
           },
           {
             id: 2,
@@ -102,6 +114,8 @@ describe('getAvailableTimesToSchedule', () => {
             durationInMinutes: 30,
             day: '2022-05-26',
             servicioId: 1,
+            esCancelada: false,
+            pacienteId: '1',
           },
         ],
       })
@@ -185,6 +199,8 @@ describe('isTimeAvailable', () => {
             time: '10:20',
             day: '2022-05-26',
             servicioId: 1,
+            esCancelada: false,
+            pacienteId: '1',
           },
         ],
         newAppointmentDuration: 30,
@@ -200,6 +216,8 @@ describe('isTimeAvailable', () => {
             time: '00:20',
             day: '2022-05-26',
             servicioId: 1,
+            esCancelada: false,
+            pacienteId: '1',
           },
           {
             id: 2,
@@ -207,6 +225,8 @@ describe('isTimeAvailable', () => {
             time: '10:20',
             day: '2022-05-26',
             servicioId: 1,
+            esCancelada: false,
+            pacienteId: '1',
           },
         ],
         newAppointmentDuration: 40,
@@ -222,6 +242,8 @@ describe('isTimeAvailable', () => {
             time: '00:20',
             day: '2022-05-26',
             servicioId: 1,
+            esCancelada: false,
+            pacienteId: '1',
           },
           {
             id: 2,
@@ -229,6 +251,8 @@ describe('isTimeAvailable', () => {
             time: '13:10',
             day: '2022-05-26',
             servicioId: 1,
+            esCancelada: false,
+            pacienteId: '1',
           },
         ],
         newAppointmentDuration: 50,

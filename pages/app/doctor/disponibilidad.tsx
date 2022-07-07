@@ -1,6 +1,13 @@
 import PageLayout from '../../../src/components/layout/PageLayout'
+import Combobox from '../../../src/components/common/Combobox'
+import { getFormattedHourFromTimeInHours } from '../../../src/controllers/appointmentController'
 
 const Disponibilidad = () => {
+  const availableHours = Array.from(Array(24).keys()).map((hour) => ({
+    value: hour.toString(),
+    text: `${getFormattedHourFromTimeInHours(hour)}:00`,
+  }))
+
   return (
     <PageLayout
       pageTitle='Horas de trabajo'
@@ -30,6 +37,7 @@ const Disponibilidad = () => {
                     <div className='flex items-center rtl:space-x-reverse'>
                       <div className='flex flex-grow sm:flex-grow-0'>
                         <div className='flex flex-grow items-center space-x-3'>
+                          <Combobox options={availableHours} />
                           <div className='text-sm shadow-sm w-[120px]'>
                             <span className=''></span>
                             <div className='flex cursor-default text-gray-700 border items-center h-10 px-2 justify-between border-gray-300 hover:border-gray-400'>
