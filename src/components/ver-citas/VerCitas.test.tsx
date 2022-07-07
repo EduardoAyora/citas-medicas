@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event'
-import { render, screen } from '@testing-library/react'
+import { queryByText, render, screen, waitFor } from '@testing-library/react'
 import nock from 'nock'
 import VerCitas from './VerCitas'
 
@@ -66,5 +66,25 @@ describe('VerCitas', () => {
     screen.getByText(
       'Cita de 20 minutos del paciente René Perez con el doctor/a Karen Ayora'
     )
+  })
+
+  nock(host).get('/api/citas/proximas').reply(200, JSON.stringify({ citas }))
+  nock(host)
+    .put('/api/citas/1/cancelar')
+    .reply(200, JSON.stringify({ message: 'Se ha cancelado la cita' }))
+
+  test('Cancelar citas', async () => {
+    render(<VerCitas />)
+
+    await screen.findAllByText('Miércoles, 6 de julio')
+    screen.getAllByText('12:00')
+    await userEvent.click(screen.getByRole('button', { name: 'cancelar-0' }))
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText('Miércoles, 6 de julio')
+      ).not.toBeInTheDocument()
+      expect(screen.queryByText('12:00')).not.toBeInTheDocument()
+    })
   })
 })

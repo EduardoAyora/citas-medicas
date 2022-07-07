@@ -8,7 +8,7 @@ const VerCitas = () => {
   const [appointmentsState, setAppointmentsState] = useState<
     'proximas' | 'pasadas' | 'canceladas'
   >('proximas')
-  const [appointments, setAppointments] = useState([])
+  const [appointments, setAppointments] = useState<CitaResponse[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -21,6 +21,15 @@ const VerCitas = () => {
     }
     fetchAppointments()
   }, [appointmentsState])
+
+  const cancelarCita = async (id: number) => {
+    const response = await fetch(`/api/citas/${id}/cancelar`, {
+      method: 'PUT',
+    })
+    const { message } = await response.json()
+    if (!response.ok) alert(message)
+    setAppointments(appointments.filter((appointment) => appointment.id !== id))
+  }
 
   return (
     <div className='flex flex-1 flex-col overflow-hidden'>
@@ -142,7 +151,11 @@ const VerCitas = () => {
                                     </td>
                                     <td className='whitespace-nowrap py-4 text-right text-sm font-medium ltr:pr-4 rtl:pl-4'>
                                       <div className='hidden space-x-2 rtl:space-x-reverse lg:block'>
-                                        <button className='inline-flex items-center px-3 py-2 text-sm font-medium rounded-sm relative border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:text-gray-900 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-neutral-900 dark:bg-transparent'>
+                                        <button
+                                          onClick={() => cancelarCita(id)}
+                                          aria-label={`cancelar-${index}`}
+                                          className='inline-flex items-center px-3 py-2 text-sm font-medium rounded-sm relative border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:text-gray-900 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-neutral-900 dark:bg-transparent'
+                                        >
                                           <XIcon className='inline -ml-1 h-5 w-5 ltr:mr-2 rtl:ml-2 rtl:-mr-1' />
                                           Cancelar
                                         </button>
