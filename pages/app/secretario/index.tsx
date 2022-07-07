@@ -5,16 +5,14 @@ import PageLayout from '../../../src/components/layout/PageLayout'
 
 const index = () => {
   return (
-    <div>
-      <PageLayout pageTitle='Panel de secretario'>
-        <>
-          <button onClick={() => signOut()} className='button'>
-            <LogoutIcon className='w-5 h-5 mr-2' />
-            Logout
-          </button>
-        </>
-      </PageLayout>
-    </div>
+    <PageLayout pageTitle='Panel de secretario'>
+      <>
+        <button onClick={() => signOut()} className='button'>
+          <LogoutIcon className='w-5 h-5 mr-2' />
+          Logout
+        </button>
+      </>
+    </PageLayout>
   )
 }
 

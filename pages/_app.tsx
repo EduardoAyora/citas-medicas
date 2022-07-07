@@ -8,6 +8,7 @@ const adminLinks: Link[] = [{ name: 'Inicio', href: '/' }]
 const doctorLinks: Link[] = [
   { name: 'Inicio', href: '/' },
   { name: 'Ver citas', href: '/citas' },
+  { name: 'Disponibilidad', href: '/disponibilidad' },
 ]
 const secretarioLinks: Link[] = [
   { name: 'Inicio', href: '/' },
