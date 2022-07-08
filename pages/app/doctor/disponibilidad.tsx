@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useReducer, useState } from 'react'
 
 import PageLayout from '../../../src/components/layout/PageLayout'
 import Combobox from '../../../src/components/common/Combobox'
@@ -9,8 +9,9 @@ import Loading from '../../../src/components/common/Loading'
 
 const Disponibilidad = () => {
   const { data } = useSession()
-  const [horarios, setHorarios] = useState<HorarioDia[]>([])
   const [isLoading, setIsLoading] = useState(false)
+
+  const [state, dispatch] = useReducer(reducer, createInitialState())
 
   useEffect(() => {
     const getHorarios = async () => {
@@ -18,13 +19,22 @@ const Disponibilidad = () => {
       if (!data) return
       const horariosData = await fetch(`/api/doctores/${data.user.id}/horarios`)
       const { horarios } = await horariosData.json()
-      setHorarios(horarios)
+      configureInitialState(horarios)
       setIsLoading(false)
     }
     getHorarios()
   }, [data])
 
-  const availableHours = Array.from(Array(24).keys()).map((hour) => ({
+  const configureInitialState = (horarios: HorarioDia[]) => {
+    const initialState = createInitialState()
+    horarios.forEach(({ dia, horaFin, horaInicio }) => {
+      initialState[dia].inicio = horaInicio
+      initialState[dia].fin = horaFin
+    })
+    dispatch({ type: actionTypes.SET_INITIAL_STATE, payload: initialState })
+  }
+
+  const comboboxOptions = Array.from(Array(24).keys()).map((hour) => ({
     value: hour.toString(),
     text: `${getFormattedHourFromTimeInHours(hour)}:00`,
   }))
@@ -57,7 +67,10 @@ const Disponibilidad = () => {
                 </div>
               ) : (
                 days.map(({ texto, dbEquivalent }, index) => {
-                  if (horarios.find((horario) => horario.dia === dbEquivalent))
+                  const isDayAvailable =
+                    state[dbEquivalent].inicio !== null &&
+                    state[dbEquivalent].fin !== null
+                  if (isDayAvailable)
                     return (
                       <fieldset
                         key={index}
@@ -66,6 +79,12 @@ const Disponibilidad = () => {
                         <label className='flex space-x-2 rtl:space-x-reverse w-1/3'>
                           <div className='w-full'>
                             <input
+                              checked={isDayAvailable}
+                              onClick={() =>
+                                dispatch(
+                                  enableOrDisableDayActionCreator(dbEquivalent)
+                                )
+                              }
                               type='checkbox'
                               className='inline-block rounded-sm border-gray-300 text-neutral-900 focus:ring-neutral-500'
                             />
@@ -79,9 +98,9 @@ const Disponibilidad = () => {
                             <div className='flex items-center rtl:space-x-reverse'>
                               <div className='flex flex-grow sm:flex-grow-0'>
                                 <div className='flex flex-grow items-center space-x-3'>
-                                  <Combobox options={availableHours} />
+                                  <Combobox options={comboboxOptions} />
                                   <span>-</span>
-                                  <Combobox options={availableHours} />
+                                  <Combobox options={comboboxOptions} />
                                 </div>
                               </div>
                             </div>
@@ -98,6 +117,12 @@ const Disponibilidad = () => {
                         <label className='flex space-x-2 rtl:space-x-reverse w-full'>
                           <div className='w-1/3'>
                             <input
+                              checked={isDayAvailable}
+                              onClick={() =>
+                                dispatch(
+                                  enableOrDisableDayActionCreator(dbEquivalent)
+                                )
+                              }
                               type='checkbox'
                               className='inline-block rounded-sm border-gray-300 text-neutral-900 focus:ring-neutral-500'
                             />
@@ -127,3 +152,93 @@ const Disponibilidad = () => {
 }
 
 export default Disponibilidad
+
+const createInitialState = (): {
+  [dia: string]: { inicio: number | null; fin: number | null }
+} => ({
+  [Dia.LUNES]: {
+    inicio: null,
+    fin: null,
+  },
+  [Dia.MARTES]: {
+    inicio: null,
+    fin: null,
+  },
+  [Dia.MIERCOLES]: {
+    inicio: null,
+    fin: null,
+  },
+  [Dia.JUEVES]: {
+    inicio: null,
+    fin: null,
+  },
+  [Dia.VIERNES]: {
+    inicio: null,
+    fin: null,
+  },
+  [Dia.SABADO]: {
+    inicio: null,
+    fin: null,
+  },
+  [Dia.DOMINGO]: {
+    inicio: null,
+    fin: null,
+  },
+})
+
+enum actionTypes {
+  ENABLE_OR_DISABLE,
+  CHANGE_START_HOUR,
+  CHANGE_END_HOUR,
+  SET_INITIAL_STATE,
+}
+
+const enableOrDisableDayActionCreator = (day: Dia) => ({
+  type: actionTypes.ENABLE_OR_DISABLE,
+  payload: day,
+})
+
+const changeStartHourActionCreator = (day: Dia, hour: number) => ({
+  type: actionTypes.CHANGE_START_HOUR,
+  payload: { day, hour },
+})
+
+const changeEndHourActionCreator = (day: Dia, hour: number) => ({
+  type: actionTypes.CHANGE_END_HOUR,
+  payload: { day, hour },
+})
+
+function reducer(
+  state = createInitialState(),
+  action: { type: number; payload: any }
+) {
+  switch (action.type) {
+  case actionTypes.ENABLE_OR_DISABLE:
+    if (
+      state[action.payload].inicio === null ||
+        state[action.payload].fin === null
+    )
+      return { ...state, [action.payload]: { inicio: 8, fin: 17 } }
+    return { ...state, [action.payload]: { inicio: null, fin: null } }
+  case actionTypes.CHANGE_START_HOUR:
+    return {
+      ...state,
+      [action.payload.day]: {
+        ...[action.payload.day],
+        inicio: action.payload.hour,
+      },
+    }
+  case actionTypes.CHANGE_END_HOUR:
+    return {
+      ...state,
+      [action.payload.day]: {
+        ...[action.payload.day],
+        fin: action.payload.hour,
+      },
+    }
+  case actionTypes.SET_INITIAL_STATE:
+    return { ...action.payload }
+  default:
+    throw new Error()
+  }
+}
