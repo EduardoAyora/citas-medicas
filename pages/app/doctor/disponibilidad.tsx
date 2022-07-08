@@ -107,11 +107,11 @@ const Disponibilidad = () => {
                                           state[dbEquivalent].inicio
                                       ) || comboboxOptions[0]
                                     }
-                                    setSelected={() =>
+                                    setSelected={(hour: number) =>
                                       dispatch(
                                         changeStartHourActionCreator(
                                           dbEquivalent,
-                                          7
+                                          hour
                                         )
                                       )
                                     }
@@ -126,11 +126,11 @@ const Disponibilidad = () => {
                                           state[dbEquivalent].fin
                                       ) || comboboxOptions[0]
                                     }
-                                    setSelected={() =>
+                                    setSelected={(hour: number) =>
                                       dispatch(
                                         changeEndHourActionCreator(
                                           dbEquivalent,
-                                          7
+                                          hour
                                         )
                                       )
                                     }

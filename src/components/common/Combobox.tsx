@@ -9,7 +9,7 @@ interface Option {
 interface Props {
   options: Option[]
   selected: Option
-  setSelected: (option: Option) => void
+  setSelected: (option: any) => void
 }
 
 const MyCombobox: React.FC<Props> = ({ options, selected, setSelected }) => {
@@ -67,7 +67,7 @@ const MyCombobox: React.FC<Props> = ({ options, selected, setSelected }) => {
                           : 'font-normal'
                       }`
                     }
-                    value={option}
+                    value={option.value}
                   >
                     {option.text}
                   </Combobox.Option>
