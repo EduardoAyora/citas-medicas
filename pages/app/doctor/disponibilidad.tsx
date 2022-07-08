@@ -46,11 +46,13 @@ const Disponibilidad = () => {
 
   const onSaveClick = async () => {
     if (!data) return
+    setIsLoading(true)
     const responseData = await fetch(`/api/doctores/${data.user.id}/horarios`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(state),
     })
+    setIsLoading(false)
     if (!responseData.ok)
       showModal({
         message: 'Ocurrió un error al guardar los cambios',
