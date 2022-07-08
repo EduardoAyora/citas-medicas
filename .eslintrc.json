@@ -1,7 +1,7 @@
 {
   "extends": ["next/core-web-vitals", "prettier"],
   "rules": {
-    "complexity": ["warn", 8],
+    "complexity": ["warn", 12],
     "max-params": ["warn", 3],
     "max-lines": ["warn", 400],
     "indent": ["error", 2],

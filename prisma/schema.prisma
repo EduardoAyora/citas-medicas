@@ -42,8 +42,8 @@ model Servicio {
   dias              HorarioDia[]
   citas             Cita[]
   usuarioId         Int
-  
-  usuario           Usuario     @relation(fields: [usuarioId], references: [id])
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
 }
 
 model Cita {
@@ -61,8 +61,8 @@ model Cita {
 
 model HorarioDia {
   id         Int      @id @default(autoincrement())
-  horaInicio Int
-  horaFin    Int
+  horaInicio Int?
+  horaFin    Int?
   dia        Dia
   servicioId Int
   servicio   Servicio @relation(fields: [servicioId], references: [id])

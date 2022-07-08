@@ -288,7 +288,10 @@ function reducer(
         state[action.payload].fin === null
     )
       return { ...state, [action.payload]: { inicio: 8, fin: 17 } }
-    return { ...state, [action.payload]: { inicio: null, fin: null } }
+    return {
+      ...state,
+      [action.payload]: { inicio: null, fin: null },
+    }
   case actionTypes.CHANGE_START_HOUR:
     return {
       ...state,

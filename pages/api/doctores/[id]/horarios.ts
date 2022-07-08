@@ -43,6 +43,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const dayKeys = Object.keys(body)
     for (const dayKey of dayKeys) {
       const dia = dayKey as Dia
+      const horaInicio = parseInt(body[dia].inicio) || null
+      const horaFin = parseInt(body[dia].fin) || null
+      
       await prisma.horarioDia.upsert({
         where: {
           servicioId_dia: {
@@ -51,13 +54,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
           }
         },
         update: {
-          horaInicio: body[dia].inicio,
-          horaFin: body[dia].fin,
+          horaInicio,
+          horaFin,
         },
         create: {
           servicioId,
-          horaInicio: body[dia].inicio,
-          horaFin: body[dia].fin,
+          horaInicio,
+          horaFin,
           dia,
         },
       })
