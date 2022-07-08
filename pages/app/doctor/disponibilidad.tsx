@@ -98,9 +98,43 @@ const Disponibilidad = () => {
                             <div className='flex items-center rtl:space-x-reverse'>
                               <div className='flex flex-grow sm:flex-grow-0'>
                                 <div className='flex flex-grow items-center space-x-3'>
-                                  <Combobox options={comboboxOptions} />
+                                  <Combobox
+                                    options={comboboxOptions}
+                                    selected={
+                                      comboboxOptions.find(
+                                        (comboboxOption) =>
+                                          comboboxOption.value ==
+                                          state[dbEquivalent].inicio
+                                      ) || comboboxOptions[0]
+                                    }
+                                    setSelected={() =>
+                                      dispatch(
+                                        changeStartHourActionCreator(
+                                          dbEquivalent,
+                                          7
+                                        )
+                                      )
+                                    }
+                                  />
                                   <span>-</span>
-                                  <Combobox options={comboboxOptions} />
+                                  <Combobox
+                                    options={comboboxOptions}
+                                    selected={
+                                      comboboxOptions.find(
+                                        (comboboxOption) =>
+                                          comboboxOption.value ==
+                                          state[dbEquivalent].fin
+                                      ) || comboboxOptions[0]
+                                    }
+                                    setSelected={() =>
+                                      dispatch(
+                                        changeEndHourActionCreator(
+                                          dbEquivalent,
+                                          7
+                                        )
+                                      )
+                                    }
+                                  />
                                 </div>
                               </div>
                             </div>
@@ -224,7 +258,7 @@ function reducer(
     return {
       ...state,
       [action.payload.day]: {
-        ...[action.payload.day],
+        ...state[action.payload.day],
         inicio: action.payload.hour,
       },
     }
@@ -232,7 +266,7 @@ function reducer(
     return {
       ...state,
       [action.payload.day]: {
-        ...[action.payload.day],
+        ...state[action.payload.day],
         fin: action.payload.hour,
       },
     }
