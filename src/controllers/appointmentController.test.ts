@@ -153,6 +153,16 @@ describe('getTimesToSchedule', () => {
       })
     ).toEqual(['13:00', '14:30', '16:00'])
   })
+
+  test('Devuelve una lista de horarios entre las 16:00 y las 17:00 con duración de 20 minutos', () => {
+    expect(
+      getTimesToSchedule({
+        startTime: 16,
+        endTime: 17,
+        newAppointmentDuration: 20,
+      })
+    ).toEqual(['16:00', '16:20', '16:40'])
+  })
 })
 
 describe('getFormattedHoursFromTimeInHours', () => {

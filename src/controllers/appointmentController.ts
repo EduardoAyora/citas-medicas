@@ -46,6 +46,7 @@ export const getTimesToSchedule = ({
       getFormattedMinutesFromTimeInHours(currentTimeInHours)
     const formattedHour = getFormattedHourFromTimeInHours(currentTimeInHours)
 
+    if (formattedMinutes === '60') continue
     times.push(`${formattedHour}:${formattedMinutes}`)
   }
   return times

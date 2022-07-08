@@ -62,6 +62,10 @@ export default async function handler(
     const { horaInicio, horaFin } = informacionHorarioDia
     const { duracionEnMinutos } = informacionServicio
 
+    if (!horaInicio || !horaFin) return res.status(200).json({
+      horarioDisponible: [],
+    })
+    
     const horarioDisponible = getAvailableTimesToSchedule({
       startTime: horaInicio,
       endTime: horaFin,
