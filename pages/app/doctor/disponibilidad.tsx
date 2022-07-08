@@ -6,12 +6,22 @@ import { getFormattedHourFromTimeInHours } from '../../../src/controllers/appoin
 import { useSession } from 'next-auth/react'
 import { Dia, HorarioDia } from '@prisma/client'
 import Loading from '../../../src/components/common/Loading'
+import useSuccessError from '../../../src/hooks/modals/useSuccessError'
+import SuccessErrorModal from '../../../src/components/common/SuccessErrorModal'
 
 const Disponibilidad = () => {
   const { data } = useSession()
   const [isLoading, setIsLoading] = useState(false)
 
   const [state, dispatch] = useReducer(reducer, createInitialState())
+
+  const {
+    isModalOpen,
+    isSuccessModal,
+    modalMessage,
+    setIsModalOpen,
+    showModal,
+  } = useSuccessError()
 
   useEffect(() => {
     const getHorarios = async () => {
@@ -32,6 +42,22 @@ const Disponibilidad = () => {
       initialState[dia].fin = horaFin
     })
     dispatch({ type: actionTypes.SET_INITIAL_STATE, payload: initialState })
+  }
+
+  const onSaveClick = async () => {
+    if (!data) return
+    const responseData = await fetch(`/api/doctores/${data.user.id}/horarios`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(state),
+    })
+    if (!responseData.ok)
+      showModal({
+        message: 'Ocurrió un error al guardar los cambios',
+        isSuccess: false,
+      })
+    const { message } = await responseData.json()
+    showModal({ message, isSuccess: responseData.ok })
   }
 
   const comboboxOptions = Array.from(Array(24).keys()).map((hour) => ({
@@ -55,6 +81,12 @@ const Disponibilidad = () => {
       pageDescription='Cambia los horarios de inicio y fin de tu días'
     >
       <>
+        <SuccessErrorModal
+          isOpen={isModalOpen}
+          isSuccess={isSuccessModal}
+          message={modalMessage}
+          setIsOpen={setIsModalOpen}
+        />
         <div className='col-span-3 space-y-2 lg:col-span-2'>
           <div className='divide-y rounded-sm border border-gray-200 bg-white px-4 py-5 sm:p-6'>
             <h3 className='mb-5 text-base font-medium leading-6 text-gray-900'>
@@ -79,7 +111,7 @@ const Disponibilidad = () => {
                         <label className='flex space-x-2 rtl:space-x-reverse w-1/3'>
                           <div className='w-full'>
                             <input
-                              checked={isDayAvailable}
+                              defaultChecked={isDayAvailable}
                               onClick={() =>
                                 dispatch(
                                   enableOrDisableDayActionCreator(dbEquivalent)
@@ -151,7 +183,7 @@ const Disponibilidad = () => {
                         <label className='flex space-x-2 rtl:space-x-reverse w-full'>
                           <div className='w-1/3'>
                             <input
-                              checked={isDayAvailable}
+                              defaultChecked={isDayAvailable}
                               onClick={() =>
                                 dispatch(
                                   enableOrDisableDayActionCreator(dbEquivalent)
@@ -175,7 +207,10 @@ const Disponibilidad = () => {
             </fieldset>
           </div>
           <div className='space-x-2 text-right'>
-            <button className='text-white inline-flex items-center px-3 py-2 text-sm font-medium rounded-sm relative border border-transparent dark:text-darkmodebrandcontrast text-brandcontrast bg-gray-900 hover:bg-opacity-90 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-neutral-900'>
+            <button
+              onClick={onSaveClick}
+              className='text-white inline-flex items-center px-3 py-2 text-sm font-medium rounded-sm relative border border-transparent dark:text-darkmodebrandcontrast text-brandcontrast bg-gray-900 hover:bg-opacity-90 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-neutral-900'
+            >
               Guardar
             </button>
           </div>
