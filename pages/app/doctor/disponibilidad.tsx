@@ -4,20 +4,20 @@ import PageLayout from '../../../src/components/layout/PageLayout'
 import Combobox from '../../../src/components/common/Combobox'
 import { getFormattedHourFromTimeInHours } from '../../../src/controllers/appointmentController'
 import { useSession } from 'next-auth/react'
+import { Dia, HorarioDia } from '@prisma/client'
+import Loading from '../../../src/components/common/Loading'
 
 const Disponibilidad = () => {
   const { data } = useSession()
-  const [horarios, setHorarios] = useState([])
+  const [horarios, setHorarios] = useState<HorarioDia[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const getHorarios = async () => {
       setIsLoading(true)
       if (!data) return
-      const horariosData = await fetch(
-        `/api/doctores/${data.user.id}/horarios`
-      )
-      const horarios = await horariosData.json()
+      const horariosData = await fetch(`/api/doctores/${data.user.id}/horarios`)
+      const { horarios } = await horariosData.json()
       setHorarios(horarios)
       setIsLoading(false)
     }
@@ -29,6 +29,16 @@ const Disponibilidad = () => {
     text: `${getFormattedHourFromTimeInHours(hour)}:00`,
   }))
 
+  const days = [
+    { texto: 'Lunes', dbEquivalent: Dia.LUNES },
+    { texto: 'Martes', dbEquivalent: Dia.MARTES },
+    { texto: 'Miércoles', dbEquivalent: Dia.MIERCOLES },
+    { texto: 'Jueves', dbEquivalent: Dia.JUEVES },
+    { texto: 'Viernes', dbEquivalent: Dia.VIERNES },
+    { texto: 'Sábado', dbEquivalent: Dia.SABADO },
+    { texto: 'Domingo', dbEquivalent: Dia.DOMINGO },
+  ]
+
   return (
     <PageLayout
       pageTitle='Horas de trabajo'
@@ -38,67 +48,71 @@ const Disponibilidad = () => {
         <div className='col-span-3 space-y-2 lg:col-span-2'>
           <div className='divide-y rounded-sm border border-gray-200 bg-white px-4 py-5 sm:p-6'>
             <h3 className='mb-5 text-base font-medium leading-6 text-gray-900'>
-              Cambia los horarios de inicio y fin de tu días
+              Cambia los horarios de inicio y fin de tus días
             </h3>
             <fieldset className='divide-y divide-gray-200'>
-              <fieldset className='relative flex flex-col justify-between space-y-2 py-5 sm:flex-row sm:space-y-0'>
-                <label className='flex space-x-2 rtl:space-x-reverse w-1/3'>
-                  <div className='w-full'>
-                    <input
-                      type='checkbox'
-                      className='inline-block rounded-sm border-gray-300 text-neutral-900 focus:ring-neutral-500'
-                    />
-                    <span className='ml-2 inline-block text-sm capitalize'>
-                      Miércoles
-                    </span>
-                  </div>
-                </label>
-                <div className='flex-grow'>
-                  <div className='space-y-2'>
-                    <div className='flex items-center rtl:space-x-reverse'>
-                      <div className='flex flex-grow sm:flex-grow-0'>
-                        <div className='flex flex-grow items-center space-x-3'>
-                          <Combobox options={availableHours} />
-                          <span>-</span>
-                          <Combobox options={availableHours} />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+              {isLoading ? (
+                <div className='w-full flex justify-center items-center mt-8'>
+                  <Loading isDarkMode={false} />
                 </div>
-              </fieldset>
-              <fieldset className='relative flex flex-col justify-between space-y-2 py-5 sm:flex-row sm:space-y-0'>
-                <label className='flex space-x-2 rtl:space-x-reverse w-full'>
-                  <div className='w-1/3'>
-                    <input
-                      type='checkbox'
-                      className='inline-block rounded-sm border-gray-300 text-neutral-900 focus:ring-neutral-500'
-                    />
-                    <span className='ml-2 inline-block text-sm capitalize'>
-                      Sábado
-                    </span>
-                  </div>
-                  <div className='flex-grow text-right text-sm text-gray-500 sm:flex-shrink'>
-                    No disponible
-                  </div>
-                </label>
-              </fieldset>
-              <fieldset className='relative flex flex-col justify-between space-y-2 py-5 sm:flex-row sm:space-y-0'>
-                <label className='flex space-x-2 rtl:space-x-reverse w-full'>
-                  <div className='w-1/3'>
-                    <input
-                      type='checkbox'
-                      className='inline-block rounded-sm border-gray-300 text-neutral-900 focus:ring-neutral-500'
-                    />
-                    <span className='ml-2 inline-block text-sm capitalize'>
-                      Domingo
-                    </span>
-                  </div>
-                  <div className='flex-grow text-right text-sm text-gray-500 sm:flex-shrink'>
-                    No disponible
-                  </div>
-                </label>
-              </fieldset>
+              ) : (
+                days.map(({ texto, dbEquivalent }, index) => {
+                  if (horarios.find((horario) => horario.dia === dbEquivalent))
+                    return (
+                      <fieldset
+                        key={index}
+                        className='relative flex flex-col justify-between space-y-2 py-5 sm:flex-row sm:space-y-0'
+                      >
+                        <label className='flex space-x-2 rtl:space-x-reverse w-1/3'>
+                          <div className='w-full'>
+                            <input
+                              type='checkbox'
+                              className='inline-block rounded-sm border-gray-300 text-neutral-900 focus:ring-neutral-500'
+                            />
+                            <span className='ml-2 inline-block text-sm capitalize'>
+                              {texto}
+                            </span>
+                          </div>
+                        </label>
+                        <div className='flex-grow'>
+                          <div className='space-y-2'>
+                            <div className='flex items-center rtl:space-x-reverse'>
+                              <div className='flex flex-grow sm:flex-grow-0'>
+                                <div className='flex flex-grow items-center space-x-3'>
+                                  <Combobox options={availableHours} />
+                                  <span>-</span>
+                                  <Combobox options={availableHours} />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </fieldset>
+                    )
+                  else
+                    return (
+                      <fieldset
+                        key={index}
+                        className='relative flex flex-col justify-between space-y-2 py-5 sm:flex-row sm:space-y-0'
+                      >
+                        <label className='flex space-x-2 rtl:space-x-reverse w-full'>
+                          <div className='w-1/3'>
+                            <input
+                              type='checkbox'
+                              className='inline-block rounded-sm border-gray-300 text-neutral-900 focus:ring-neutral-500'
+                            />
+                            <span className='ml-2 inline-block text-sm capitalize'>
+                              {texto}
+                            </span>
+                          </div>
+                          <div className='flex-grow text-right text-sm text-gray-500 sm:flex-shrink'>
+                            No disponible
+                          </div>
+                        </label>
+                      </fieldset>
+                    )
+                })
+              )}
             </fieldset>
           </div>
           <div className='space-x-2 text-right'>
