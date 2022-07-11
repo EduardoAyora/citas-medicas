@@ -16,38 +16,25 @@ describe('handler /servicios/[servicio]/citas', () => {
   beforeAll(async () => {
     await prisma.persona.create({
       data: {
+        id: 1,
         cedula: '1234567890',
-        nombre: 'eduardo',
-        apellido: 'sanchez',
+        nombre: 'karen',
+        apellido: 'ayora',
         email: 'kar@gmail.com',
         celular: '1234567890',
         direccion: 'calle falsa 123',
       }
     })
 
-    await prisma.usuario.createMany({
-      data: [
-        {
-          name: 'Karen',
-          password: '123',
-          username: 'karen',
-          role: Rol.SECRETARY,
-        },
-        {
-          name: 'Eduardo',
-          password: '123',
-          username: 'eduardo',
-        },
-      ],
-    })
-
     await prisma.usuario.create({
       data: {
         id: 1,
-        name: 'Doctor',
-        password: '123456',
-        username: 'doctor',
-      }
+        name: 'Karen',
+        password: '123',
+        username: 'karen',
+        role: Rol.SECRETARY,
+        personaId: 1,
+      },
     })
 
     await prisma.servicio.createMany({

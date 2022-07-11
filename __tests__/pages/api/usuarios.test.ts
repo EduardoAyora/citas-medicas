@@ -7,11 +7,24 @@ import {prisma} from '../../../src/lib/db'
 describe('ruta /api/usuarios método POST', () => {
   afterEach(async () => {
     await prisma.usuario.deleteMany()
+    await prisma.persona.deleteMany()
   })
 
   test('El usuario ya existía', async () => {
+    await prisma.persona.create({
+      data: {
+        id: 1,
+        nombre: 'Iván',
+        apellido: 'Perez',
+        email: 'ivan@gmail.com',
+        cedula: '',
+        celular: '',
+        direccion: '',
+      }
+    })
     await prisma.usuario.create({
       data: {
+        personaId: 1,
         username: "ivan4",
         password : "123",
         name: "Iván",
@@ -44,7 +57,12 @@ describe('ruta /api/usuarios método POST', () => {
         username: "ivan4",
         password : "123",
         name: "Iván",
-        role: Rol.DOCTOR
+        role: Rol.DOCTOR,
+        apellido: "Perez",
+        cedula: "0105032221",
+        direccion: "Calle falsa 123",
+        celular: "123456789",
+        email: "iv@gmail.com"
       }
     })
 
@@ -56,7 +74,8 @@ describe('ruta /api/usuarios método POST', () => {
         username: "ivan4",
         password: "123",
         name: "Iván",
-        role: Rol.DOCTOR
+        role: Rol.DOCTOR,
+        personaId: expect.any(Number),
       }
     )
   })

@@ -7,6 +7,7 @@ import Layout from '../src/components/layout/Layout'
 const adminLinks: Link[] = [{ name: 'Inicio', href: '/' }]
 const doctorLinks: Link[] = [
   { name: 'Inicio', href: '/' },
+  { name: 'Pacientes', href: '/pacientes' },
   { name: 'Ver citas', href: '/citas' },
   { name: 'Disponibilidad', href: '/disponibilidad' },
 ]

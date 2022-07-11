@@ -6,12 +6,25 @@ import { prisma } from '../../../../../../src/lib/db'
 
 describe('handler /servicios/[servicio]/horario-disponible/[fecha]', () => {
   beforeAll(async () => {
+    await prisma.persona.create({
+      data: {
+        id: 1,
+        cedula: '1234567890',
+        nombre: 'karen',
+        apellido: 'ayora',
+        email: 'kar@gmail.com',
+        celular: '1234567890',
+        direccion: 'calle falsa 123',
+      }
+    })
+
     await prisma.usuario.create({
       data: {
         id: 1,
         name: 'Doctor',
         password: '123456',
         username: 'doctor',
+        personaId: 1
       }
     })
     await prisma.servicio.createMany({
@@ -40,16 +53,6 @@ describe('handler /servicios/[servicio]/horario-disponible/[fecha]', () => {
         { dia: Dia.VIERNES, horaInicio: 11, horaFin: 15, servicioId: 2 },
       ],
     })
-
-    await prisma.persona.create({
-      data: {
-        cedula: '1234567890',
-        nombre: 'eduardo',
-        apellido: 'sanchez',
-        email: 'kar@gmail.com',
-        celular: '1234567890',
-        direccion: 'calle falsa 123',
-      }})
 
     await prisma.cita.createMany({
       data: [
@@ -103,8 +106,8 @@ describe('handler /servicios/[servicio]/horario-disponible/[fecha]', () => {
     await prisma.cita.deleteMany()
     await prisma.horarioDia.deleteMany()
     await prisma.servicio.deleteMany()
-    await prisma.persona.deleteMany()
     await prisma.usuario.deleteMany()
+    await prisma.persona.deleteMany()
   })
 
   test('Devuelve un estado de error al no recibir una fecha', async () => {
