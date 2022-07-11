@@ -1,3 +1,4 @@
+import { ClipboardListIcon, PhoneOutgoingIcon } from '@heroicons/react/outline'
 import { useEffect, useState } from 'react'
 import Loading from '../../../../src/components/common/Loading'
 
@@ -48,7 +49,7 @@ const Index = () => {
                             celular,
                             email,
                             direccion,
-                            sexo
+                            sexo,
                           },
                           index
                         ) => {
@@ -60,10 +61,18 @@ const Index = () => {
                               <td className='hidden align-top ltr:pl-6 rtl:pr-6 sm:table-cell sm:w-64'>
                                 <div className='cursor-pointer py-4'>
                                   <div className='text-sm leading-6 text-gray-900'>
-                                    {formattedDate}
+                                    {nombre} {apellido}
                                   </div>
                                   <div className='text-sm text-gray-500'>
-                                    {time}
+                                    <a
+                                      rel='noreferrer'
+                                      target='_blank'
+                                      href={`https://wa.me/593${celular}`}
+                                      className='underline text-blue-600 flex items-center'
+                                    >
+                                      <PhoneOutgoingIcon className='w-4 h-4 mr-1' />
+                                      {celular}
+                                    </a>
                                   </div>
                                   <div className='text-sm text-gray-400'></div>
                                 </div>
@@ -72,9 +81,9 @@ const Index = () => {
                                 <div className='cursor-pointer py-4'>
                                   <div className='sm:hidden'>
                                     <div className='text-sm font-medium text-gray-900'>
-                                      <span>{formattedDate}</span>{' '}
+                                      <span>{nombre}</span>{' '}
                                       <small className='text-sm text-gray-500'>
-                                        {time}
+                                        {apellido}
                                       </small>
                                     </div>
                                   </div>
@@ -82,22 +91,20 @@ const Index = () => {
                                     title='30 Min Meeting between Antonio Ochoa and Eduardo Ayora'
                                     className='max-w-56 truncate text-sm font-medium leading-6 text-neutral-900 md:max-w-max'
                                   >
-                                    {`Cita de ${durationInMinutes} minutos del paciente ${paciente} con el doctor/a ${doctor}`}
+                                    {`Cédula: ${cedula}. Dirección: ${direccion}. Email: ${email}`}
                                   </div>
                                 </div>
                               </td>
                               <td className='whitespace-nowrap py-4 text-right text-sm font-medium ltr:pr-4 rtl:pl-4'>
-                                {appointmentsState === 'proximas' && (
+                                {true && (
                                   <div className='hidden space-x-2 rtl:space-x-reverse lg:block'>
                                     <button
-                                      onClick={() =>
-                                        onCancelAppointmentClick(id)
-                                      }
+                                      onClick={() => {}}
                                       aria-label={`cancelar-${index}`}
                                       className='inline-flex items-center px-3 py-2 text-sm font-medium rounded-sm relative border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:text-gray-900 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-neutral-900 dark:bg-transparent'
                                     >
-                                      <XIcon className='inline -ml-1 h-5 w-5 ltr:mr-2 rtl:ml-2 rtl:-mr-1' />
-                                      Cancelar
+                                      <ClipboardListIcon className='inline mr-2 -ml-1 h-5 w-5 ltr:mr-2 rtl:ml-2 rtl:-mr-1' />
+                                      Historia Clínica
                                     </button>
                                   </div>
                                 )}
