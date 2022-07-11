@@ -1,11 +1,10 @@
-import { Paciente } from '@prisma/client'
 import { useEffect, useState } from 'react'
 import Loading from '../../../../src/components/common/Loading'
 
 import PageLayout from '../../../../src/components/layout/PageLayout'
 
 const Index = () => {
-  const [pacientes, setPacientes] = useState<Paciente[]>([])
+  const [pacientes, setPacientes] = useState<PacienteResponse[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -43,11 +42,13 @@ const Index = () => {
                         (
                           {
                             id,
-                            day,
-                            durationInMinutes,
-                            time,
-                            doctor,
-                            paciente,
+                            nombre,
+                            apellido,
+                            cedula,
+                            celular,
+                            email,
+                            direccion,
+                            sexo
                           },
                           index
                         ) => {

@@ -2,48 +2,84 @@ import { Dia, PrismaClient, Rol } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-  // await prisma.usuario.createMany({
-  //   data: [
-  //     {
-  //       id: 1,
-  //       name: 'Eduardo Ayora',
-  //       password: '123',
-  //       username: 'edu',
-  //       role: Rol.DOCTOR,
-  //     },
-  //     {
-  //       name: 'Karen Ayora',
-  //       password: '123',
-  //       username: 'karen',
-  //       role: Rol.SECRETARY,
-  //     },
-  //     {
-  //       name: 'Admin',
-  //       password: '123',
-  //       username: 'admin',
-  //       role: Rol.ADMIN,
-  //     },
-  //   ]
-  // })
+  await prisma.persona.createMany({
+    data: [
+      {
+        id: 1,
+        nombre: 'Eduardo',
+        apellido: 'Ayora',
+        cedula: '0101010151',
+        direccion: 'calle falsa 123',
+        celular: '1234567890',
+        email: 'j@gmail.com',
+      },
+      {
+        id: 2,
+        nombre: 'Karen',
+        apellido: 'Ayora',
+        cedula: '0101010152',
+        direccion: 'calle falsa 123',
+        celular: '1234567890',
+        email: 'k@gmail.com',
+      },
+      {
+        id: 3,
+        nombre: 'Admin',
+        apellido: '',
+        cedula: '0101010153',
+        direccion: 'calle falsa 123',
+        celular: '1234567890',
+        email: 'a@gmail.com',
+      },
+    ]
+  })
+  await prisma.usuario.createMany({
+    data: [
+      {
+        id: 1,
+        name: 'Eduardo Ayora',
+        password: '123',
+        username: 'edu',
+        role: Rol.DOCTOR,
+        personaId: 1,
+      },
+      {
+        id: 2,
+        name: 'Karen Ayora',
+        password: '123',
+        username: 'karen',
+        role: Rol.SECRETARY,
+        personaId: 2
+      },
+      {
+        id: 3,
+        name: 'Admin',
+        password: '123',
+        username: 'admin',
+        role: Rol.ADMIN,
+        personaId: 3
+      },
+    ]
+  })
     
-  // await prisma.servicio.createMany({
-  //   data: [
-  //     {
-  //       id: 1,
-  //       costo: 20,
-  //       descripcion: 'Consulta general',
-  //       duracionEnMinutos: 20,
-  //       usuarioId: 1
-  //     },
-  //     {
-  //       id: 2,
-  //       costo: 35,
-  //       descripcion: 'Consulta con especialista - Dermatología',
-  //       duracionEnMinutos: 30,
-  //       usuarioId: 1
-  //     }
-  //   ]
-  // })
+  await prisma.servicio.createMany({
+    data: [
+      {
+        id: 1,
+        costo: 20,
+        descripcion: 'Consulta general',
+        duracionEnMinutos: 20,
+        usuarioId: 1
+      },
+      {
+        id: 2,
+        costo: 35,
+        descripcion: 'Consulta con especialista - Dermatología',
+        duracionEnMinutos: 30,
+        usuarioId: 1
+      }
+    ]
+  })
 
   await prisma.horarioDia.createMany({
     data: [
