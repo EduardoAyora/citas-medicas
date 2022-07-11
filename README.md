@@ -26,7 +26,7 @@ Crear un archivo nombrado .env y establecer las variables de entorno
 
 ```
 DATABASE_URL="postgresql://postgres:v9aZjFb7wSvXrf8lboYN@containers-us-west-54.railway.app:7107/railway"
-JWT_SECRET="SecretoParaElToken"
+NEXTAUTH_SECRET="secEsEstoYn4di3pu3EEEcuvvrir47361"
 NEXTAUTH_URL=http://localhost:3000
 ```
 

@@ -54,12 +54,9 @@ const Index = () => {
                           index
                         ) => {
                           return (
-                            <tr
-                              key={index}
-                              className='flex hover:bg-neutral-50 px-6'
-                            >
+                            <tr key={index} className='flex px-6'>
                               <td className='hidden align-top ltr:pl-6 rtl:pr-6 sm:table-cell sm:w-64'>
-                                <div className='cursor-pointer py-4'>
+                                <div className='py-4'>
                                   <div className='text-sm leading-6 text-gray-900'>
                                     {nombre} {apellido}
                                   </div>
@@ -78,7 +75,7 @@ const Index = () => {
                                 </div>
                               </td>
                               <td className='flex-1 ltr:pl-4 rtl:pr-4'>
-                                <div className='cursor-pointer py-4'>
+                                <div className='py-4'>
                                   <div className='sm:hidden'>
                                     <div className='text-sm font-medium text-gray-900'>
                                       <span>{nombre}</span>{' '}
@@ -87,11 +84,18 @@ const Index = () => {
                                       </small>
                                     </div>
                                   </div>
-                                  <div
-                                    title='30 Min Meeting between Antonio Ochoa and Eduardo Ayora'
-                                    className='max-w-56 truncate text-sm font-medium leading-6 text-neutral-900 md:max-w-max'
-                                  >
-                                    {`Cédula: ${cedula}. Dirección: ${direccion}. Email: ${email}`}
+                                  <div className='max-w-56 flex truncate text-sm font-medium leading-6 text-neutral-900 md:max-w-max'>
+                                    <div className='grid grid-cols-4 gap-4 w-full'>
+                                      <div>Esto es</div>
+                                      <div>02</div>
+                                      <div>03</div>
+                                      <div>04</div>
+                                      <div>05</div>
+                                      <div>06</div>
+                                      <div>07</div>
+                                      <div>08</div>
+                                    </div>
+                                    {/* {`Cédula: ${cedula}. Dirección: ${direccion}. Email: ${email}`} */}
                                   </div>
                                 </div>
                               </td>
