@@ -1,7 +1,7 @@
 const Paciente = () => {
   return (
     <div>
-      
+      paciente
     </div>
   );
 };
