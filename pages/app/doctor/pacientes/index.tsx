@@ -84,18 +84,31 @@ const Index = () => {
                                       </small>
                                     </div>
                                   </div>
-                                  <div className='max-w-56 flex truncate text-sm font-medium leading-6 text-neutral-900 md:max-w-max'>
-                                    <div className='grid grid-cols-4 gap-4 w-full'>
-                                      <div>Esto es</div>
-                                      <div>02</div>
-                                      <div>03</div>
-                                      <div>04</div>
-                                      <div>05</div>
-                                      <div>06</div>
-                                      <div>07</div>
-                                      <div>08</div>
+                                  <div className='max-w-56 w-full truncate text-sm font-medium leading-6 text-neutral-900'>
+                                    <div className='grid grid-cols-1 xl:grid-cols-3 gap-4 w-full'>
+                                      <div>
+                                        <span className='font-bold'>
+                                          Cédula:
+                                        </span>{' '}
+                                        {cedula}
+                                      </div>
+                                      <div>
+                                        <span className='font-bold'>
+                                          Email:
+                                        </span>{' '}
+                                        {email}
+                                      </div>
+                                      <div>
+                                        <span className='font-bold'>Sexo:</span>{' '}
+                                        {sexo}
+                                      </div>
+                                      <div className='truncate xl:col-span-3'>
+                                        <span className='font-bold'>
+                                          Dirección:
+                                        </span>{' '}
+                                        {direccion}
+                                      </div>
                                     </div>
-                                    {/* {`Cédula: ${cedula}. Dirección: ${direccion}. Email: ${email}`} */}
                                   </div>
                                 </div>
                               </td>
