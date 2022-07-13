@@ -26,10 +26,22 @@ model Persona {
 }
 
 model Paciente {
-  sexo      SEXO
-  personaId Int  @unique
+  sexo            SEXO
+  personaId       Int                       @unique
+  antecedentes    String?
+  historiaClinica RegistroHistoriaClinica[]
 
   persona Persona @relation(fields: [personaId], references: [id])
+}
+
+model RegistroHistoriaClinica {
+  id             Int      @id @default(autoincrement())
+  fecha          DateTime
+  motivoConsulta String
+  tratamiento    String
+  pacienteId     Int      @unique
+
+  paciente Paciente @relation(fields: [pacienteId], references: [personaId])
 }
 
 model Usuario {

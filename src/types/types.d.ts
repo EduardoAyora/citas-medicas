@@ -16,4 +16,11 @@ interface PacienteResponse {
   direccion: string
   celular: string
   email: string
+  historiaClinica?: RegistroHistoriaClinica[]
+}
+
+interface RegistroHistoriaClinica {
+  fecha: date
+  motivoConsulta: string
+  tratamiento: string
 }
