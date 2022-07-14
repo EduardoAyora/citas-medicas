@@ -7,8 +7,13 @@ import ConfirmModal from '../common/ConfirmModal'
 import useSuccessError from '../../hooks/modals/useSuccessError'
 import SuccessErrorModal from '../common/SuccessErrorModal'
 import PageLayout from '../layout/PageLayout'
+import { Rol } from '@prisma/client'
 
-const VerCitas = () => {
+type Props = {
+  role: Rol
+}
+
+const VerCitas: React.FC<Props> = ({ role }) => {
   const [appointmentsState, setAppointmentsState] = useState<
     'proximas' | 'pasadas' | 'canceladas'
   >('proximas')
@@ -28,13 +33,16 @@ const VerCitas = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       setIsLoading(true)
-      const response = await fetch(`/api/citas/${appointmentsState}`)
+      const response =
+        role === Rol.DOCTOR
+          ? await fetch(`/api/citas/doctor/${appointmentsState}`)
+          : await fetch(`/api/citas/${appointmentsState}`)
       const { citas } = await response.json()
       setIsLoading(false)
       setAppointments(citas)
     }
     fetchAppointments()
-  }, [appointmentsState])
+  }, [appointmentsState, role])
 
   const cancelAppointment = async () => {
     const response = await fetch(`/api/citas/${idCitaToDelete}/cancelar`, {
