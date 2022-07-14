@@ -6,9 +6,12 @@ import authMiddleware from "../../../src/middlewares/authMiddleware";
 import roleMiddleware from "../../../src/middlewares/roleMiddleware";
 
 async function handler(req: NextApiRequest, res: NextApiResponse<{
-  pacientes: PacienteResponse[]
+  pacientes?: PacienteResponse[],
+  pacienteCreado?: PacienteResponse,
+  message?: string
 }>) {
   const {
+    body,
     method,
   } = req
   
@@ -36,6 +39,61 @@ async function handler(req: NextApiRequest, res: NextApiResponse<{
 
     return res.status(200).json({
       pacientes: pacientesFormateados
+    })
+  case 'POST':
+    const { 
+      cedula,
+      nombre,
+      apellido,
+      direccion,
+      celular,
+      email,
+      sexo
+    } = body
+
+    const paciente = await prisma.paciente.findFirst({
+      where:{
+        persona: {
+          cedula
+        }
+      }
+    })
+  
+    if (paciente) return res.status(400).json({message: 'Ya existe un paciente con esa cédula'})
+
+    const persona = await prisma.persona.findUnique({
+      where: {
+        cedula
+      }
+    })
+    const personaCreada = persona ? persona : await prisma.persona.create({
+      data: {
+        cedula,
+        nombre,
+        apellido,
+        direccion,
+        celular,
+        email,
+      }
+    })
+  
+    const pacienteCreado = await prisma.paciente.create({
+      data: {
+        sexo: sexo,
+        personaId: personaCreada.id
+      }
+    })
+    return res.status(200).json({
+      pacienteCreado: {
+        id: personaCreada.id,
+        apellido: personaCreada.apellido,
+        nombre: personaCreada.nombre,
+        cedula: personaCreada.cedula,
+        direccion: personaCreada.direccion,
+        celular: personaCreada.celular,
+        email: personaCreada.email,
+        sexo: pacienteCreado.sexo
+      }
     })
   default:
     return res.status(405).end(`Method ${method} Not Allowed`)

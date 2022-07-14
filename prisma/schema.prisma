@@ -17,7 +17,7 @@ model Persona {
   cedula    String @unique
   direccion String
   celular   String
-  email     String @unique
+  email     String
 
   usuario  Usuario?
   paciente Paciente?
@@ -26,6 +26,7 @@ model Persona {
 }
 
 model Paciente {
+  id              Int                       @id @default(autoincrement())
   sexo            SEXO
   personaId       Int                       @unique
   antecedentes    String?

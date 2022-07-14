@@ -1,3 +1,4 @@
+import { SEXO } from '@prisma/client'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import nock from 'nock'
@@ -10,6 +11,7 @@ const patient = {
   direccion: 'Calle falsa 123',
   celular: '0982634321',
   email: 'eduardo@gmail.com',
+  sexo: SEXO.MASCULINO,
 }
 const servicio = {
   id: 1,
@@ -71,16 +73,17 @@ describe('NuevaCita', () => {
     )
   nock(host)
     .post(
-      `/api/personas`,
+      `/api/pacientes`,
       (body) =>
         body.cedula === patient.cedula &&
         body.nombre === patient.nombre &&
         body.apellido === patient.apellido &&
         body.direccion === patient.direccion &&
         body.celular === patient.celular &&
-        body.email === patient.email
+        body.email === patient.email &&
+        body.sexo === patient.sexo
     )
-    .reply(200, JSON.stringify(patient))
+    .reply(200, JSON.stringify({ pacienteCreado: patient }))
 
   test('Crear un paciente', async () => {
     render(<NuevaCita />)

@@ -6,7 +6,7 @@ import { ServicioJSON } from './Servicios'
 import { getFormattedDateString } from '../../lib/dateFormatters'
 import Loading from '../common/Loading'
 import useSuccessErrorModal from '../../hooks/modals/useSuccessError'
-import { Persona } from '@prisma/client'
+import { Persona, SEXO } from '@prisma/client'
 
 interface Props {
   onScheduleClick: () => void
@@ -74,7 +74,7 @@ const Paciente: React.FC<Props> = ({
     const phone = createPatientPhoneInputRef.current?.value
     const email = createPatientEmailInputRef.current?.value
     setIsPatientLoading(true)
-    const patientData = await fetch(`/api/personas`, {
+    const patientData = await fetch(`/api/pacientes`, {
       method: 'POST',
       body: JSON.stringify({
         cedula: id,
@@ -83,6 +83,7 @@ const Paciente: React.FC<Props> = ({
         direccion: direction,
         celular: phone,
         email,
+        sexo: SEXO.MASCULINO,
       }),
     })
     const patient = await patientData.json()
@@ -93,7 +94,7 @@ const Paciente: React.FC<Props> = ({
       showModal({ isSuccess: false, message: patient.message })
       return
     }
-    setPatient(patient)
+    setPatient(patient.pacienteCreado)
     setIsScheduleButtonEnabled(true)
     showModal({
       isSuccess: true,

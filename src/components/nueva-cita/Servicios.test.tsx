@@ -34,7 +34,7 @@ nock(host).get('/api/servicios').reply(
 
 describe('Servicios', () => {
   test('Consulta y muestra los servicios disponibles', async () => {
-    render(<Servicios setServiceId={() => {}} />)
+    render(<Servicios setService={() => {}} />)
     await screen.findByRole('button', {
       name: `${servicios[0].descripcion}-${servicios[0].usuario.name}`,
     })
