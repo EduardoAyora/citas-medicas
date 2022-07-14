@@ -70,13 +70,6 @@ async function main() {
         descripcion: 'Consulta general',
         duracionEnMinutos: 20,
         usuarioId: 1
-      },
-      {
-        id: 2,
-        costo: 35,
-        descripcion: 'Consulta con especialista - Dermatología',
-        duracionEnMinutos: 30,
-        usuarioId: 1
       }
     ]
   })

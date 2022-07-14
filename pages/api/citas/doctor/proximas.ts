@@ -5,7 +5,7 @@ import { withMiddleware } from "../../../../src/lib/withMiddleware";
 import authMiddleware from "../../../../src/middlewares/authMiddleware";
 import roleMiddleware from "../../../../src/middlewares/roleMiddleware";
 
-async function handler(req: NextApiRequest, res: NextApiResponse<{citas: CitaResponse[]}>) {
+async function handlerCitasProximasDoctor(req: NextApiRequest, res: NextApiResponse<{citas: CitaResponse[]}>) {
   const {
     body: {
       session: {
@@ -24,7 +24,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse<{citas: CitaRes
         day: {
           gte: new Date().toISOString().split('T')[0]
         },
-        servicioId: id,
+        servicio: {
+          usuarioId: id
+        },
         esCancelada: false
       },
       orderBy: [
@@ -44,6 +46,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<{citas: CitaRes
         paciente: true
       }
     })
+
     const mappedCitas = citas.map(cita => ({
       id: cita.id,
       day: cita.day,
@@ -62,5 +65,5 @@ async function handler(req: NextApiRequest, res: NextApiResponse<{citas: CitaRes
 export default withMiddleware(
   authMiddleware,
   roleMiddleware([Rol.SECRETARY, Rol.DOCTOR, Rol.ADMIN]),
-  handler
+  handlerCitasProximasDoctor
 )
