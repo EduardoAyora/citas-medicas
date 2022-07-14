@@ -22,7 +22,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse<{citas: CitaRes
     const citas = await prisma.cita.findMany({
       where: {
         esCancelada: true,
-        servicioId: id,
+        servicio: {
+          usuarioId: id
+        },
       },
       orderBy: [
         {

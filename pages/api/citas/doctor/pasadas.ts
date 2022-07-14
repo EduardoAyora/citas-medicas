@@ -24,7 +24,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse<{citas: CitaRes
         day: {
           lt: new Date().toISOString().split('T')[0]
         },
-        servicioId: id,
+        servicio: {
+          usuarioId: id
+        },
       },
       orderBy: [
         {
