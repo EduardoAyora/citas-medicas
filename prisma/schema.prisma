@@ -39,7 +39,7 @@ model RegistroHistoriaClinica {
   fecha          DateTime
   motivoConsulta String
   tratamiento    String
-  pacienteId     Int      @unique
+  pacienteId     Int
 
   paciente Paciente @relation(fields: [pacienteId], references: [personaId])
 }

@@ -9,7 +9,7 @@ interface Props {
   isSuccess: boolean
 }
 
-const Modal: React.FC<Props> = ({ isOpen, setIsOpen, message, isSuccess }) => {
+const SuccessErrorModal: React.FC<Props> = ({ isOpen, setIsOpen, message, isSuccess }) => {
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog as='div' className='relative z-10' onClose={setIsOpen}>
@@ -87,4 +87,4 @@ const Modal: React.FC<Props> = ({ isOpen, setIsOpen, message, isSuccess }) => {
   )
 }
 
-export default Modal
+export default SuccessErrorModal

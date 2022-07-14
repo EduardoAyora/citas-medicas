@@ -2,11 +2,23 @@ import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
 import Loading from '../../../../src/components/common/Loading'
 import PageLayout from '../../../../src/components/layout/PageLayout'
+import useSuccessError from '../../../../src/hooks/modals/useSuccessError'
+import SuccessErrorModal from '../../../../src/components/common/SuccessErrorModal'
 
 const Paciente = () => {
   const [paciente, setPaciente] = useState<PacienteResponse>()
   const [isAddMenuOpen, setIsAddMenuOpen] = useState(false)
+  const [isCreateHistoryRecordLoading, setIsCreateHistoryRecordLoading] =
+    useState(false)
   const router = useRouter()
+
+  const {
+    isModalOpen,
+    isSuccessModal,
+    modalMessage,
+    setIsModalOpen,
+    showModal,
+  } = useSuccessError()
 
   const motivoInputRef = useRef<HTMLTextAreaElement>(null)
   const tratamientoInputRef = useRef<HTMLTextAreaElement>(null)
@@ -28,20 +40,39 @@ const Paciente = () => {
     if (!paciente.historiaClinica) return
     const motivo = motivoInputRef.current?.value
     const tratamiento = tratamientoInputRef.current?.value
-    if (!motivo || !tratamiento) return
+    if (!motivo || !tratamiento)
+      return showModal({
+        isSuccess: false,
+        message: 'El motivo de la consulta y el tratamiento son obligatorios',
+      })
     const { id } = router.query
     if (!id) return
-    // const data = await fetch(`/api/pacientes/${id}/historias-clinicas`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({ motivo, tratamiento }),
-    // })
-    // const { message } = await data.json()
-    // if (!data.ok) alert(message)
+    setIsCreateHistoryRecordLoading(true)
+    const pacienteData = await fetch(`/api/pacientes/${id}/historia-clinica`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ motivo, tratamiento }),
+    })
+    type Response = { registroHistoria: RegistroHistoriaClinica } & {
+      message: string
+    }
+    const pacienteJSON: Response = await pacienteData.json()
+    setIsCreateHistoryRecordLoading(false)
+    console.log(pacienteJSON)
+
+    if (!pacienteData.ok)
+      return showModal({
+        isSuccess: false,
+        message: pacienteJSON.message,
+      })
     const newHistory = [
-      { motivoConsulta: motivo, tratamiento, fecha: new Date() },
+      {
+        motivoConsulta: pacienteJSON.registroHistoria.motivoConsulta,
+        tratamiento: pacienteJSON.registroHistoria.tratamiento,
+        fecha: pacienteJSON.registroHistoria.fecha,
+      },
       ...paciente.historiaClinica,
     ]
     setPaciente({ ...paciente, historiaClinica: newHistory })
@@ -60,6 +91,12 @@ const Paciente = () => {
           pageDescription={`Cédula: ${paciente.cedula} / Celular: ${paciente.celular} / Email: ${paciente.email} / Dirección: ${paciente.direccion}`}
         >
           <>
+            <SuccessErrorModal
+              isOpen={isModalOpen}
+              isSuccess={isSuccessModal}
+              message={modalMessage}
+              setIsOpen={setIsModalOpen}
+            />
             <div>
               <button
                 onClick={() => {
@@ -69,53 +106,58 @@ const Paciente = () => {
               >
                 {isAddMenuOpen ? '-' : '+'} Agregar registro a historia clínica
               </button>
-              {isAddMenuOpen && (
-                <>
-                  <div className='mb-4 mt-4'>
-                    <label
-                      htmlFor='motivo_consulta'
-                      className='block text-sm font-medium text-gray-700'
-                    >
-                      Motivo de consulta
-                    </label>
-                    <div className='mt-1'>
-                      <textarea
-                        ref={motivoInputRef}
-                        rows={4}
-                        id='motivo_consulta'
-                        className='focus:border-brand block w-full rounded-sm border-gray-300 shadow-sm focus:ring-black disabled:bg-gray-200 disabled:hover:cursor-not-allowed dark:border-gray-900 dark:selection:bg-green-500 disabled:dark:text-gray-500 sm:text-sm'
-                        placeholder='Motivo de consulta'
-                      />
+              {isAddMenuOpen &&
+                (isCreateHistoryRecordLoading ? (
+                  <div className='flex justify-center items-center h-20'>
+                    <Loading isDarkMode={false} />
+                  </div>
+                ) : (
+                  <>
+                    <div className='mb-4 mt-4'>
+                      <label
+                        htmlFor='motivo_consulta'
+                        className='block text-sm font-medium text-gray-700'
+                      >
+                        Motivo de consulta
+                      </label>
+                      <div className='mt-1'>
+                        <textarea
+                          ref={motivoInputRef}
+                          rows={4}
+                          id='motivo_consulta'
+                          className='focus:border-brand block w-full rounded-sm border-gray-300 shadow-sm focus:ring-black disabled:bg-gray-200 disabled:hover:cursor-not-allowed dark:border-gray-900 dark:selection:bg-green-500 disabled:dark:text-gray-500 sm:text-sm'
+                          placeholder='Motivo de consulta'
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className='mb-4'>
-                    <label
-                      htmlFor='tratamiento'
-                      className='block text-sm font-medium text-gray-700'
-                    >
-                      Tratamiento
-                    </label>
-                    <div className='mt-1'>
-                      <textarea
-                        ref={tratamientoInputRef}
-                        rows={4}
-                        id='tratamiento'
-                        className='focus:border-brand block w-full rounded-sm border-gray-300 shadow-sm focus:ring-black disabled:bg-gray-200 disabled:hover:cursor-not-allowed dark:border-gray-900 dark:selection:bg-green-500 disabled:dark:text-gray-500 sm:text-sm'
-                        placeholder='Tratamiento'
-                      />
+                    <div className='mb-4'>
+                      <label
+                        htmlFor='tratamiento'
+                        className='block text-sm font-medium text-gray-700'
+                      >
+                        Tratamiento
+                      </label>
+                      <div className='mt-1'>
+                        <textarea
+                          ref={tratamientoInputRef}
+                          rows={4}
+                          id='tratamiento'
+                          className='focus:border-brand block w-full rounded-sm border-gray-300 shadow-sm focus:ring-black disabled:bg-gray-200 disabled:hover:cursor-not-allowed dark:border-gray-900 dark:selection:bg-green-500 disabled:dark:text-gray-500 sm:text-sm'
+                          placeholder='Tratamiento'
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className='flex items-start justify-end space-x-2 rtl:space-x-reverse mb-4'>
-                    <button
-                      type='button'
-                      onClick={crearRegistroDeHistoriaClinica}
-                      className='button'
-                    >
-                      Agregar
-                    </button>
-                  </div>
-                </>
-              )}
+                    <div className='flex items-start justify-end space-x-2 rtl:space-x-reverse mb-4'>
+                      <button
+                        type='button'
+                        onClick={crearRegistroDeHistoriaClinica}
+                        className='button'
+                      >
+                        Agregar
+                      </button>
+                    </div>
+                  </>
+                ))}
             </div>
             <main>
               <div className='-mx-4 flex flex-col sm:mx-auto'>
@@ -138,7 +180,7 @@ const Paciente = () => {
                                     <td className='hidden align-top ltr:pl-6 rtl:pr-6 sm:table-cell sm:w-32'>
                                       <div className='py-4'>
                                         <div className='text-sm leading-6 text-gray-900'>
-                                          {fecha.toLocaleDateString()}
+                                          {new Date(fecha).toLocaleDateString()}
                                         </div>
                                         <div className='text-sm text-gray-400'></div>
                                       </div>

@@ -1,9 +1,9 @@
 import { Rol } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import {prisma} from '../../../src/lib/db'
-import { withMiddleware } from "../../../src/lib/withMiddleware";
-import authMiddleware from "../../../src/middlewares/authMiddleware";
-import roleMiddleware from "../../../src/middlewares/roleMiddleware";
+import {prisma} from '../../../../src/lib/db'
+import { withMiddleware } from "../../../../src/lib/withMiddleware";
+import authMiddleware from "../../../../src/middlewares/authMiddleware";
+import roleMiddleware from "../../../../src/middlewares/roleMiddleware";
 
 async function handler(req: NextApiRequest, res: NextApiResponse<{
   paciente?: PacienteResponse
@@ -24,7 +24,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse<{
       },
       include: {
         persona: true,
-        historiaClinica: true,
+        historiaClinica: {
+          orderBy: {
+            fecha: 'desc'
+          }
+        }
       }
     })
     if (!paciente) return res.status(404).json({
