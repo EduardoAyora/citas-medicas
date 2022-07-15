@@ -57,6 +57,16 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
         },
       })
 
+      await prisma.factura.create({
+        data: {
+          descripcionServicio: informacionServicio.descripcion,
+          fecha: new Date(),
+          precioServicio: informacionServicio.costo,
+          total: informacionServicio.costo,
+          clienteId: paciente.id,
+        }
+      })
+
       return res.status(200).json({ cita: citaCreada })
     } catch (error) {
       return res.status(500).json({ message: 'Ha ocurrido un error' })

@@ -72,6 +72,7 @@ describe('handler /servicios/[servicio]/citas', () => {
   })
   afterAll(async () => {
     await prisma.horarioDia.deleteMany()
+    await prisma.factura.deleteMany()
     await prisma.servicio.deleteMany()
     await prisma.usuario.deleteMany()
     await prisma.persona.deleteMany()
