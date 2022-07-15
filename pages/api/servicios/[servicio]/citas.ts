@@ -59,7 +59,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
 
       await prisma.factura.create({
         data: {
-          descripcionServicio: informacionServicio.descripcion,
+          descripcionServicio: `Cita de ${informacionServicio.descripcion} el ${day} a las ${time}`,
           fecha: new Date(),
           precioServicio: informacionServicio.costo,
           total: informacionServicio.costo,

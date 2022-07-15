@@ -4,23 +4,31 @@ import Loading from '../../../src/components/common/Loading'
 import PageLayout from '../../../src/components/layout/PageLayout'
 
 const DiarioCaja = () => {
-  const [cobros, setCobros] = useState([
+  const [cobros, setCobros] = useState<
     {
-      nombre: 'Eduardo',
-      apellido: 'Ayora',
-      total: '',
-      fecha: '',
-      hora: '18:00',
-    },
-  ])
+      nombre: string
+      apellido: string
+      total: string
+      descripcionServicio: string
+    }[]
+  >([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchCobros = async () => {
+      setIsLoading(true)
+      const cobrosData = await fetch('/api/diario-caja')
+      const { cobrosDelDia } = await cobrosData.json()
+      setCobros(cobrosDelDia)
       setIsLoading(false)
     }
     fetchCobros()
   }, [])
+
+  const totalEnCaja = cobros.reduce(
+    (total, cobro) => total + parseInt(cobro.total),
+    0
+  )
 
   return (
     <PageLayout
@@ -43,7 +51,10 @@ const DiarioCaja = () => {
                       data-testid='bookings'
                     >
                       {cobros.map(
-                        ({ nombre, apellido, total, fecha, hora }, index) => {
+                        (
+                          { nombre, apellido, total, descripcionServicio },
+                          index
+                        ) => {
                           return (
                             <tr key={index} className='flex px-6'>
                               <td className='hidden align-top ltr:pl-6 rtl:pr-6 sm:table-cell sm:w-64'>
@@ -69,14 +80,14 @@ const DiarioCaja = () => {
                                     title='30 Min Meeting between Antonio Ochoa and Eduardo Ayora'
                                     className='max-w-56 truncate text-sm font-medium leading-6 text-neutral-900 md:max-w-max'
                                   >
-                                    {`Cita de durationInMinutes minutos del paciente {paciente} con el doctor/a {doctor}`}
+                                    {descripcionServicio}
                                   </div>
                                 </div>
                               </td>
                               <td className='whitespace-nowrap py-4 text-right text-sm font-medium ltr:pr-4 rtl:pl-4'>
                                 <div className='hidden space-x-2 rtl:space-x-reverse lg:block'>
                                   <div className='inline-flex px-3 items-center text-lg font-bold rounded-sm relative text-gray-700 bg-white hover:text-gray-900 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-neutral-900 dark:bg-transparent'>
-                                    $20
+                                    ${total}
                                   </div>
                                 </div>
                                 <div className='inline-block text-left lg:hidden'>
@@ -107,11 +118,16 @@ const DiarioCaja = () => {
                   </table>
                 </div>
               )}
-              <div className='p-4 text-right'>
-                <div className='inline-flex items-end px-3 py-2 rounded-sm relative text-gray-900 bg-transparent cursor-not-allowed'>
-                  Debe haber <span className='text-2xl font-bold ml-2'>$20</span>
+              {!isLoading && (
+                <div className='p-4 text-right'>
+                  <div className='inline-flex items-end px-3 py-2 rounded-sm relative text-gray-900 bg-transparent cursor-not-allowed'>
+                    Debe haber{' '}
+                    <span className='text-2xl font-bold ml-2'>
+                      ${totalEnCaja}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
