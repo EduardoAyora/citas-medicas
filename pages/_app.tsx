@@ -15,6 +15,7 @@ const secretarioLinks: Link[] = [
   { name: 'Inicio', href: '/' },
   { name: 'Ver citas', href: '/citas' },
   { name: 'Agendar cita', href: '/agendar-cita' },
+  { name: 'Diario de Caja', href: '/diario-caja' },
 ]
 
 function MyApp({

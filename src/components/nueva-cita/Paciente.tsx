@@ -6,7 +6,8 @@ import { ServicioJSON } from './Servicios'
 import { getFormattedDateString } from '../../lib/dateFormatters'
 import Loading from '../common/Loading'
 import useSuccessErrorModal from '../../hooks/modals/useSuccessError'
-import { Persona, SEXO } from '@prisma/client'
+import { Persona, Prisma, SEXO } from '@prisma/client'
+import { CurrencyDollarIcon } from '@heroicons/react/solid'
 
 interface Props {
   onScheduleClick: () => void
@@ -125,6 +126,10 @@ const Paciente: React.FC<Props> = ({
           <h1 className='text-bookingdark mb-4 text-xl font-semibold dark:text-white'>
             {servicio.descripcion}
           </h1>
+          <div className='text-green-500 flex items-center text-bookinglight mt-2 dark:text-white'>
+            <CurrencyDollarIcon className='h-4 w-4 mr-[10px] ml-[2px] text-gray-400' />
+            <span>Costo: {servicio.costo && servicio.costo.toString()} dolares</span>
+          </div>
           <p className='text-bookinglight mb-2 dark:text-white'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
