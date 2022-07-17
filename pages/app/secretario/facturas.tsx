@@ -127,7 +127,7 @@ const Facturas = () => {
                                         <span className='font-bold'>
                                           Precio servicio:
                                         </span>{' '}
-                                        {precioServicio.toString()}
+                                        ${precioServicio.toString()}
                                       </div>
                                       <div className='xl:col-span-2'></div>
                                       <div className='truncate'>

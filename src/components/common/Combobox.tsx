@@ -26,9 +26,9 @@ const MyCombobox: React.FC<Props> = ({ options, selected, setSelected }) => {
       )
 
   return (
-    <div>
+    <div className='w-full bg-white'>
       <Combobox value={selected} onChange={setSelected}>
-        <div className='text-sm shadow-sm w-[120px] relative'>
+        <div className='text-sm shadow-sm w-full relative'>
           <div className='flex cursor-default text-gray-700 border items-center h-10 px-2 justify-between border-gray-300 hover:border-gray-400'>
             <Combobox.Input
               className='w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0'

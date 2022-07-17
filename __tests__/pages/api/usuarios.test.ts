@@ -6,6 +6,7 @@ import {prisma} from '../../../src/lib/db'
 
 describe('ruta /api/usuarios método POST', () => {
   afterEach(async () => {
+    await prisma.servicio.deleteMany()
     await prisma.usuario.deleteMany()
     await prisma.persona.deleteMany()
   })
@@ -56,7 +57,7 @@ describe('ruta /api/usuarios método POST', () => {
       body: {
         username: "ivan4",
         password : "123",
-        name: "Iván",
+        nombre: "Iván",
         role: Rol.DOCTOR,
         apellido: "Perez",
         cedula: "0105032221",
@@ -70,12 +71,7 @@ describe('ruta /api/usuarios método POST', () => {
     expect(res._getStatusCode()).toBe(200)
     expect(res._getJSONData()).toEqual(
       {
-        id: expect.any(Number),
-        username: "ivan4",
-        password: "123",
-        name: "Iván",
-        role: Rol.DOCTOR,
-        personaId: expect.any(Number),
+        message: expect.any(String),
       }
     )
   })
