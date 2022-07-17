@@ -12,8 +12,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const facturasDelDia = await prisma.factura.findMany({
       where: {
         fecha: {
-          gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 1),
-          lte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())
+          gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()),
+          lte: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1)
         }
       },
       include: {

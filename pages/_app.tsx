@@ -14,6 +14,7 @@ const doctorLinks: Link[] = [
 const secretarioLinks: Link[] = [
   { name: 'Inicio', href: '/' },
   { name: 'Ver citas', href: '/citas' },
+  { name: 'Ver facturas', href: '/facturas' },
   { name: 'Agendar cita', href: '/agendar-cita' },
   { name: 'Diario de Caja', href: '/diario-caja' },
 ]
