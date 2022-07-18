@@ -4,7 +4,7 @@ import PageLayout from '../../../src/components/layout/PageLayout'
 import Combobox from '../../../src/components/common/Combobox'
 import { getFormattedHourFromTimeInHours } from '../../../src/controllers/appointmentController'
 import { useSession } from 'next-auth/react'
-import { Dia, HorarioDia } from '@prisma/client'
+import { Dia, HorarioDia, Prisma, Servicio } from '@prisma/client'
 import Loading from '../../../src/components/common/Loading'
 import useSuccessError from '../../../src/hooks/modals/useSuccessError'
 import SuccessErrorModal from '../../../src/components/common/SuccessErrorModal'
@@ -12,6 +12,9 @@ import SuccessErrorModal from '../../../src/components/common/SuccessErrorModal'
 const Disponibilidad = () => {
   const { data } = useSession()
   const [isLoading, setIsLoading] = useState(false)
+  const [isServiceParametersLoading, setIsServiceParametersLoading] =
+    useState(false)
+  const [service, setService] = useState<Servicio>()
 
   const [state, dispatch] = useReducer(reducer, createInitialState())
 
@@ -27,10 +30,13 @@ const Disponibilidad = () => {
     const getHorarios = async () => {
       setIsLoading(true)
       if (!data) return
-      const horariosData = await fetch(`/api/doctores/${data.user.id}/horarios`)
-      const { horarios } = await horariosData.json()
+      const servicioData = await fetch(
+        `/api/doctores/${data.user.id}/servicio-con-horarios`
+      )
+      const { horarios, servicio } = await servicioData.json()
       configureInitialState(horarios)
       setIsLoading(false)
+      setService(servicio)
     }
     getHorarios()
   }, [data])
@@ -44,17 +50,50 @@ const Disponibilidad = () => {
     dispatch({ type: actionTypes.SET_INITIAL_STATE, payload: initialState })
   }
 
+  const saveServiceParameters = async () => {
+    if (!data) return
+    if (!service) return
+    const costo = service.costo
+    const descripcion = service.descripcion
+    const duracion = service.duracionEnMinutos
+    const body = {
+      costo,
+      descripcion,
+      duracion,
+    }
+    setIsServiceParametersLoading(true)
+    const response = await fetch(`/api/doctores/${data.user.id}/servicio`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+    setIsServiceParametersLoading(false)
+    const { message } = await response.json()
+    if (!response.ok)
+      return showModal({
+        message,
+        isSuccess: false,
+      })
+    showModal({
+      message,
+      isSuccess: true,
+    })
+  }
+
   const onSaveClick = async () => {
     if (!data) return
     setIsLoading(true)
-    const responseData = await fetch(`/api/doctores/${data.user.id}/horarios`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(state),
-    })
+    const responseData = await fetch(
+      `/api/doctores/${data.user.id}/servicio-con-horarios`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(state),
+      }
+    )
     setIsLoading(false)
     if (!responseData.ok)
-      showModal({
+      return showModal({
         message: 'Ocurrió un error al guardar los cambios',
         isSuccess: false,
       })
@@ -78,147 +117,254 @@ const Disponibilidad = () => {
   ]
 
   return (
-    <PageLayout
-      pageTitle='Horas de trabajo'
-      pageDescription='Cambia los horarios de inicio y fin de tu días'
-    >
-      <>
-        <SuccessErrorModal
-          isOpen={isModalOpen}
-          isSuccess={isSuccessModal}
-          message={modalMessage}
-          setIsOpen={setIsModalOpen}
-        />
-        <div className='col-span-3 space-y-2 lg:col-span-2'>
-          <div className='divide-y rounded-sm border border-gray-200 bg-white px-4 py-5 sm:p-6'>
-            <h3 className='mb-5 text-base font-medium leading-6 text-gray-900'>
-              Cambia los horarios de inicio y fin de tus días
-            </h3>
-            <fieldset className='divide-y divide-gray-200'>
-              {isLoading ? (
-                <div className='w-full flex justify-center items-center mt-8'>
-                  <Loading isDarkMode={false} />
-                </div>
-              ) : (
-                days.map(({ texto, dbEquivalent }, index) => {
-                  const isDayAvailable =
-                    state[dbEquivalent].inicio !== null &&
-                    state[dbEquivalent].fin !== null
-                  if (isDayAvailable)
-                    return (
-                      <fieldset
-                        key={index}
-                        className='relative flex flex-col justify-between space-y-2 py-5 sm:flex-row sm:space-y-0'
-                      >
-                        <label className='flex space-x-2 rtl:space-x-reverse w-1/3'>
-                          <div className='w-full'>
-                            <input
-                              defaultChecked={isDayAvailable}
-                              onClick={() =>
-                                dispatch(
-                                  enableOrDisableDayActionCreator(dbEquivalent)
-                                )
-                              }
-                              type='checkbox'
-                              className='inline-block rounded-sm border-gray-300 text-neutral-900 focus:ring-neutral-500'
-                            />
-                            <span className='ml-2 inline-block text-sm capitalize'>
-                              {texto}
-                            </span>
-                          </div>
-                        </label>
-                        <div className='flex-grow'>
-                          <div className='space-y-2'>
-                            <div className='flex items-center rtl:space-x-reverse'>
-                              <div className='flex flex-grow sm:flex-grow-0'>
-                                <div className='flex flex-grow items-center space-x-3'>
-                                  <Combobox
-                                    options={comboboxOptions}
-                                    selected={
-                                      comboboxOptions.find(
-                                        (comboboxOption) =>
-                                          comboboxOption.value ==
-                                          state[dbEquivalent].inicio
-                                      ) || comboboxOptions[0]
-                                    }
-                                    setSelected={(hour: number) =>
-                                      dispatch(
-                                        changeStartHourActionCreator(
-                                          dbEquivalent,
-                                          hour
+    <>
+      <PageLayout
+        pageTitle='Servicio'
+        pageDescription='Establece información del servicio que ofreces'
+      >
+        {isLoading ? (
+          <div className='flex justify-center items-center'>
+            <Loading isDarkMode={false} />
+          </div>
+        ) : (
+          <>
+            <div className='lg:pb-4 grid xl:grid-cols-3 gap-6'>
+              <div>
+                <label
+                  htmlFor='costo'
+                  className='block text-sm font-medium text-gray-700'
+                >
+                  Costo:
+                </label>
+                <input
+                  value={service && service.costo.toString()}
+                  onChange={(e) => {
+                    if (!service) return
+                    setService({
+                      ...service,
+                      costo: new Prisma.Decimal(Number(e.target.value)),
+                    })
+                  }}
+                  type='number'
+                  name='costo'
+                  id='costo'
+                  placeholder='Costo'
+                  className='mt-1 block w-full rounded-sm border border-gray-300 px-3 py-2 focus:border-neutral-800 focus:outline-none focus:ring-neutral-800 sm:text-sm'
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor='descripcion'
+                  className='block text-sm font-medium text-gray-700'
+                >
+                  Descripción:
+                </label>
+                <input
+                  value={service && service.descripcion}
+                  onChange={(e) => {
+                    if (!service) return
+                    setService({
+                      ...service,
+                      descripcion: e.target.value,
+                    })
+                  }}
+                  type='text'
+                  name='descripcion'
+                  id='descripcion'
+                  placeholder='Descripción'
+                  className='mt-1 block w-full rounded-sm border border-gray-300 px-3 py-2 focus:border-neutral-800 focus:outline-none focus:ring-neutral-800 sm:text-sm'
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor='duracion'
+                  className='block text-sm font-medium text-gray-700'
+                >
+                  Duración en minutos:
+                </label>
+                <input
+                  value={service && service.duracionEnMinutos}
+                  onChange={(e) => {
+                    if (!service) return
+                    setService({
+                      ...service,
+                      duracionEnMinutos: Number(e.target.value),
+                    })
+                  }}
+                  type='text'
+                  name='duracion'
+                  id='duracion'
+                  placeholder='Duración en minutos'
+                  className='mt-1 block w-full rounded-sm border border-gray-300 px-3 py-2 focus:border-neutral-800 focus:outline-none focus:ring-neutral-800 sm:text-sm'
+                />
+              </div>
+            </div>
+            <div className='flex justify-end'>
+              <button
+                disabled={isServiceParametersLoading}
+                onClick={saveServiceParameters}
+                className={`button flex justify-center items-center px-4 relative ${
+                  isServiceParametersLoading && 'cursor-default'
+                }`}
+              >
+                {isServiceParametersLoading ? (
+                  <div className='mt-1 ml-1'>
+                    <Loading />
+                  </div>
+                ) : (
+                  'Guardar'
+                )}
+              </button>
+            </div>
+          </>
+        )}
+      </PageLayout>
+      <PageLayout
+        pageTitle='Horas de trabajo'
+        pageDescription='Cambia los horarios de inicio y fin de tu días'
+      >
+        <>
+          <SuccessErrorModal
+            isOpen={isModalOpen}
+            isSuccess={isSuccessModal}
+            message={modalMessage}
+            setIsOpen={setIsModalOpen}
+          />
+          <div className='col-span-3 space-y-2 lg:col-span-2'>
+            <div className='divide-y rounded-sm border border-gray-200 bg-white px-4 py-5 sm:p-6'>
+              <h3 className='mb-5 text-base font-medium leading-6 text-gray-900'>
+                Cambia los horarios de inicio y fin de tus días
+              </h3>
+              <fieldset className='divide-y divide-gray-200'>
+                {isLoading ? (
+                  <div className='w-full flex justify-center items-center mt-8'>
+                    <Loading isDarkMode={false} />
+                  </div>
+                ) : (
+                  days.map(({ texto, dbEquivalent }, index) => {
+                    const isDayAvailable =
+                      state[dbEquivalent].inicio !== null &&
+                      state[dbEquivalent].fin !== null
+                    if (isDayAvailable)
+                      return (
+                        <fieldset
+                          key={index}
+                          className='relative flex flex-col justify-between space-y-2 py-5 sm:flex-row sm:space-y-0'
+                        >
+                          <label className='flex space-x-2 rtl:space-x-reverse w-1/3'>
+                            <div className='w-full'>
+                              <input
+                                defaultChecked={isDayAvailable}
+                                onClick={() =>
+                                  dispatch(
+                                    enableOrDisableDayActionCreator(
+                                      dbEquivalent
+                                    )
+                                  )
+                                }
+                                type='checkbox'
+                                className='inline-block rounded-sm border-gray-300 text-neutral-900 focus:ring-neutral-500'
+                              />
+                              <span className='ml-2 inline-block text-sm capitalize'>
+                                {texto}
+                              </span>
+                            </div>
+                          </label>
+                          <div className='flex-grow'>
+                            <div className='space-y-2'>
+                              <div className='flex items-center rtl:space-x-reverse'>
+                                <div className='flex flex-grow sm:flex-grow-0'>
+                                  <div className='flex flex-grow items-center space-x-3'>
+                                    <Combobox
+                                      options={comboboxOptions}
+                                      selected={
+                                        comboboxOptions.find(
+                                          (comboboxOption) =>
+                                            comboboxOption.value ==
+                                            state[dbEquivalent].inicio
+                                        ) || comboboxOptions[0]
+                                      }
+                                      setSelected={(hour: number) =>
+                                        dispatch(
+                                          changeStartHourActionCreator(
+                                            dbEquivalent,
+                                            hour
+                                          )
                                         )
-                                      )
-                                    }
-                                  />
-                                  <span>-</span>
-                                  <Combobox
-                                    options={comboboxOptions}
-                                    selected={
-                                      comboboxOptions.find(
-                                        (comboboxOption) =>
-                                          comboboxOption.value ==
-                                          state[dbEquivalent].fin
-                                      ) || comboboxOptions[0]
-                                    }
-                                    setSelected={(hour: number) =>
-                                      dispatch(
-                                        changeEndHourActionCreator(
-                                          dbEquivalent,
-                                          hour
+                                      }
+                                    />
+                                    <span>-</span>
+                                    <Combobox
+                                      options={comboboxOptions}
+                                      selected={
+                                        comboboxOptions.find(
+                                          (comboboxOption) =>
+                                            comboboxOption.value ==
+                                            state[dbEquivalent].fin
+                                        ) || comboboxOptions[0]
+                                      }
+                                      setSelected={(hour: number) =>
+                                        dispatch(
+                                          changeEndHourActionCreator(
+                                            dbEquivalent,
+                                            hour
+                                          )
                                         )
-                                      )
-                                    }
-                                  />
+                                      }
+                                    />
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </fieldset>
-                    )
-                  else
-                    return (
-                      <fieldset
-                        key={index}
-                        className='relative flex flex-col justify-between space-y-2 py-5 sm:flex-row sm:space-y-0'
-                      >
-                        <label className='flex space-x-2 rtl:space-x-reverse w-full'>
-                          <div className='w-1/3'>
-                            <input
-                              defaultChecked={isDayAvailable}
-                              onClick={() =>
-                                dispatch(
-                                  enableOrDisableDayActionCreator(dbEquivalent)
-                                )
-                              }
-                              type='checkbox'
-                              className='inline-block rounded-sm border-gray-300 text-neutral-900 focus:ring-neutral-500'
-                            />
-                            <span className='ml-2 inline-block text-sm capitalize'>
-                              {texto}
-                            </span>
-                          </div>
-                          <div className='flex-grow text-right text-sm text-gray-500 sm:flex-shrink'>
-                            No disponible
-                          </div>
-                        </label>
-                      </fieldset>
-                    )
-                })
-              )}
-            </fieldset>
+                        </fieldset>
+                      )
+                    else
+                      return (
+                        <fieldset
+                          key={index}
+                          className='relative flex flex-col justify-between space-y-2 py-5 sm:flex-row sm:space-y-0'
+                        >
+                          <label className='flex space-x-2 rtl:space-x-reverse w-full'>
+                            <div className='w-1/3'>
+                              <input
+                                defaultChecked={isDayAvailable}
+                                onClick={() =>
+                                  dispatch(
+                                    enableOrDisableDayActionCreator(
+                                      dbEquivalent
+                                    )
+                                  )
+                                }
+                                type='checkbox'
+                                className='inline-block rounded-sm border-gray-300 text-neutral-900 focus:ring-neutral-500'
+                              />
+                              <span className='ml-2 inline-block text-sm capitalize'>
+                                {texto}
+                              </span>
+                            </div>
+                            <div className='flex-grow text-right text-sm text-gray-500 sm:flex-shrink'>
+                              No disponible
+                            </div>
+                          </label>
+                        </fieldset>
+                      )
+                  })
+                )}
+              </fieldset>
+            </div>
+            <div className='space-x-2 text-right'>
+              <button
+                onClick={onSaveClick}
+                className='text-white inline-flex items-center px-3 py-2 text-sm font-medium rounded-sm relative border border-transparent dark:text-darkmodebrandcontrast text-brandcontrast bg-gray-900 hover:bg-opacity-90 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-neutral-900'
+              >
+                Guardar
+              </button>
+            </div>
           </div>
-          <div className='space-x-2 text-right'>
-            <button
-              onClick={onSaveClick}
-              className='text-white inline-flex items-center px-3 py-2 text-sm font-medium rounded-sm relative border border-transparent dark:text-darkmodebrandcontrast text-brandcontrast bg-gray-900 hover:bg-opacity-90 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-neutral-900'
-            >
-              Guardar
-            </button>
-          </div>
-        </div>
-      </>
-    </PageLayout>
+        </>
+      </PageLayout>
+    </>
   )
 }
 

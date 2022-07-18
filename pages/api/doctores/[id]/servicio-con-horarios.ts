@@ -28,7 +28,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       }
     })
 
-    return res.status(200).json({ horarios })
+    return res.status(200).json({ horarios, servicio })
   }
   case 'POST': {
     const servicio = await prisma.servicio.findFirst({
