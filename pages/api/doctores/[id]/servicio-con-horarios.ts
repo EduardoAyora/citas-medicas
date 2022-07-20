@@ -40,13 +40,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (!servicio) return res.status(404).json({error: 'No se encontró el servicio del médico'})
     const servicioId = servicio.id
 
+    const transaccionesHorario = []
     const dayKeys = Object.keys(body)
     for (const dayKey of dayKeys) {
       const dia = dayKey as Dia
       const horaInicio = parseInt(body[dia].inicio) || null
       const horaFin = parseInt(body[dia].fin) || null
       
-      await prisma.horarioDia.upsert({
+      transaccionesHorario.push(prisma.horarioDia.upsert({
         where: {
           servicioId_dia: {
             servicioId,
@@ -63,8 +64,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
           horaFin,
           dia,
         },
-      })
+      }))
     }
+    await prisma.$transaction(transaccionesHorario)
 
     return res.status(200).json({ message: 'Se han guardado los horarios' })
   }
