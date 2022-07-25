@@ -8,7 +8,14 @@ import { Persona } from '@prisma/client'
 
 const NuevaCita: React.FC = () => {
   const [service, setService] = useState<ServicioJSON>()
-  const [selectedDate, setSelectedDate] = useState(new Date())
+  const currentDate = new Date()
+  const [selectedDate, setSelectedDate] = useState(
+    new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate()
+    )
+  )
   const [availableHours, setAvailableHours] = useState<string[]>([])
   const [isAvailableHoursLoading, setIsAvailableHoursLoading] = useState(true)
   const [selectedHour, setSelectedHour] = useState<string>()
