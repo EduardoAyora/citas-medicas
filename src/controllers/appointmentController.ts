@@ -133,6 +133,7 @@ export const isRangeOfNumbersCollisioningWithAnother = ({
 export const getDayOfWeekFromDate = (dateString: string): Dia | undefined => {
   const date = new Date(dateString)
   console.log('DATE getDayOfWeekFromDate', date);
+  console.log('caso', date.getDay());
   
   switch (date.getDay()) {
   case 0:
