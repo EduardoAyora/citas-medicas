@@ -132,23 +132,21 @@ export const isRangeOfNumbersCollisioningWithAnother = ({
 
 export const getDayOfWeekFromDate = (dateString: string): Dia | undefined => {
   const date = new Date(dateString)
-  console.log('DATE getDayOfWeekFromDate', date);
-  console.log('caso', date.getDay());
   
-  switch (date.getDay()) {
+  switch (date.getUTCDay()) {
   case 0:
-    return Dia.LUNES
-  case 1:
-    return Dia.MARTES
-  case 2:
-    return Dia.MIERCOLES
-  case 3:
-    return Dia.JUEVES
-  case 4:
-    return Dia.VIERNES
-  case 5:
-    return Dia.SABADO
-  case 6:
     return Dia.DOMINGO
+  case 1:
+    return Dia.LUNES
+  case 2:
+    return Dia.MARTES
+  case 3:
+    return Dia.MIERCOLES
+  case 4:
+    return Dia.JUEVES
+  case 5:
+    return Dia.VIERNES
+  case 6:
+    return Dia.SABADO
   }
 }
