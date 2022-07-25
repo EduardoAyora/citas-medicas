@@ -8,7 +8,14 @@ import { Persona } from '@prisma/client'
 
 const NuevaCita: React.FC = () => {
   const [service, setService] = useState<ServicioJSON>()
-  const [selectedDate, setSelectedDate] = useState(new Date())
+  const currentDate = new Date()
+  const [selectedDate, setSelectedDate] = useState(
+    new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate()
+    )
+  )
   const [availableHours, setAvailableHours] = useState<string[]>([])
   const [isAvailableHoursLoading, setIsAvailableHoursLoading] = useState(true)
   const [selectedHour, setSelectedHour] = useState<string>()
@@ -19,7 +26,12 @@ const NuevaCita: React.FC = () => {
   useEffect(() => {
     const fetchDaySchedule = async (date: Date) => {
       if (!service) return
+
+      console.log('Object date', date)
+      console.log('día', date.getDate())
+      console.log('ISO string', date.toISOString())
       const formattedDate = date.toISOString().split('T')[0]
+
       setIsAvailableHoursLoading(true)
       const availableHoursData = await fetch(
         `/api/servicios/${service.id}/horario-disponible/${formattedDate}`
