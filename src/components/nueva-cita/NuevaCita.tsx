@@ -26,12 +26,7 @@ const NuevaCita: React.FC = () => {
   useEffect(() => {
     const fetchDaySchedule = async (date: Date) => {
       if (!service) return
-
-      console.log('Object date', date)
-      console.log('día', date.getDate())
-      console.log('ISO string', date.toISOString())
       const formattedDate = date.toISOString().split('T')[0]
-
       setIsAvailableHoursLoading(true)
       const availableHoursData = await fetch(
         `/api/servicios/${service.id}/horario-disponible/${formattedDate}`
