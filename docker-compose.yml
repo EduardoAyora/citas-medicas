@@ -12,4 +12,4 @@ services:
     environment:
       POSTGRES_USER: prisma
       POSTGRES_PASSWORD: prisma
-      POSTGRES_DB: tests
+      POSTGRES_DB: tests_v2

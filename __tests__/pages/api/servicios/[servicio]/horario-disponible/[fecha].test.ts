@@ -6,9 +6,18 @@ import { prisma } from '../../../../../../src/lib/db'
 
 describe('handler /servicios/[servicio]/horario-disponible/[fecha]', () => {
   beforeAll(async () => {
+    await prisma.admin.create({
+      data: {
+        email: 'admin@gmail.com',
+        password: 'admin',
+        id: 1
+      }
+    })
+
     await prisma.persona.create({
       data: {
         id: 1,
+        adminId: 1,
         cedula: '1234567890',
         nombre: 'karen',
         apellido: 'ayora',
@@ -61,42 +70,42 @@ describe('handler /servicios/[servicio]/horario-disponible/[fecha]', () => {
           durationInMinutes: 45,
           day: '2022-05-26',
           servicioId: 1,
-          pacienteId:'1234567890',
+          pacienteId: 1,
         },
         {
           time: '12:40',
           durationInMinutes: 45,
           day: '2022-05-26',
           servicioId: 1,
-          pacienteId:'1234567890',
+          pacienteId: 1,
         },
         {
           time: '11:20',
           durationInMinutes: 20,
           day: '2022-05-27',
           servicioId: 1,
-          pacienteId:'1234567890',
+          pacienteId: 1,
         },
         {
           time: '12:00',
           durationInMinutes: 20,
           day: '2022-05-27',
           servicioId: 1,
-          pacienteId:'1234567890',
+          pacienteId: 1,
         },
         {
           time: '12:40',
           durationInMinutes: 20,
           day: '2022-05-27',
           servicioId: 1,
-          pacienteId:'1234567890',
+          pacienteId: 1,
         },
         {
           time: '12:30',
           durationInMinutes: 20,
           day: '2022-05-27',
           servicioId: 2,
-          pacienteId:'1234567890',
+          pacienteId: 1,
         },
       ],
     })
@@ -108,6 +117,7 @@ describe('handler /servicios/[servicio]/horario-disponible/[fecha]', () => {
     await prisma.servicio.deleteMany()
     await prisma.usuario.deleteMany()
     await prisma.persona.deleteMany()
+    await prisma.admin.deleteMany()
   })
 
   test('Devuelve un estado de error al no recibir una fecha', async () => {

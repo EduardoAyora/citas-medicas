@@ -10,11 +10,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Admin {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  password     String
+  isSubscribed Boolean   @default(false)
+  personas     Persona[]
+}
+
 model Persona {
   id        Int    @id @default(autoincrement())
   nombre    String
   apellido  String
-  cedula    String @unique
+  cedula    String
   direccion String
   celular   String
   email     String
@@ -23,6 +31,10 @@ model Persona {
   paciente Paciente?
   citas    Cita[]
   facturas Factura[]
+  adminId  Int
+  admin    Admin     @relation(fields: [adminId], references: [id])
+
+  @@unique([cedula, adminId])
 }
 
 model Paciente {
@@ -76,9 +88,9 @@ model Cita {
   day               String
   esCancelada       Boolean @default(false)
   servicioId        Int
-  pacienteId        String
+  pacienteId        Int
 
-  paciente Persona  @relation(fields: [pacienteId], references: [cedula])
+  paciente Persona  @relation(fields: [pacienteId], references: [id])
   servicio Servicio @relation(fields: [servicioId], references: [id])
 }
 

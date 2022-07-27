@@ -5,6 +5,19 @@ import handler from '../../../pages/api/usuarios'
 import {prisma} from '../../../src/lib/db'
 
 describe('ruta /api/usuarios método POST', () => {
+  beforeAll(async () => {
+    await prisma.admin.create({
+      data: {
+        email: 'admin@gmail.com',
+        password: 'admin',
+        id: 1
+      }
+    })
+  })
+  afterAll(async () => {
+    await prisma.admin.deleteMany()
+  })
+
   afterEach(async () => {
     await prisma.servicio.deleteMany()
     await prisma.usuario.deleteMany()
@@ -15,6 +28,7 @@ describe('ruta /api/usuarios método POST', () => {
     await prisma.persona.create({
       data: {
         id: 1,
+        adminId: 1,
         nombre: 'Iván',
         apellido: 'Perez',
         email: 'ivan@gmail.com',
@@ -55,6 +69,7 @@ describe('ruta /api/usuarios método POST', () => {
     const { req, res } = createMocks({
       method: 'POST',
       body: {
+        adminId: 1,
         username: "ivan4",
         password : "123",
         nombre: "Iván",

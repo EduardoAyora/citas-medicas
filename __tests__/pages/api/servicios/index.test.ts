@@ -6,9 +6,18 @@ import {prisma} from '../../../../src/lib/db'
 
 describe('ruta /api/servicios/index método GET', () => {
   beforeAll(async () => {
+    await prisma.admin.create({
+      data: {
+        email: 'admin@gmail.com',
+        password: 'admin',
+        id: 1
+      }
+    })
+
     await prisma.persona.create({
       data: {
         id: 1,
+        adminId: 1,
         cedula: '1234567890',
         nombre: 'karen',
         apellido: 'ayora',
@@ -52,6 +61,7 @@ describe('ruta /api/servicios/index método GET', () => {
     await prisma.servicio.deleteMany({})
     await prisma.usuario.deleteMany({})
     await prisma.persona.deleteMany({})
+    await prisma.admin.deleteMany({})
   })
 
   test('Consultar todos los servicios', async () => {

@@ -13,7 +13,7 @@ export type Data = {
 async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   const {
     query: { servicio },
-    body: { day, time, pacienteId },
+    body: { day, time, pacienteId, adminId },
     method,
   } = req
 
@@ -39,7 +39,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
       
       const paciente = await prisma.persona.findUnique({
         where: {
-          cedula: pacienteId,
+          cedula_adminId: {
+            cedula: pacienteId,
+            adminId,
+          }
         }
       })
       if (!paciente)
@@ -51,7 +54,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
         data: {
           day,
           time,
-          pacienteId,
+          pacienteId: paciente.id,
           durationInMinutes: informacionServicio.duracionEnMinutos,
           servicioId,
         },

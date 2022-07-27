@@ -16,9 +16,17 @@ jest
 
 describe("pages/api/citas/doctor/proximas", () => {
   beforeAll(async () => {
+    await prisma.admin.create({
+      data: {
+        email: 'admin@gmail.com',
+        password: 'admin',
+        id: 1
+      }
+    })
     await prisma.persona.createMany({
       data: [{
         id: 1,
+        adminId: 1,
         nombre: "Test",
         apellido: "Test",
         email: "a",
@@ -28,6 +36,7 @@ describe("pages/api/citas/doctor/proximas", () => {
       },
       {
         id: 2,
+        adminId: 1,
         nombre: "Test2",
         apellido: "Test2",
         email: "e",
@@ -74,21 +83,21 @@ describe("pages/api/citas/doctor/proximas", () => {
           time: "08:00",
           durationInMinutes: 60,
           servicioId: 3,
-          pacienteId: '1',
+          pacienteId: 1,
         },
         {
           day: "2020-01-10",
           time: "09:00",
           durationInMinutes: 60,
           servicioId: 3,
-          pacienteId: '1',
+          pacienteId: 1,
         },
         {
           day: "2020-01-05",
           time: "10:00",
           durationInMinutes: 60,
           servicioId: 2,
-          pacienteId: '2',
+          pacienteId: 2,
         },
       ]
     })
@@ -98,6 +107,7 @@ describe("pages/api/citas/doctor/proximas", () => {
     await prisma.servicio.deleteMany()
     await prisma.usuario.deleteMany()
     await prisma.persona.deleteMany()
+    await prisma.admin.deleteMany()
   })
   it("Lista solo las citas del doctor con id 1", async () => {
     const { req, res } = createMocks({

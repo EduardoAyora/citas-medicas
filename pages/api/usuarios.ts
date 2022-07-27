@@ -4,7 +4,7 @@ import {prisma} from '../../src/lib/db'
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const {
-    body: { username, password, nombre, apellido, email, cedula, celular, direccion, role },
+    body: { username, password, nombre, apellido, email, cedula, celular, direccion, role, adminId },
     method,
   } = req
   
@@ -20,9 +20,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const persona = await prisma.persona.upsert({
       where: {
-        cedula
+        cedula_adminId: {
+          cedula,
+          adminId
+        }
       },
       create: {
+        adminId,
         nombre,
         apellido,
         email,
