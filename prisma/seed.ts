@@ -2,10 +2,19 @@ import { Dia, PrismaClient, Rol } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
+  await prisma.admin.create({
+    data: {
+      email: 'admin@gmail.com',
+      password: 'admin',
+      id: 1,
+    }
+  })
+
   await prisma.persona.createMany({
     data: [
       {
         id: 1,
+        adminId: 1,
         nombre: 'Eduardo',
         apellido: 'Ayora',
         cedula: '0101010151',
@@ -15,6 +24,7 @@ async function main() {
       },
       {
         id: 2,
+        adminId: 1,
         nombre: 'Karen',
         apellido: 'Ayora',
         cedula: '0101010152',
@@ -24,6 +34,7 @@ async function main() {
       },
       {
         id: 3,
+        adminId: 1,
         nombre: 'Admin',
         apellido: '',
         cedula: '0101010153',
