@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "HorarioDia" ALTER COLUMN "horaInicio" DROP NOT NULL,
-ALTER COLUMN "horaFin" DROP NOT NULL;
